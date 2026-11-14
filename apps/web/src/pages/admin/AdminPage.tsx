@@ -69,9 +69,10 @@ export function AdminPage() {
     gridfs: { status: string; files: number };
     ml: {
       status: string;
-      providers?: { sarvam?: { configured: boolean; mock?: boolean; reachable: boolean | null; keyValid: boolean | null }; claude?: { configured: boolean } };
+      providers?: { sarvam?: { configured: boolean; mock?: boolean; reachable: boolean | null; keyValid: boolean | null }; llm?: { configured: boolean; provider?: string; model?: string } };
       tools?: { ffmpeg?: boolean; tesseract?: boolean };
-      models?: { ocr?: { loaded?: boolean } };
+      models?: { ocr?: { loaded?: boolean }; system1?: { model?: string; loaded?: boolean; hosted?: boolean }; embeddings?: { model?: string; loaded?: boolean } };
+      agents?: { enabled: boolean; error?: string };
     };
   };
   const healthQ = useQuery({
@@ -386,8 +387,14 @@ export function AdminPage() {
                 {sarvam?.mock ? 'mock mode' : !sarvam?.configured ? 'not configured — using local fallback' : sarvam.keyValid === false ? 'key rejected' : sarvam.reachable === false ? 'unreachable' : 'configured'}
               </span>
             )}</dd>
-            <dt>Claude (summaries)</dt>
-            <dd>{h && <span className={`badge ${h.ml.providers?.claude?.configured ? 'ok' : 'warn'}`}>{h.ml.providers?.claude?.configured ? 'configured' : 'not configured — offline fallback'}</span>}</dd>
+            <dt>LLM (summaries)</dt>
+            <dd>{h && <span className={`badge ${h.ml.providers?.llm?.configured ? 'ok' : 'warn'}`}>{h.ml.providers?.llm?.configured ? `${h.ml.providers.llm.model} · ${h.ml.providers.llm.provider}` : 'not configured — offline fallback'}</span>}</dd>
+            <dt>System1 (incident type)</dt>
+            <dd>{h && <span className="mono muted" style={{ fontSize: 12 }}>{h.ml.models?.system1?.model ?? 'unknown'} · {h.ml.models?.system1?.loaded ? 'loaded' : 'loads on first use'}{h.ml.models?.system1?.hosted ? ' · HF token set' : ''}</span>}</dd>
+            <dt>Search embeddings</dt>
+            <dd>{h && <span className="mono muted" style={{ fontSize: 12 }}>{h.ml.models?.embeddings?.model ?? 'unknown'} · {h.ml.models?.embeddings?.loaded ? 'loaded' : 'loads on first use'}</span>}</dd>
+            <dt>Investigation agents</dt>
+            <dd>{h && <span className={`badge ${h.ml.agents?.enabled ? 'ok' : 'warn'}`}>{h.ml.agents?.enabled ? 'enabled' : `disabled${h.ml.agents?.error ? ` — ${h.ml.agents.error}` : ''}`}</span>}</dd>
             <dt>OCR / transcription tools</dt>
             <dd>{h && (
               <span className="mono muted" style={{ fontSize: 12 }}>
