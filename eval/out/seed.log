@@ -1,0 +1,25 @@
+(node:10728) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/build-beyond-bmsce/scripts/seed-demo.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\build-beyond-bmsce\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+case 6af8e2a424afc297fb28bb25
+  uploaded WhatsApp Chat with Karthik Menon.txt  sha256=50289efeb5896152…
+  uploaded 01_whatsapp_persistent_contact.png  sha256=a31dd3dc3c4b0f21…
+  uploaded 02_instagram_dm_after_block.png  sha256=c7b9dfe03d7205fa…
+  uploaded 03_sms_surveillance.png  sha256=dbab9156cfe60e93…
+  uploaded 04_whatsapp_threats_second_sim.png  sha256=8f34c8839f19f868…
+  uploaded 05_instagram_fake_account.png  sha256=bc0d004ac0a02f27…
+  uploaded 06_whatsapp_demand_EDITED.png  sha256=545a0433c67f5550…
+  uploaded 07_telegram_second_demand.png  sha256=8b0551b1cb17912f…
+  uploaded hdfc_statement_sep2024.pdf  sha256=6574c0e4f01dbe7d…
+  uploaded email_from_anon.eml  sha256=8baef763d3e2b417…
+  processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing     processing… 0/10 files, status=processing   file:///C:/build-beyond-bmsce/scripts/seed-demo.js:45
+  if (!r.ok && r.status !== 409) throw new Error(`${method} ${p} → ${r.status} ${text.slice(0, 300)}`);
+                                       ^
+
+Error: GET /cases/6af8e2a424afc297fb28bb25/overview → 500 {"error":{"code":"INTERNAL","message":"Internal error"}}
+    at call (file:///C:/build-beyond-bmsce/scripts/seed-demo.js:45:40)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///C:/build-beyond-bmsce/scripts/seed-demo.js:77:9
+
+Node.js v24.21.0

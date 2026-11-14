@@ -1,0 +1,419 @@
+<title>TraceVault Final Report</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+/* Layout: one printed-report column that mirrors the official template: serif headings, sans body, plain ruled tables. Deliberately monochrome, single (paper) theme. */
+:root{
+  color-scheme:light;
+  --paper:#FFFFFF; --text:#1A1A1A; --sub:#555555; --rule:#D6D6D6; --head:#F2F2F2;
+  --serif:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --sans:'Inter','Segoe UI',Arial,sans-serif;
+  --mono:'JetBrains Mono',Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.65;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+main{max-width:820px;margin:0 auto;padding-block:56px 96px}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:400;color:var(--text);text-wrap:balance;line-height:1.2}
+h1{font-size:2.75rem;margin:0 0 .3em;letter-spacing:-.01em}
+h2{font-size:1.85rem;margin:2.4em 0 .6em}
+h3{font-size:1.35rem;margin:1.7em 0 .5em}
+h4{font-family:var(--sans);font-size:1rem;font-weight:700;margin:1.4em 0 .3em}
+p,li{max-width:70ch}
+p{margin:.55em 0}
+ul,ol{padding-left:1.3em;margin:.5em 0}
+li{margin:.3em 0}
+a{color:var(--text);text-underline-offset:2px}
+a:focus-visible{outline:2px solid var(--text);outline-offset:2px}
+.intro{font-style:italic;color:var(--sub);margin-bottom:2em}
+.lead{font-weight:600}
+.tbl{overflow-x:auto;margin:1em 0 1.2em}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{border:1px solid var(--rule);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--head);font-weight:600}
+td.k{white-space:nowrap;width:1%}
+.details td.k{font-weight:400}
+.details{max-width:560px}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+small{color:var(--sub);font-size:.85em}
+code{font-family:var(--mono);font-size:.85em}
+pre{font-family:var(--mono);font-size:.84rem;border:1px solid var(--rule);padding:12px 14px;overflow-x:auto;line-height:1.5;margin:1em 0}
+pre.mmd{border:0;padding:0;background:none;text-align:center}
+pre.diagram{font-size:.74rem;line-height:1.35;border:0;padding:0}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps>li{counter-increment:s;padding-left:2.2em;position:relative;margin:.55em 0}
+.steps>li::before{content:counter(s) ".";position:absolute;left:0;font-weight:700;font-variant-numeric:tabular-nums}
+.note{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:10px 0;margin:1.2em 0;font-size:.95rem}
+.refs li{font-size:.93rem}
+footer{margin-top:3em;font-size:.85rem;color:var(--sub);border-top:1px solid var(--rule);padding-top:1em}
+@media (max-width:640px){h1{font-size:2.1rem} h2{font-size:1.55rem}}
+@page{size:A4;margin:18mm 16mm}
+@media print{body{font-size:11pt;padding:0}main{max-width:none;padding:0}h2{break-after:avoid;margin-top:1.6em}h3,h4{break-after:avoid}pre.mmd,tr{break-inside:avoid}pre.mmd svg{max-width:100%!important;height:auto}.tbl{overflow:visible}footer{display:none}a{text-decoration:none}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+
+<main>
+<h1>Hackathon Final Report</h1>
+<p class="intro">TraceVault: turning scattered digital evidence into a verified, court-ready incident story.</p>
+
+<h2 style="margin-top:1em">Project Details</h2>
+<div class="tbl"><table class="details">
+<tr><td class="k">Hackathon</td><td>Build Beyond'26</td></tr>
+<tr><td class="k">Project Title</td><td>TraceVault</td></tr>
+<tr><td class="k">Problem Statement</td><td>PS 3.2 · AI-Powered Digital Evidence Intelligence Platform</td></tr>
+<tr><td class="k">Team Name</td><td>ModiFY (Team 24)</td></tr>
+<tr><td class="k">Team Members</td><td>Shashank G (Lead), Ansu Kumar, Aman Raj</td></tr>
+<tr><td class="k">Institution</td><td>BMS Institute of Technology &amp; Management</td></tr>
+<tr><td class="k">GitHub Repository</td><td><a href="https://github.com/Ansukr07/TraceVault">github.com/Ansukr07/TraceVault</a></td></tr>
+<tr><td class="k">Demo Video / Live Prototype</td><td><b>[Add link]</b> <small>(60-second demo in repo: <code>demo-video/tracevault-demo-60s.mp4</code>)</small></td></tr>
+<tr><td class="k">Submitted On</td><td><b>[15 Nov 2026, add time]</b></td></tr>
+</table></div>
+
+<!-- ============ 1 ============ -->
+<h2>1. Analysis of the Problem Statement</h2>
+
+<h3>1.1 Problem Overview</h3>
+<p class="lead">People who are harassed, stalked or cheated online usually do have the evidence. It is just scattered, messy and easy to dispute, so their cases stall.</p>
+<p>Take a college student being stalked by an ex-partner. Over three weeks she collects WhatsApp threats from two SIM cards, Instagram messages from fake accounts, an anonymous email, a voice note, and a bank statement showing ₹35,000 she paid under threat. That is 11 files, 5 formats and 3 languages (English, Hinglish, Kannada).</p>
+<p>When she goes to the police or a lawyer, she has a phone gallery, not a case. Someone has to read every file, put events in order, work out that four accounts are one person, and match the chat demands to the bank debits. Nobody can prove the screenshots weren't edited.</p>
+<p><b>Who it affects:</b></p>
+<ul>
+<li><b>Victims and their families</b>, who have to retell a painful story again and again.</li>
+<li><b>Lawyers and NGO counsellors</b>, who spend hours sorting files before any legal work starts.</li>
+<li><b>Police cyber cells</b>, who receive unstructured uploads and can't easily check whether files were changed.</li>
+</ul>
+
+<h3>1.2 Causes and Impact</h3>
+<h4>Why the problem exists</h4>
+<ul>
+<li><b>Scattered:</b> evidence sits in chat apps, screenshots, call recordings, emails and PDFs. No tool reads them together.</li>
+<li><b>Multilingual:</b> threats arrive in Hindi, Hinglish, Kannada and other languages that standard tools don't read.</li>
+<li><b>Fragile:</b> screenshots can be edited and timestamps disputed. Without a record of who handled the file, evidence gets challenged or rejected.</li>
+<li><b>Unlinked:</b> one offender uses many numbers, handles and UPI IDs. Connecting them by hand is slow and error-prone.</li>
+<li><b>A new legal requirement:</b> Section 63 of the Bharatiya Sakshya Adhiniyam (BSA) expects a certificate with a hash value for electronic records. Victims have no easy way to produce one.</li>
+</ul>
+<h4>How serious it is</h4>
+<div class="tbl"><table>
+<tr><th>Figure</th><th>What it means</th></tr>
+<tr><td class="num"><b>22.68 lakh</b></td><td>Cybercrime complaints filed in India in 2024, up 42% from the year before</td></tr>
+<tr><td class="num"><b>₹22,845 crore</b></td><td>Money lost by citizens to cyber fraud in 2024</td></tr>
+<tr><td class="num"><b>1 in 3</b></td><td>Cybercrime cases that reached a chargesheet in 2023</td></tr>
+</table></div>
+<p>The result: complaints are delayed, under-documented or abandoned, and victims are re-traumatised by repeating their story.</p>
+
+<!-- ============ 2 ============ -->
+<h2>2. Research Gap</h2>
+
+<h3>2.1 Existing Solutions</h3>
+<div class="tbl"><table>
+<tr><th>Existing solution</th><th>What it does</th><th>Where it falls short</th></tr>
+<tr><td><b>Cellebrite Pathfinder</b><br><small>Police forensics</small></td><td>AI timeline, link graph and transcription over phone extractions</td><td>Sold only to agencies and needs trained examiners. Victims and lawyers can't use it.</td></tr>
+<tr><td><b>Everlaw Storybuilder</b><br><small>Legal e-discovery</small></td><td>Document review with cited AI answers and timelines</td><td>Enterprise pricing. No WhatsApp, voice-note or Hinglish support, and no hash certificate.</td></tr>
+<tr><td><b>e-Sakshya</b><br><small>MHA police app, 2024</small></td><td>Police capture hashed, geo-tagged crime-scene media</td><td>Capture-only and police-only. Can't analyse what a victim already has.</td></tr>
+<tr><td><b>NCRP</b><br><small>cybercrime.gov.in</small></td><td>Citizens file complaints and upload files</td><td>Uploads are an unstructured pile: no timeline, linking or integrity check.</td></tr>
+<tr><td><b>Spot</b><br><small>talktospot.com</small></td><td>Chatbot interview that produces a signed harassment report</td><td>Relies on memory, doesn't read or verify evidence files, and is workplace-only.</td></tr>
+<tr><td><b>ProofMode, DocuSAFE</b></td><td>Sign photos at capture; survivor incident log</td><td>Protect only new in-app captures. DocuSAFE shut down in Oct 2023. Neither analyses evidence.</td></tr>
+</table></div>
+
+<h3>2.2 Identified Gap</h3>
+<p><b>Police tools</b> have powerful analysis but are locked inside agencies. <b>Victim apps</b> are easy to use but only store files. Nothing gives a victim both.</p>
+<p>No current tool does all of these together:</p>
+<ol>
+<li>Reads the evidence a victim <i>already has</i> (screenshots, chat exports, voice notes, PDFs), including Indian languages.</li>
+<li>Links the same offender across many accounts, and links chat demands to bank debits.</li>
+<li>Finds contradictions and edited files <i>before</i> the other side does.</li>
+<li>Backs every AI statement with a citation to the source file.</li>
+<li>Produces output that a court or police officer can check for tampering independently, even offline.</li>
+</ol>
+<p><b>TraceVault fills this gap: police-grade analysis and proof, in the victim's hands.</b></p>
+
+<!-- ============ 3 ============ -->
+<h2>3. Ideation of the Solution</h2>
+
+<h3>3.1 Proposed Solution</h3>
+<p class="lead">Upload everything once. Get back a sealed case file where every claim points to its source.</p>
+
+<pre class="mmd">
+flowchart TB
+  subgraph IN[Victim uploads]
+    direction LR
+    A1[Chats] ~~~ A2[Screenshots] ~~~ A3[Voice notes] ~~~ A4[PDFs and emails]
+  end
+  subgraph TV[TraceVault]
+    direction LR
+    B1[Seal] --> B2[Read] --> B3[Link] --> B4[Flag] --> B5[Cite]
+  end
+  subgraph OUT[Case file]
+    direction LR
+    C1[Timeline] ~~~ C2[People graph] ~~~ C3[Cited summary] ~~~ C4[Report + §63 certificate] ~~~ C5[Verifiable bundle]
+  end
+  subgraph USE[Shared with]
+    direction LR
+    D1[Lawyer / NGO] ~~~ D2[Police cyber cell]
+  end
+  IN --> TV --> OUT --> USE
+</pre>
+
+<h4>Key features</h4>
+<div class="tbl"><table>
+<tr><th>Feature</th><th>In one line</th></tr>
+<tr><td><b>Preserve</b></td><td>Every file is hashed, encrypted and logged. Originals never change.</td></tr>
+<tr><td><b>Extract</b></td><td>OCR, speech-to-text and NLP in English, Hindi, Hinglish and Kannada.</td></tr>
+<tr><td><b>Link</b></td><td>Many numbers and handles become one person; duplicates are grouped.</td></tr>
+<tr><td><b>Reconstruct</b></td><td>One timeline across all files, each event linked to its source.</td></tr>
+<tr><td><b>Flag</b></td><td>Edited files and conflicting amounts or dates, only from independent sources.</td></tr>
+<tr><td><b>Summarise</b></td><td>Every sentence is cited; unsupported ones are marked.</td></tr>
+<tr><td><b>Visualise</b></td><td>Graph of people, accounts and money flows.</td></tr>
+<tr><td><b>Share and export</b></td><td>Expiring scoped access, report PDF with hashes, offline-verifiable bundle.</td></tr>
+<tr><td><b>Speak</b></td><td>Voice statement, voice questions and read-aloud in Indian languages.</td></tr>
+</table></div>
+
+<h4>Built for victims</h4>
+<ul>
+<li><b>Safety first:</b> quick exit, discreet mode, helplines, risk gauge.</li>
+<li><b>Adapts to the harm:</b> tone and steps change for sextortion, stalking or fraud.</li>
+<li><b>Knows where to go:</b> police unit, cyber cell and ready letters for 8 metros.</li>
+</ul>
+<p><b>Rules:</b> originals never change · every AI claim is cited · AI suggests, people decide · the victim controls access.</p>
+
+<h3>3.2 How It Works</h3>
+
+<h4>Workflow</h4>
+<pre class="mmd">
+flowchart TD
+  U[Upload] --> S[Seal: hash, encrypt, log]
+  S --> T{File type}
+  T -->|Chat export| P1[Parse messages]
+  T -->|Image| P2[OCR + chat bubbles]
+  T -->|Audio| P3[Speech-to-text]
+  T -->|PDF / email| P4[Text + attachments]
+  P1 & P2 & P3 & P4 --> L[Language: English working copy]
+  L --> E[Enrich: entities, dates, severity, vectors]
+  E --> C[Case rebuild: link, dedup, events, timeline, graph, flags]
+  C --> G[AI agents]
+  G --> R[Cited summary · report PDF · signed bundle]
+</pre>
+<p>Progress streams live to the browser. Failed steps retry without blocking the rest of the case.</p>
+
+<h4>Technical architecture</h4>
+<pre class="mmd">
+flowchart LR
+  subgraph Client["React SPA (Vite + TS) :5173"]
+    UI[Pages]
+    WC[Web Crypto SHA-256 worker]
+    MIC[MediaRecorder: voice statement / Q&A]
+  end
+
+  subgraph API["Node 20 / Express :4000"]
+    AUTH[Auth + RBAC]
+    UP[Upload + sealing]
+    CASE[Case / evidence API]
+    AUD[Hash-chained audit log]
+    SHARE[Scoped sharing]
+    REP[Reports + bundles]
+    WS[Socket.IO]
+    JOBS[Mongo-backed job runner]
+  end
+
+  subgraph ML["Python FastAPI :8000 (stateless)"]
+    ING[Ingestion: WhatsApp / chats / PDF / EML / metadata]
+    OCR[OCR: English + Indic]
+    VOICE[Voice: Sarvam STT + whisper fallback]
+    NLP[NER · time · severity · embeddings]
+    SYS1[System1 incident model]
+    AG[LangGraph investigation agents]
+    CASEML[Resolve · dedup · events · graph · inconsistencies · summaries]
+  end
+
+  SARVAM[(Sarvam AI)]
+  GCP[(Google Vision / Translate)]
+  LLM[(LLM: Groq / Ollama)]
+  MONGO[(MongoDB replica set<br/>data + GridFS + jobs)]
+  VEC[(Chroma vector index)]
+
+  UI -->|REST + JWT| API
+  WC --> UP
+  MIC --> UP
+  API --> MONGO
+  JOBS -->|multipart / JSON, X-Internal-Secret| ML
+  ML --> SARVAM
+  ML --> GCP
+  ML --> LLM
+  NLP --> VEC
+  WS --> UI
+</pre>
+<ul>
+<li>The AI service has <b>no database access</b>; it only sees what the API sends.</li>
+<li>In <b>local</b> mode nothing leaves the machine.</li>
+</ul>
+
+<h4>Tech stack</h4>
+<div class="tbl"><table>
+<tr><th>Layer</th><th>Technology</th></tr>
+<tr><td><b>Frontend</b></td><td>React 18, Vite, TypeScript, TanStack Query, Cytoscape.js, wavesurfer.js, hash-wasm</td></tr>
+<tr><td><b>API</b></td><td>Node 20, Express, Mongoose, Zod, Socket.IO</td></tr>
+<tr><td><b>Security</b></td><td>argon2, JWT, TOTP 2FA, helmet, rate limiting, ClamAV</td></tr>
+<tr><td><b>Integrity</b></td><td>SHA-256, AES-256-GCM, Ed25519, Merkle tree, RFC 3161, OpenTimestamps</td></tr>
+<tr><td><b>Storage</b></td><td>MongoDB 7 replica set, GridFS</td></tr>
+<tr><td><b>AI service</b></td><td>Python 3.11, FastAPI, PyMuPDF, Pillow, imagehash</td></tr>
+<tr><td><b>OCR</b></td><td>RapidOCR, Google Cloud Vision, Sarvam Vision</td></tr>
+<tr><td><b>Voice</b></td><td>Sarvam Saaras, Mayura, Bulbul; faster-whisper; ffmpeg</td></tr>
+<tr><td><b>NLP</b></td><td>phonenumbers, dateparser, rapidfuzz, datasketch, networkx</td></tr>
+<tr><td><b>Retrieval</b></td><td>BGE-M3 embeddings, ChromaDB</td></tr>
+<tr><td><b>Agents and models</b></td><td>LangGraph, Laya (System1), Groq (Qwen), Ollama</td></tr>
+<tr><td><b>Deployment</b></td><td>concurrently, pm2, Vercel serverless</td></tr>
+</table></div>
+
+<h4>AI / ML pipeline</h4>
+<div class="tbl"><table>
+<tr><th>Stage</th><th>Method</th></tr>
+<tr><td><b>OCR</b></td><td>On-device RapidOCR; cloud fallback for Indian scripts</td></tr>
+<tr><td><b>Speech</b></td><td>Sarvam STT with speaker labels; Whisper offline</td></tr>
+<tr><td><b>Entities</b></td><td>Rules + validators for phones, UPI IDs, IFSC, amounts</td></tr>
+<tr><td><b>Time</b></td><td>Resolves "kal raat 9 baje" against the message date</td></tr>
+<tr><td><b>Entity resolution</b></td><td>Score ≥ 0.85 merges; 0.65–0.85 suggested to user</td></tr>
+<tr><td><b>Duplicates</b></td><td>Perceptual hash, MinHash, screenshot-vs-chat matching</td></tr>
+<tr><td><b>Contradictions</b></td><td>Rules behind 6 gates; independent sources only</td></tr>
+<tr><td><b>Summary</b></td><td>LLM with citation check; template fallback</td></tr>
+<tr><td><b>Search</b></td><td>BGE-M3 vectors, one index per case</td></tr>
+</table></div>
+
+<h4>Investigation agents</h4>
+<pre class="mmd">
+flowchart LR
+  S["Permission-filtered<br/>case snapshot"] --> P[Planner]
+  S --> Y["System1 classifier<br/>harassment · fraud · scam · UPI"]
+  Y --> P
+  P --> A1[Evidence quality]
+  P --> A2[Cited Q&A]
+  P --> A3[Financial trail]
+  P --> A4[Relationship graph]
+  P --> A5[Timeline replay]
+  P --> A6[Evidence gaps]
+  P --> A7[Report draft]
+  A1 & A2 & A3 & A4 & A5 & A6 & A7 --> R[System1 review]
+  R --> F[Cited findings]
+</pre>
+<p>Built with LangGraph. Agents are read-only, cite every finding, and Q&amp;A says "can't answer" rather than guess.</p>
+
+<h4>Tamper detection</h4>
+<pre class="mmd">
+flowchart LR
+  H[File hashes] --> C[Hash-chained audit log] --> M[Merkle root] --> S[Ed25519 signature + timestamp] --> V[Offline verify.py]
+</pre>
+<p>Change one byte anywhere and verification fails.</p>
+
+<h4>Who can see what</h4>
+<div class="tbl"><table>
+<tr><th>Role</th><th>Access</th></tr>
+<tr><td><b>Owner</b> (victim)</td><td>Everything on own case</td></tr>
+<tr><td><b>Collaborator</b> (family)</td><td>Upload and annotate; no sharing</td></tr>
+<tr><td><b>Legal</b> (lawyer, NGO)</td><td>Shared files only; expires</td></tr>
+<tr><td><b>Investigator</b> (police)</td><td>Shared files, verify, export; expires</td></tr>
+<tr><td><b>Admin / Official</b></td><td>System health or aggregate numbers; no case content</td></tr>
+</table></div>
+
+<!-- ============ 4 ============ -->
+<h2>4. Implementation Roadmap</h2>
+
+<h3>4.1 Work Completed in 24 Hours</h3>
+<p class="lead">We built a working end-to-end prototype (web app, API server and AI service) and a test case to measure it against.</p>
+<p>To test honestly, we generated a synthetic case with a known answer key: <i>Ananya Rao v. Karthik Menon</i>, a stalking, defamation and extortion case over 2–28 September 2024. It has 11 files and 3 deliberately planted problems: an edited screenshot, a chat amount that doesn't match the bank debit, and a wrong payment date in the victim's own statement. All names and numbers are fictional.</p>
+
+<h4>Features completed</h4>
+<p>Every feature below is built and in the repository.</p>
+<p><b>Core features (asked for by PS 3.2)</b></p>
+<div class="tbl"><table>
+<tr><th>Feature</th><th>Status</th><th>Result on the test case</th></tr>
+<tr><td>Login and role-based access</td><td><b>Completed</b></td><td>34 of 34 allow/refuse access checks passed</td></tr>
+<tr><td>Upload, sealing and audit log</td><td><b>Completed</b></td><td>Browser and server hashing, encryption, hash-chained log</td></tr>
+<tr><td>Reading evidence (chats, images, PDFs, email, audio)</td><td><b>Completed</b></td><td>Kannada threat read from a screenshot and translated; Hindi and English voice notes transcribed</td></tr>
+<tr><td>Person linking, duplicates, timeline, graph</td><td><b>Completed</b></td><td>21 people/accounts, 18 events and 21 duplicate groups built from the 11 files</td></tr>
+<tr><td>Contradiction flags</td><td><b>Completed</b></td><td>All 3 planted problems found, plus 2 extra signals</td></tr>
+<tr><td>Cited summary and Q&amp;A</td><td><b>Completed</b></td><td>Every sentence cited; uses a language model, with a template fallback</td></tr>
+<tr><td>Investigation agents</td><td><b>Completed</b></td><td>Financial agent traced the ₹35,000 loss to 2 UPI IDs; Q&amp;A abstains when unsure</td></tr>
+<tr><td>Sharing, report PDF, bundle, offline verify</td><td><b>Completed</b></td><td>Tampered bundle fails verification as expected</td></tr>
+</table></div>
+
+<p><b>Additional features (beyond PS 3.2)</b></p>
+<div class="tbl"><table>
+<tr><th>Feature</th><th>What it does</th></tr>
+<tr><td><b>Evidence authenticity check</b></td><td>Error Level Analysis heatmap that highlights regions that may have been edited, plus editing-software and date-mismatch checks from metadata. Gives a risk band and a "needs attention" list in the viewer. Shown as indicators, never as proof.</td></tr>
+<tr><td><b>Trusted timestamping</b></td><td>Requests RFC 3161 timestamps from a timestamp authority, anchors the audit chain periodically, and includes the tokens in the bundle so <code>verify.py</code> checks them offline. OpenTimestamps anchoring as well.</td></tr>
+<tr><td><b>Complaint helper</b></td><td>A 5-step wizard that produces a cited complaint narrative with candidate offences (BNS, IT Act). Copy, print or download as text.</td></tr>
+<tr><td><b>Regional legal layer</b></td><td>Registry for 8 metros: which police unit, cyber cell, portal, helpline and languages apply. Renders recipient-specific PDFs: police complaint, cyber-cell note, platform takedown, bank freeze request, lawyer brief.</td></tr>
+<tr><td><b>Safety mode and risk score</b></td><td>An escalation gauge built from named, cited warning signs (a transparent points system, not a black box), helplines, Quick exit (Esc Esc) and Discreet mode.</td></tr>
+<tr><td><b>Trauma-informed personalisation</b></td><td>The case adapts its tone, screen order, safety steps and support to the type of harm. Abusive content is blurred by default.</td></tr>
+<tr><td><b>Voice statement</b></td><td>Record "what happened" in the browser in any supported language; it becomes a written first-person statement with suggested form fields.</td></tr>
+<tr><td><b>Voice Q&amp;A and read-aloud</b></td><td>Ask about the case by voice; hear the summary in Indian languages (Sarvam Bulbul).</td></tr>
+<tr><td><b>Multilingual interface</b></td><td>Opt-in translation of the interface into Indian languages. Evidence, names and summaries are marked so they are never machine-translated.</td></tr>
+<tr><td><b>Investigate tab</b></td><td>Run the agents from the case page, ask questions, and search the case by meaning.</td></tr>
+<tr><td><b>Pattern insights</b></td><td>Escalation trend, a day-by-hour heatmap of contact, first contact, peak hours and reply gaps.</td></tr>
+<tr><td><b>Role portals</b></td><td>Separate screens for lawyers ("Shared with me"), police officers (inbox and profile), admins (system and AI-model health, job queue) and officials (oversight dashboard).</td></tr>
+<tr><td><b>Verify page</b></td><td>Upload an exported bundle in the browser and see whether every hash, signature and log entry still matches.</td></tr>
+<tr><td><b>Privacy controls</b></td><td>Per-case settings for OCR, AI model and classifier mode (local or cloud), and crypto-shred deletion that also wipes the case's search index.</td></tr>
+<tr><td><b>Evaluation harness</b></td><td>Generates synthetic cases with an answer key and scores extraction, linking and contradiction detection.</td></tr>
+</table></div>
+
+<h4>How far the prototype works</h4>
+<p>On the test case, the full pipeline (OCR, speech, language, extraction, case rebuild, agents) passed <b>36 of 36</b> end-to-end checks. Where it falls short:</p>
+<ul>
+<li>The timeline has some noise, such as "Active 2m ago" from an Instagram profile tagged as a place, and the 9 Sep "please stop" message isn't its own event. Timeline order hasn't been scored against the answer key yet.</li>
+<li>Some database integration tests were written but couldn't run in our build environment, and the collaborator flow and officer approve/reject buttons haven't been tested end to end yet.</li>
+<li>Offence mappings in the complaint helper and regional guide stay hidden from users until a lawyer reviews them.</li>
+</ul>
+
+<h4>Challenges we faced</h4>
+<ul>
+<li><b>Reading Indian scripts.</b> Our on-device OCR models only read English (and Chinese), so Kannada and Hindi screenshots came back empty. We added Google Vision and Sarvam Vision as cloud options, used only when the user's privacy setting allows it.</li>
+<li><b>Too many false alarms.</b> Early contradiction checks fired whenever two copies of the same chat disagreed slightly. We wrote strict rules: normalise amounts, dates and IDs first, and flag only when <i>independent</i> sources disagree about the <i>same</i> fact.</li>
+<li><b>Translation changing meaning.</b> Machine translation could shift a threat's meaning. We always show and cite the original, run number and ID extraction on the original text, and use the English copy only for analysis.</li>
+<li><b>Dropping Docker and Redis.</b> To make setup fast on every laptop, we replaced Redis with a job queue inside MongoDB, with retries, de-duplication and crash recovery.</li>
+<li><b>Serverless deployment.</b> Vercel functions can't run long background jobs, so jobs are claimed in time-boxed batches by a scheduled task. The AI service has to be hosted separately.</li>
+<li><b>Free translation limits.</b> Google's keyless translate endpoint started rate-limiting us, so we moved to the official API and Sarvam.</li>
+</ul>
+
+<h3>4.2 Future Roadmap</h3>
+<p>The next steps come from our future-advancement spec. They are grouped into waves so that trust comes first and new channels come last. Timelines are estimates based on per-feature effort for a small team.</p>
+<div class="tbl"><table>
+<tr><th>Phase</th><th>When (est.)</th><th>What we build</th><th>Resources needed</th></tr>
+<tr><td><b>Before any real user</b></td><td class="num">Month 0–2</td><td>Production hardening: tamper-proof cloud storage (S3/R2 Object Lock), managed encryption keys, 2FA and passkeys, logs with no case content, backups and restore drills, security testing, DPDP Act compliance, accessibility audit</td><td>External security review, cloud hosting, a data-protection advisor</td></tr>
+<tr><td><b>Wave 1: Trust</b></td><td class="num">Month 0–3</td><td>Finish authenticity checks (C2PA content credentials, PDF and audio forensics), a court-accepted timestamp authority, complaint pre-fill for the national cybercrime portal, Word export</td><td>A lawyer to review legal mappings; a labelled set of genuine and edited samples; timestamp authority fees</td></tr>
+<tr><td><b>Wave 2: Reach and safety</b></td><td class="num">Month 3–6</td><td>Mobile capture app that hashes at the moment of capture; more importers (email, bank, Telegram); full safety features (auto-lock, trusted-contact alert); complete interface in Indian languages</td><td>An advocacy organisation to review safety wording; translators per language</td></tr>
+<tr><td><b>Wave 3: Scale</b></td><td class="num">Month 6–9</td><td>Consent-based linking of the same offender across cases for NGOs and police; preservation and takedown letter generator; search across a case; comments, tasks and legal review</td><td>A verified onboarding process for NGOs and police units; GPU capacity</td></tr>
+<tr><td><b>Wave 4: New channels</b></td><td class="num">Month 9–12</td><td>Live call capture with real-time transcription (with consent); phone-line intake for victims without smartphones</td><td>Telephony provider and per-minute budget; legal review of recording consent</td></tr>
+</table></div>
+<p><b>Pilots.</b> Start with an NGO or legal-aid clinic once hardening is done, then a police cyber cell using a fully local mode where no data leaves their servers.</p>
+<p><b>Open questions to settle first:</b> which offence table and timestamp authority courts will accept, who verifies NGOs and police units, where data must be hosted under the DPDP Act, and who reviews the safety signals.</p>
+
+<!-- ============ 5 ============ -->
+<h2>5. SDG Mapping</h2>
+<div class="tbl"><table>
+<tr><th>Goal</th><th>Target</th><th>How TraceVault contributes</th></tr>
+<tr><td><b>SDG 16</b> Peace, Justice and Strong Institutions <small>(primary)</small></td><td>16.3 Equal access to justice for all</td><td>Gives victims verifiable, court-ready evidence and an audit trail, so a case doesn't depend on who can afford a forensic expert. Measured by cases taken up as FIR or chargesheet, and hours saved per case.</td></tr>
+<tr><td><b>SDG 5</b> Gender Equality</td><td>5.2 End violence against women and girls</td><td>Helps women document online harassment, stalking and sextortion safely, with safety mode and trauma-informed screens. Measured by days from incident to complaint.</td></tr>
+<tr><td><b>SDG 10</b> Reduced Inequalities</td><td>10.3 Equal opportunity</td><td>A free tier brings forensic-grade analysis to people who can't pay for lawyers or private experts, in their own language. Measured by free-tier cases per month and cost per case.</td></tr>
+</table></div>
+<p>Reference: <a href="https://sdgs.un.org/goals">sdgs.un.org/goals</a></p>
+
+<!-- ============ refs ============ -->
+<h2>References</h2>
+<ol class="refs">
+<li>Ministry of Home Affairs, reply in Lok Sabha on National Cybercrime Reporting Portal complaints and losses, 2024.</li>
+<li>National Crime Records Bureau, <i>Crime in India 2023</i>.</li>
+<li>Bharatiya Sakshya Adhiniyam, 2023, Section 63 (certificates for electronic records).</li>
+<li>National Cybercrime Reporting Portal: <a href="https://cybercrime.gov.in">cybercrime.gov.in</a></li>
+<li>Product pages: Cellebrite Pathfinder, Everlaw Storybuilder, MHA e-Sakshya, Spot (talktospot.com), ProofMode, DocuSAFE.</li>
+<li>Build Beyond'26 problem statements, PS 3.2.</li>
+<li>TraceVault project documents: <code>README.md</code>, <code>spec.md</code>, <code>prd.md</code>, <code>ARCHITECTURE.md</code>, <code>future-advancement-spec.md</code>, <code>inconsistency-flag-spec.md</code>, <code>personalisation-spec.md</code>, <code>regional-states-india-spec.md</code>, <code>eval/DEMO_CASE_ANANYA.md</code>.</li>
+<li>Open-source components: RapidOCR, faster-whisper, BAAI BGE-M3, ChromaDB, LangGraph, networkx, Cytoscape.js, OpenTimestamps; Sarvam AI APIs.</li>
+<li>UN Sustainable Development Goals: <a href="https://sdgs.un.org/goals">sdgs.un.org/goals</a></li>
+</ol>
+
+<footer>TraceVault · Team ModiFY · BMS Institute of Technology &amp; Management · Build Beyond'26. All demo data is synthetic.</footer>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script>
+try{mermaid.initialize({startOnLoad:false,theme:"neutral",securityLevel:"strict",flowchart:{useMaxWidth:true}});mermaid.run({querySelector:"pre.mmd"});}catch(e){console.error(e)}
+</script>

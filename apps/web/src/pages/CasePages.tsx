@@ -7,7 +7,6 @@ import { AppShell, DotGrid, DotText, PageHead } from '../ui';
 
 type CaseSummary = { id: string; title: string; incidentType: string; status: string; role?: string; evidenceCount?: number; updatedAt: string };
 
-const TYPES = ['harassment', 'fraud', 'stalking', 'sextortion', 'other'];
 
 function statusTone(s: string) {
   if (/ready|done|complete|sealed/i.test(s)) return 'ok';
@@ -176,7 +175,7 @@ export function NewCasePage() {
   const [step, setStep] = useState<1 | 2>(1);
   const [err, setErr] = useState('');
   const [busy, setBusy] = useState(false);
-  const [form, setForm] = useState({ title: '', incidentType: 'other', description: '' });
+  const [form, setForm] = useState({ title: '', description: '' });
   const [voiceConsent, setVoiceConsent] = useState(false);
 
   function next(e: FormEvent<HTMLFormElement>) {
@@ -210,17 +209,6 @@ export function NewCasePage() {
         {step === 1 ? (
           <form onSubmit={next} className="card stack" style={{ gap: 22 }}>
             <label className="field">Title<input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required maxLength={200} placeholder="e.g. Messages from unknown number, March" /></label>
-            <fieldset className="field" style={{ border: 0, padding: 0, margin: 0 }}>
-              <legend style={{ marginBottom: 8 }}>Type of incident</legend>
-              <div className="seg">
-                {TYPES.map((t) => (
-                  <label key={t}>
-                    <input type="radio" name="incidentType" value={t} checked={form.incidentType === t} onChange={() => setForm({ ...form, incidentType: t })} />
-                    <span>{t}</span>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
             <label className="field">
               <span>Description <span className="hint">· optional</span></span>
               <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} maxLength={5000} rows={4} placeholder="Anything you want to remember about this case. You can add more later." />
