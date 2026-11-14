@@ -236,7 +236,7 @@ export function NewCasePage() {
                 <p className="muted">Encrypted, fingerprinted with SHA-256, and never changed. Never sent to any AI provider as files.</p>
               </li>
               <li>
-                <div className="row"><strong>Summaries and timeline</strong><span className="badge">Claude · Anthropic</span></div>
+                <div className="row"><strong>Summaries and timeline</strong><span className="badge">Qwen 3.8 · Groq</span></div>
                 <p className="muted">Names, phone numbers, UPI IDs and similar details are replaced with placeholders before text is sent, then restored.</p>
               </li>
               <li>
