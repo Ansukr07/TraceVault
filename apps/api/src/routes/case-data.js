@@ -25,6 +25,10 @@ import { verifyStored } from '../services/evidence-store.js';
 import { mlBinary, mlJson, mlMultipart } from '../services/ml-client.js';
 import { caseProgress, chunkPayload, generateSummary, loadCaseInputs } from '../jobs/pipeline.js';
 import { debounceCaseJob } from '../jobs/runner.js';
+import { citationAllowed, evidenceFilter, restrictCitations, scopeFor } from '../services/scope.js';
+
+const inScope = (scope, ids = []) => !scope || ids.some((i) => scope.ids.has(String(i)));
+const allInScope = (scope, ids = []) => !scope || ids.every((i) => scope.ids.has(String(i)));
 
 export const caseDataRouter = Router({ mergeParams: true });
 caseDataRouter.use(requireAuth);
@@ -38,19 +42,31 @@ caseDataRouter.get(
   requireCaseRole(),
   ah(async (req, res) => {
     const cid = req.case._id;
-    const [evidence, people, events, incs, dups, snap, progress, summary] = await Promise.all([
+    const scope = await scopeFor(req);
+    let [evidence, peopleEnts, events, incs, dups, snap, progress, summary] = await Promise.all([
       Evidence.find({ caseId: cid }, 'kind status duplicateOf idx filename sourceLabel').lean(),
-      Entity.countDocuments({ caseId: cid, type: 'PERSON' }),
+      Entity.find({ caseId: cid, type: 'PERSON' }, 'evidenceIds').lean(),
       TimelineEvent.find({ caseId: cid }).sort({ ts: 1 }).lean(),
-      Inconsistency.find({ caseId: cid }, 'key type severity title').lean(),
+      Inconsistency.find({ caseId: cid }, 'key type severity title refs').lean(),
       DuplicateGroup.countDocuments({ caseId: cid }),
       CaseSnapshot.findOne({ caseId: cid }).lean(),
       caseProgress(cid),
       Summary.findOne({ caseId: cid, lang: 'en-IN' }).sort({ version: -1 }).lean(),
     ]);
+    if (scope) {
+      // Shared with a scope: every number and list is computed from what this viewer may see.
+      evidence = evidence.filter((e) => scope.ids.has(String(e._id)));
+      events = events.filter((e) => inScope(scope, e.evidenceIds)).map((e) => ({ ...e, citations: restrictCitations(scope, e.citations) }));
+      incs = incs.filter((i) => allInScope(scope, i.refs.map((r) => r.evidenceId)));
+      peopleEnts = peopleEnts.filter((e) => inScope(scope, e.evidenceIds));
+      dups = 0;
+      progress = [];
+      snap = snap && { ...snap, insights: null };
+    }
+    const people = peopleEnts.length;
     const statuses = await Decision.find({ caseId: cid, kind: 'inconsistency_status' }).lean();
     const closed = new Set(statuses.filter((d) => d.data?.status === 'dismissed').map((d) => d.key));
-    const topEntities = await Entity.find({ caseId: cid, isOwner: { $ne: true } }).sort({ mentionCount: -1 }).limit(8).lean();
+    const topEntities = (await Entity.find({ caseId: cid, isOwner: { $ne: true } }).sort({ mentionCount: -1 }).limit(40).lean()).filter((e) => inScope(scope, e.evidenceIds)).slice(0, 8);
     const keySet = new Set(snap?.keyMoments ?? []);
     res.json({
       counts: {
@@ -82,7 +98,8 @@ caseDataRouter.get(
   requireCaseRole(),
   ah(async (req, res) => {
     const ids = String(req.query.ids ?? '').split(',').map((s) => s.trim()).filter((s) => /^E\d+:\d+$/.test(s)).slice(0, 200);
-    const chunks = await Chunk.find({ caseId: req.case._id, cid: { $in: ids } }).lean();
+    const scope = await scopeFor(req);
+    const chunks = await Chunk.find({ caseId: req.case._id, cid: { $in: ids }, ...evidenceFilter(scope) }).lean();
     const ev = await Evidence.find({ _id: { $in: chunks.map((c) => c.evidenceId) } }, 'kind filename sourceLabel mime idx').lean();
     const byId = new Map(ev.map((e) => [String(e._id), e]));
     res.json({
@@ -107,11 +124,15 @@ caseDataRouter.get(
     if (minSeverity) q.severity = { $gte: Number(minSeverity) };
     if (from || to) q.ts = { ...(from ? { $gte: String(from) } : {}), ...(to ? { $lte: String(to) } : {}) };
     if (source) q.evidenceIds = source;
+    const scope = await scopeFor(req);
     const [events, entities] = await Promise.all([
       TimelineEvent.find(q).sort({ ts: 1 }).lean(),
-      Entity.find({ caseId: req.case._id, type: 'PERSON' }, 'key name isOwner').lean(),
+      Entity.find({ caseId: req.case._id, type: 'PERSON' }, 'key name isOwner evidenceIds').lean(),
     ]);
-    res.json({ events: events.map(strip), people: entities.map(strip) });
+    res.json({
+      events: events.filter((e) => inScope(scope, e.evidenceIds)).map((e) => ({ ...strip(e), citations: restrictCitations(scope, e.citations), evidenceIds: scope ? e.evidenceIds.filter((i) => scope.ids.has(i)) : e.evidenceIds })),
+      people: entities.filter((e) => inScope(scope, e.evidenceIds)).map(({ evidenceIds, ...x }) => strip(x)),
+    });
   }),
 );
 
@@ -149,9 +170,10 @@ caseDataRouter.get(
       CaseSnapshot.findOne({ caseId: req.case._id }, 'candidates').lean(),
       Decision.find({ caseId: req.case._id, kind: { $in: ['must_link', 'cannot_link'] } }).lean(),
     ]);
+    const scope = await scopeFor(req);
     res.json({
-      entities: entities.map(strip),
-      candidates: snap?.candidates ?? [],
+      entities: entities.filter((e) => inScope(scope, e.evidenceIds)).map((e) => ({ ...strip(e), mentionChunkIds: restrictCitations(scope, e.mentionChunkIds).filter((c) => c !== 'RESTRICTED') })),
+      candidates: scope ? [] : snap?.candidates ?? [],
       decisions: decisions.map((d) => ({ id: String(d._id), kind: d.kind, a: d.a, b: d.b, at: d.createdAt })),
     });
   }),
@@ -198,7 +220,17 @@ caseDataRouter.get(
   requireCaseRole(),
   ah(async (req, res) => {
     const snap = await CaseSnapshot.findOne({ caseId: req.case._id }, 'graph candidates builtAt').lean();
-    res.json({ graph: snap?.graph ?? { nodes: [], edges: [] }, builtAt: snap?.builtAt ?? null });
+    const scope = await scopeFor(req);
+    let graph = snap?.graph ?? { nodes: [], edges: [] };
+    if (scope) {
+      const nodes = graph.nodes.filter((n) => (n.type === 'EVIDENCE' ? scope.ids.has(n.evidenceId) : inScope(scope, n.evidenceIds)));
+      const keep = new Set(nodes.map((n) => n.id));
+      graph = {
+        ...graph, nodes, centralFigures: graph.centralFigures.filter((k) => keep.has(k)),
+        edges: graph.edges.filter((e) => keep.has(e.source) && keep.has(e.target) && e.type !== 'SAME_AS_CANDIDATE').map((e) => ({ ...e, citations: e.citations.filter((c) => citationAllowed(scope, c)) })),
+      };
+    }
+    res.json({ graph, builtAt: snap?.builtAt ?? null });
   }),
 );
 
@@ -210,6 +242,8 @@ caseDataRouter.get(
       DuplicateGroup.find({ caseId: req.case._id }).lean(),
       Evidence.find({ caseId: req.case._id, duplicateOf: { $ne: null } }, 'duplicateOf filename').lean(),
     ]);
+    const scope = await scopeFor(req);
+    if (scope) return res.json({ groups: groups.filter((g) => g.members.every((m) => scope.ids.has(m.evidenceId))).map(strip), exactUploads: [] });
     res.json({ groups: groups.map(strip), exactUploads: exact.map((e) => ({ evidenceId: String(e._id), duplicateOf: String(e.duplicateOf), filename: e.filename })) });
   }),
 );
@@ -219,7 +253,7 @@ caseDataRouter.get(
   requireCaseRole(),
   ah(async (req, res) => {
     const snap = await CaseSnapshot.findOne({ caseId: req.case._id }, 'insights').lean();
-    res.json({ insights: snap?.insights ?? null });
+    res.json({ insights: (await scopeFor(req)) ? null : snap?.insights ?? null });
   }),
 );
 
@@ -233,7 +267,9 @@ caseDataRouter.get(
       Decision.find({ caseId: req.case._id, kind: 'inconsistency_status' }).lean(),
     ]);
     const st = new Map(statuses.map((d) => [d.key, d.data]));
-    res.json({ items: items.map((i) => ({ ...strip(i), status: st.get(i.key)?.status ?? 'open', note: st.get(i.key)?.note ?? null })) });
+    const scope = await scopeFor(req);
+    const visible = items.filter((i) => allInScope(scope, i.refs.map((r) => r.evidenceId)));
+    res.json({ items: visible.map((i) => ({ ...strip(i), status: st.get(i.key)?.status ?? 'open', note: st.get(i.key)?.note ?? null })) });
   }),
 );
 
@@ -262,7 +298,9 @@ caseDataRouter.get(
     const lang = String(req.query.lang || 'en-IN');
     const base = await Summary.findOne({ caseId: req.case._id, lang: 'en-IN' }).sort({ version: -1 }).lean();
     if (!base) return res.json({ summary: null });
-    if (lang === 'en-IN') return res.json({ summary: strip(base) });
+    const scope = await scopeFor(req);
+    const restrict = (sm) => (!scope ? sm : { ...sm, sections: sm.sections.map((sec) => ({ ...sec, sentences: sec.sentences.map((x) => ({ ...x, citations: restrictCitations(scope, x.citations) })).filter((x) => !x.citations.length || x.citations.some((c) => c !== 'RESTRICTED')) })) });
+    if (lang === 'en-IN') return res.json({ summary: restrict(strip(base)) });
     // S8: translate the validated English summary sentence by sentence; citations unchanged.
     let tr = await Summary.findOne({ caseId: req.case._id, lang, version: base.version }).lean();
     if (!tr) {
@@ -285,7 +323,7 @@ caseDataRouter.get(
         })
       ).toObject();
     }
-    res.json({ summary: strip(tr) });
+    res.json({ summary: restrict(strip(tr)) });
   }),
 );
 
@@ -300,8 +338,9 @@ caseDataRouter.post(
   }),
 );
 
-async function answerQuestion(c, question) {
-  const { chunks } = await loadCaseInputs(c._id);
+async function answerQuestion(c, question, scope) {
+  let { chunks } = await loadCaseInputs(c._id);
+  if (scope) chunks = chunks.filter((ch) => scope.ids.has(String(ch.evidenceId)));
   const entities = await Entity.find({ caseId: c._id, type: 'PERSON' }, 'type aliases name').lean();
   return mlJson('/case/ask', { question, llmMode: c.settings?.llmMode ?? 'cloud_redacted', chunks: chunks.map(chunkPayload), entities: entities.map(strip) });
 }
@@ -311,7 +350,7 @@ caseDataRouter.post(
   requireCaseRole(),
   validate(z.object({ question: z.string().min(2).max(1000), lang: z.string().optional() })),
   ah(async (req, res) => {
-    const out = await answerQuestion(req.case, req.body.question);
+    const out = await answerQuestion(req.case, req.body.question, await scopeFor(req));
     await audit(req.case._id, {
       actorId: req.user._id, actorRole: req.role, action: 'QUESTION_ASKED', target: String(req.case._id),
       payload: { questionHash: crypto.createHash('sha256').update(req.body.question).digest('hex') },
@@ -332,7 +371,7 @@ caseDataRouter.post(
     if (req.case.settings?.voiceMode !== 'sarvam' || !req.case.settings?.voiceConsentAt) throw httpError(409, 'VOICE_DISABLED', 'Voice questions need Sarvam voice processing enabled for this case');
     const q = await mlMultipart('/voice/transcribe-query', { file: req.file.buffer, filename: req.file.originalname || 'question.webm' });
     req.file.buffer = null;
-    const out = await answerQuestion(req.case, q.text);
+    const out = await answerQuestion(req.case, q.text, await scopeFor(req));
     let answerNative = null;
     if (q.lang && !q.lang.startsWith('en') && req.case.settings?.translateMode !== 'off') {
       const t = await mlJson('/translate', { items: [{ id: 'a', text: out.answer, src: 'en-IN' }], target: q.lang, redact: false }).catch(() => null);
@@ -378,7 +417,8 @@ caseDataRouter.post(
     const cid = req.case._id;
     const entries = await AuditEntry.find({ caseId: String(cid) }).sort({ seq: 1 }).lean();
     const chain = verifyChain(String(cid), entries);
-    const evidence = await Evidence.find({ caseId: cid, 'redacted.at': null }).sort({ idx: 1 });
+    const scope = await scopeFor(req);
+    const evidence = await Evidence.find({ caseId: cid, 'redacted.at': null, ...(scope ? { _id: { $in: [...scope.ids] } } : {}) }).sort({ idx: 1 });
     const files = [];
     for (const e of evidence) files.push({ evidenceId: String(e._id), idx: e.idx, filename: e.filename, ...(await verifyStored(e)) });
     const brokenFile = files.find((f) => !f.ok);

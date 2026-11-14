@@ -8,6 +8,9 @@ import { authRouter, meRouter } from './routes/auth.js';
 import { casesRouter } from './routes/cases.js';
 import { caseEvidenceRouter, evidenceRouter } from './routes/evidence.js';
 import { caseDataRouter } from './routes/case-data.js';
+import { exportRouter } from './routes/export.js';
+import { caseStatementsRouter, statementRouter } from './routes/statements.js';
+import { adminRouter, caseSharesRouter, officerRouter, oversightRouter, shareRouter } from './routes/sharing.js';
 import { errorHandler } from './middleware/index.js';
 
 export function createApp() {
@@ -21,6 +24,14 @@ export function createApp() {
   app.use('/api/v1/me', meRouter);
   app.use('/api/v1/cases', casesRouter);
   app.use('/api/v1/cases/:id/evidence', caseEvidenceRouter);
+  app.use('/api/v1/cases/:id/shares', caseSharesRouter);
+  app.use('/api/v1/share', shareRouter);
+  app.use('/api/v1/officer', officerRouter);
+  app.use('/api/v1/oversight', oversightRouter);
+  app.use('/api/v1/admin', adminRouter);
+  app.use('/api/v1/cases/:id/export', exportRouter);
+  app.use('/api/v1/cases/:id/statements', caseStatementsRouter);
+  app.use('/api/v1/statements', statementRouter);
   app.use('/api/v1/cases/:id', caseDataRouter);
   app.use('/api/v1/evidence', evidenceRouter);
   app.use((_req, res) => res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Not found' } }));

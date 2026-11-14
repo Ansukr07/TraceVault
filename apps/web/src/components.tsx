@@ -1,36 +1,207 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { Link, NavLink, useNavigate, useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, post } from './lib/api';
 import { fmtDate, langName, SEVERITY, useCase, useCaseSocket, useChunk, type Entity } from './lib/case';
 import { AppShell } from './ui';
 
-const TABS: [string, string][] = [
-  ['', 'Overview'], ['evidence', 'Evidence'], ['timeline', 'Timeline'], ['graph', 'Graph'], ['inconsistencies', 'Inconsistencies'],
-  ['summary', 'Summary'], ['insights', 'Insights'], ['audit', 'Integrity'], ['upload', 'Add evidence'], ['settings', 'Settings'],
-];
+export function Watermark({ email, caseId }: { email?: string; caseId?: string }) {
+  if (!email) return null;
+  return (
+    <div className="watermark" aria-hidden="true">
+      Viewed by {email} · Case {caseId?.slice(-6) ?? 'TV'} · Strictly Confidential
+    </div>
+  );
+}
+
+type Note = { id: string; text: string; authorName: string; authorRole: string; createdAt: string; mine: boolean; chunkId?: string | null };
+
+/** Notes on an evidence item (spec E9). Owner, collaborator and legal can add; authors can delete their own. */
+export function Annotations({ evidenceId, role }: { evidenceId: string; role?: string }) {
+  const qc = useQueryClient();
+  const key = ['annotations', evidenceId];
+  const q = useQuery({ queryKey: key, queryFn: () => api<{ annotations: Note[] }>(`/evidence/${evidenceId}/annotations`).then((r) => r.annotations) });
+  const [text, setText] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  const can = role === 'owner' || role === 'collaborator' || role === 'legal';
+
+  async function add() {
+    setBusy(true); setErr('');
+    try { await post(`/evidence/${evidenceId}/annotations`, { text: text.trim() }); setText(''); await qc.invalidateQueries({ queryKey: key }); }
+    catch (e) { setErr((e as Error).message); }
+    finally { setBusy(false); }
+  }
+  async function remove(id: string) {
+    await api(`/evidence/${evidenceId}/annotations/${id}`, { method: 'DELETE' }).catch(() => {});
+    qc.invalidateQueries({ queryKey: key });
+  }
+  const notes = q.data ?? [];
+
+  return (
+    <section className="card" aria-label="Notes">
+      <div className="card-title"><h3>Notes</h3><span className="mono muted" style={{ fontSize: 11 }}>{notes.length}</span></div>
+      {notes.length === 0 && <p className="muted" style={{ fontSize: 14 }}>No notes yet. Notes sit beside the evidence; they never change the sealed original.</p>}
+      <ul className="list">
+        {notes.map((n) => (
+          <li key={n.id}>
+            <div className="row" style={{ gap: 8 }}>
+              <span style={{ fontSize: 13 }}><strong style={{ fontWeight: 500 }}>{n.authorName}</strong> <span className="chip">{n.authorRole}</span></span>
+              <span className="mono muted" style={{ fontSize: 11 }}>{fmtDate(n.createdAt)}</span>
+            </div>
+            <p style={{ fontSize: 14, whiteSpace: 'pre-wrap' }}>{n.text}</p>
+            {n.mine && <div><button type="button" className="btn-text muted" style={{ fontSize: 12 }} onClick={() => remove(n.id)}>Delete</button></div>}
+          </li>
+        ))}
+      </ul>
+      {can && (
+        <div className="stack" style={{ marginTop: 12 }}>
+          <textarea rows={3} maxLength={2000} value={text} onChange={(e) => setText(e.target.value)} placeholder="Add a note for this evidence" aria-label="New note" />
+          {err && <p role="alert" className="err">{err}</p>}
+          <div><button type="button" className="btn btn-ghost" disabled={busy || !text.trim()} onClick={add}>Add note</button></div>
+        </div>
+      )}
+    </section>
+  );
+}
+
+type Grant = {
+  id: string; role: string; expiresAt: string; allowDownload: boolean; officerStatus: string; firNumber?: string;
+  scope: { type: string; evidenceIds: string[] }; requests: { at: string; message: string }[];
+};
+const OFFICER_STATUS: [string, string][] = [['received', 'Received'], ['under_review', 'Under review'], ['fir_registered', 'FIR registered'], ['closed', 'Closed']];
+
+/** Officer / lawyer action rail (plan §7.2): access banner, status + FIR, request more evidence, private notes. */
+export function OfficerRail({ caseId }: { caseId: string }) {
+  const qc = useQueryClient();
+  const g = useQuery({ queryKey: ['grant', caseId], queryFn: () => api<{ grant: Grant }>(`/officer/cases/${caseId}/grant`).then((r) => r.grant) });
+  const n = useQuery({ queryKey: ['notes', caseId], queryFn: () => api<{ notes: string }>(`/officer/cases/${caseId}/notes`).then((r) => r.notes) });
+  const [fir, setFir] = useState('');
+  const [msg, setMsg] = useState('');
+  const [notes, setNotes] = useState('');
+  const [busy, setBusy] = useState('');
+  const [err, setErr] = useState('');
+  const [saved, setSaved] = useState('');
+  useEffect(() => { if (g.data?.firNumber) setFir(g.data.firNumber); }, [g.data?.firNumber]);
+  useEffect(() => { if (n.data !== undefined) setNotes(n.data); }, [n.data]);
+
+  async function run(label: string, fn: () => Promise<unknown>, ok: string) {
+    setBusy(label); setErr(''); setSaved('');
+    try { await fn(); await qc.invalidateQueries({ queryKey: ['grant', caseId] }); setSaved(ok); }
+    catch (e) { setErr((e as Error).message); }
+    finally { setBusy(''); }
+  }
+  if (!g.data) return null;
+  const d = g.data;
+  const daysLeft = Math.max(0, Math.ceil((new Date(d.expiresAt).getTime() - Date.now()) / 86_400_000));
+
+  return (
+    <section className="card officer-rail" aria-label="Officer actions">
+      <p className="verify-banner" style={{ marginBottom: 16 }}>
+        <strong>{d.role === 'investigator' ? 'Investigator' : 'Legal'} access</strong> until {fmtDate(d.expiresAt)} ({daysLeft} day{daysLeft === 1 ? '' : 's'} left)
+        {d.scope.type === 'evidence' ? ` · ${d.scope.evidenceIds.length} item(s) shared` : ' · whole case'} · Every view is logged and visible to the complainant.
+      </p>
+      <div className="grid-2">
+        {d.role === 'investigator' && <div className="stack">
+          <p className="eyebrow">Case status</p>
+          <div className="seg">
+            {OFFICER_STATUS.map(([v, label]) => (
+              <label key={v}>
+                <input type="radio" name="officer-status" checked={d.officerStatus === v} disabled={!!busy}
+                  onChange={() => run('status', () => api(`/officer/cases/${caseId}/status`, { method: 'PATCH', body: JSON.stringify({ status: v, firNumber: fir || undefined }) }), `Marked ${label.toLowerCase()}`)} />
+                <span>{label}</span>
+              </label>
+            ))}
+          </div>
+          {d.officerStatus === 'needs_evidence' && <span className="badge warn">Waiting for more evidence</span>}
+          <label className="field">FIR / complaint number
+            <span className="row" style={{ gap: 8, flexWrap: 'nowrap' }}>
+              <input value={fir} onChange={(e) => setFir(e.target.value)} placeholder="e.g. 0142/2026" />
+              <button type="button" className="btn btn-ghost" disabled={!!busy || !fir}
+                onClick={() => run('fir', () => api(`/officer/cases/${caseId}/status`, { method: 'PATCH', body: JSON.stringify({ status: d.officerStatus, firNumber: fir }) }), 'FIR number saved')}>Save</button>
+            </span>
+          </label>
+          <p className="muted" style={{ fontSize: 13 }}>Status changes are audited and shown to the complainant on their Sharing page.</p>
+        </div>}
+        <div className="stack">
+          <p className="eyebrow">Request more evidence</p>
+          <label className="field">Message to the complainant
+            <textarea rows={3} maxLength={500} value={msg} onChange={(e) => setMsg(e.target.value)} placeholder="e.g. Please add the bank statement for June." />
+          </label>
+          <div><button type="button" className="btn btn-dark" disabled={!!busy || msg.trim().length < 3}
+            onClick={() => run('req', async () => { await post(`/officer/cases/${caseId}/requests`, { message: msg.trim() }); setMsg(''); }, 'Request sent')}>Send request</button></div>
+          {d.requests.length > 0 && (
+            <ul className="list" style={{ fontSize: 13 }}>
+              {d.requests.map((r, i) => <li key={i}><span className="muted">{fmtDate(r.at)}</span> {r.message}</li>)}
+            </ul>
+          )}
+          <p className="eyebrow" style={{ marginTop: 6 }}>Private notes</p>
+          <textarea rows={3} maxLength={5000} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Only you can see these. They are not part of any export." aria-label="Private notes" />
+          <div><button type="button" className="btn btn-ghost" disabled={!!busy}
+            onClick={() => run('notes', () => api(`/officer/cases/${caseId}/notes`, { method: 'PUT', body: JSON.stringify({ notes }) }), 'Notes saved')}>Save notes</button></div>
+        </div>
+      </div>
+      {err && <p role="alert" className="err" style={{ marginTop: 12 }}>{err}</p>}
+      {saved && !err && <p className="muted" role="status" style={{ marginTop: 12, fontSize: 13 }}>{saved}</p>}
+    </section>
+  );
+}
 
 /** Case header + tab bar. Keeps a live socket open while any case page is mounted. */
 export function CaseShell({ children, wide = false }: { children: ReactNode; wide?: boolean }) {
   const { id } = useParams();
   const c = useCase(id);
   useCaseSocket(id);
+  const role = c.data?.role ?? 'owner';
+  const isOfficerOrLegal = role === 'investigator' || role === 'legal';
+
+  const tabs: [string, string][] = isOfficerOrLegal
+    ? [
+        ['', 'Overview'], ['evidence', 'Evidence'], ['timeline', 'Timeline'], ['graph', 'Graph'],
+        ['inconsistencies', 'Inconsistencies'], ['summary', 'Summary'], ['insights', 'Insights'],
+        ['audit', 'Integrity'], ['export', 'Export'],
+      ]
+    : role === 'collaborator'
+    ? [
+        ['', 'Overview'], ['evidence', 'Evidence'], ['timeline', 'Timeline'], ['graph', 'Graph'],
+        ['inconsistencies', 'Inconsistencies'], ['summary', 'Summary'], ['insights', 'Insights'],
+        ['statement', 'Statement'], ['audit', 'Integrity'], ['upload', 'Add evidence'],
+      ]
+    : [
+        ['', 'Overview'], ['evidence', 'Evidence'], ['timeline', 'Timeline'], ['graph', 'Graph'],
+        ['inconsistencies', 'Inconsistencies'], ['summary', 'Summary'], ['insights', 'Insights'],
+        ['statement', 'Statement'], ['audit', 'Integrity'], ['upload', 'Add evidence'], ['share', 'Share'], ['export', 'Export'],
+        ['settings', 'Settings'],
+      ];
+
+  const backLink = isOfficerOrLegal ? '/officer' : '/cases';
+  const backText = isOfficerOrLegal ? '← Officer Inbox' : '← Cases';
+
   return (
     <AppShell>
-      <Link to="/cases" className="back">← Cases</Link>
+      <Link to={backLink} className="back">{backText}</Link>
       <header className="case-head">
         <div>
           <p className="eyebrow">{c.data ? `${c.data.incidentType} · ${c.data.role}` : 'Case'}</p>
           <h1 className="case-title">{c.data?.title ?? '…'}</h1>
         </div>
-        {c.data && <span className={`badge ${c.data.status === 'ready' ? 'ok' : c.data.status === 'processing' ? 'signal' : ''}`}>{c.data.status}</span>}
+        <div className="row" style={{ gap: 8 }}>
+          {isOfficerOrLegal && <span className="chip" style={{ background: 'var(--paper-2)' }}>Scoped Access</span>}
+          {c.data && <span className={`badge ${c.data.status === 'ready' ? 'ok' : c.data.status === 'processing' ? 'signal' : ''}`}>{c.data.status}</span>}
+        </div>
       </header>
-      <nav className="tabs" aria-label="Case sections">
-        {TABS.map(([p, label]) => (
-          <NavLink key={p} to={`/cases/${id}${p ? `/${p}` : ''}`} end={!p} className="tab">{label}</NavLink>
-        ))}
-      </nav>
-      <div className={wide ? 'case-body wide' : 'case-body'}>{children}</div>
+      <div className="case-layout">
+        <nav className="tabs" aria-label="Case sections">
+          <p className="eyebrow tabs-label">Case sections</p>
+          {tabs.map(([p, label]) => (
+            <NavLink key={p} to={`/cases/${id}${p ? `/${p}` : ''}`} end={!p} className="tab">{label}</NavLink>
+          ))}
+        </nav>
+        <div className="case-main">
+          {isOfficerOrLegal && id && <OfficerRail caseId={id} />}
+          <div className={wide ? 'case-body wide' : 'case-body'}>{children}</div>
+        </div>
+      </div>
     </AppShell>
   );
 }

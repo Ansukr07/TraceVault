@@ -1,12 +1,22 @@
-import { useMemo, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, patch } from '../../lib/api';
 import { fmtDate, fmtMoney, fmtMs, useEvidenceBlob, type TEvent } from '../../lib/case';
-import { CaseShell, Cites, Empty, SeverityTag } from '../../components';
+import { CaseShell, Cites, Empty, SeverityTag, Stat } from '../../components';
 
 const SEV_COLOR = ['#b9b8b3', '#a86a12', '#e2603d', '#b5412a'];
+const SEV_NAME = ['benign', 'concerning', 'harmful', 'severe'];
 const CATEGORIES = ['extortion', 'threat', 'sexual', 'abuse', 'financial_request', 'payment', 'meeting', 'contact'];
+
+const dayKey = (ts: string | null) => (ts ? ts.slice(0, 10) : 'unknown');
+const dayLabel = (k: string) =>
+  k === 'unknown' ? 'Undated' : new Date(`${k}T12:00:00`).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+const timeLabel = (e: TEvent) => {
+  if (!e.ts || e.tsPrecision !== 'exact') return e.tsPrecision === 'approx' ? '≈ day' : 'day';
+  const d = new Date(e.ts);
+  return d.getHours() === 0 && d.getMinutes() === 0 ? 'day' : d.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' });
+};
 
 function AudioSnippet({ evidenceId, startMs, endMs }: { evidenceId: string; startMs: number; endMs: number }) {
   const blob = useEvidenceBlob(evidenceId);
@@ -75,6 +85,7 @@ export function TimelinePage() {
   const [to, setTo] = useState('');
   const [sel, setSel] = useState<string | null>(null);
   const [editing, setEditing] = useState(false);
+  const listRef = useRef<HTMLDivElement>(null);
   const q = useQuery({ queryKey: ['timeline', id], queryFn: () => api<{ events: TEvent[]; people: { key: string; name: string; isOwner?: boolean }[] }>(`/cases/${id}/timeline`) });
   const names = useMemo(() => new Map(q.data?.people.map((p) => [p.key, p.name])), [q.data]);
 
@@ -97,22 +108,54 @@ export function TimelinePage() {
     return { order, key };
   }, [dated, laneBy, names]);
 
+  const groups = useMemo(() => {
+    const m = new Map<string, TEvent[]>();
+    events.forEach((e) => { const k = dayKey(e.ts); m.set(k, [...(m.get(k) ?? []), e]); });
+    return [...m.entries()];
+  }, [events]);
+
+  const stats = useMemo(() => {
+    const all = q.data?.events ?? [];
+    const ts = all.filter((e) => e.ts).map((e) => new Date(e.ts!).getTime());
+    return {
+      total: all.length,
+      days: ts.length ? Math.max(1, Math.round((Math.max(...ts) - Math.min(...ts)) / 86400000) + 1) : 0,
+      harmful: all.filter((e) => e.severity >= 2).length,
+      corroborated: all.filter((e) => e.corroborationCount > 0).length,
+    };
+  }, [q.data]);
+
+  const pick = (key: string, scroll = false) => {
+    setSel(key);
+    setEditing(false);
+    if (scroll) requestAnimationFrame(() => listRef.current?.querySelector(`[data-ev="${key}"]`)?.scrollIntoView({ block: 'center', behavior: 'smooth' }));
+  };
+  useEffect(() => { if (sel && !events.some((e) => e.key === sel)) setSel(null); }, [events, sel]);
+
   const selected = events.find((e) => e.key === sel) ?? null;
   const t = dated.map((e) => new Date(e.ts!).getTime());
   const min = Math.min(...t);
   const max = Math.max(...t, min + 3600_000);
-  const W = Math.max(900, dated.length * 26);
-  const LANE_H = 54;
+  const W = 960;
+  const LANE_H = 48;
   const LEFT = 150;
-  const x = (ms: number) => LEFT + ((ms - min) / (max - min)) * (W - LEFT - 30);
+  const x = (ms: number) => LEFT + ((ms - min) / (max - min)) * (W - LEFT - 24);
   const ticks = Array.from({ length: 6 }, (_, i) => min + ((max - min) * i) / 5);
+  const filtered = events.length !== (q.data?.events.length ?? 0);
 
   return (
     <CaseShell>
       {q.data && q.data.events.length === 0 && <Empty title="No events yet">Events appear once evidence is processed.</Empty>}
       {q.data && q.data.events.length > 0 && (
         <>
-          <div className="filters">
+          <div className="tl-stats">
+            <Stat n={stats.total} label="Events" />
+            <Stat n={stats.days} label="Days covered" />
+            <Stat n={stats.harmful} label="Harmful or severe" tone={stats.harmful ? 'signal' : ''} />
+            <Stat n={stats.corroborated} label="Corroborated" />
+          </div>
+
+          <div className="tl-toolbar">
             <div className="seg" role="radiogroup" aria-label="Lanes">
               {(['source', 'person'] as const).map((l) => (
                 <label key={l}><input type="radio" name="lanes" checked={laneBy === l} onChange={() => setLaneBy(l)} /><span>by {l}</span></label>
@@ -129,24 +172,31 @@ export function TimelinePage() {
             </select>
             <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} aria-label="From date" />
             <input type="date" value={to} onChange={(e) => setTo(e.target.value)} aria-label="To date" />
-          </div>
-          <div className="legend">
-            {['benign', 'concerning', 'harmful', 'severe'].map((s, i) => <span key={s} className={`sev-${i}`}><i />{s}</span>)}
-            <span>▭ bar = approximate time</span>
+            {(filtered || from || to) && (
+              <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setMinSev(0); setCat(''); setPerson(''); setFrom(''); setTo(''); }}>Clear</button>
+            )}
+            <span className="mono muted tl-count">{events.length} of {q.data.events.length}</span>
           </div>
 
           {dated.length > 0 && (
-            <div className="tl" role="figure" aria-label="Timeline">
-              <svg width={W} height={lanes.order.length * LANE_H + 34}>
+            <section className="tl-overview" aria-label="Timeline overview">
+              <div className="row tl-ov-head">
+                <p className="eyebrow">Overview · click a dot to open it</p>
+                <div className="legend">
+                  {SEV_NAME.map((s, i) => <span key={s} style={{ ['--sev' as string]: SEV_COLOR[i] }}><i />{s}</span>)}
+                  <span>▭ approximate</span>
+                </div>
+              </div>
+              <svg viewBox={`0 0 ${W} ${lanes.order.length * LANE_H + 30}`} width="100%" role="figure" aria-label="Events by lane and time" preserveAspectRatio="xMidYMid meet">
                 {lanes.order.map((l, i) => (
                   <g key={l}>
-                    <rect x={0} y={i * LANE_H} width={W} height={LANE_H} fill={i % 2 ? '#fbfbfa' : '#ffffff'} />
+                    <rect x={0} y={i * LANE_H} width={W} height={LANE_H} fill={i % 2 ? 'var(--surface)' : 'transparent'} />
                     <text x={14} y={i * LANE_H + LANE_H / 2 + 4} className="lane-label">{l.length > 20 ? `${l.slice(0, 19)}…` : l}</text>
                   </g>
                 ))}
                 {ticks.map((tk, i) => (
                   <g key={i}>
-                    <line x1={x(tk)} x2={x(tk)} y1={0} y2={lanes.order.length * LANE_H} stroke="#eeedea" />
+                    <line x1={x(tk)} x2={x(tk)} y1={0} y2={lanes.order.length * LANE_H} stroke="var(--line)" strokeDasharray="1 4" />
                     <text x={x(tk)} y={lanes.order.length * LANE_H + 18} className="axis" textAnchor="middle">{new Date(tk).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</text>
                   </g>
                 ))}
@@ -157,36 +207,56 @@ export function TimelinePage() {
                   const approx = e.tsPrecision !== 'exact' && e.tsEnd;
                   const x1 = approx ? Math.max(x0 + 10, x(new Date(e.tsEnd!).getTime())) : x0;
                   return (
-                    <g key={e.key} className={`ev${sel === e.key ? ' on' : ''}`} onClick={() => { setSel(e.key); setEditing(false); }} tabIndex={0} role="button" aria-label={`${fmtDate(e.ts, e.tsPrecision)}: ${e.title}`} onKeyDown={(k) => k.key === 'Enter' && setSel(e.key)}>
+                    <g key={e.key} className={`ev${sel === e.key ? ' on' : ''}`} onClick={() => pick(e.key, true)} tabIndex={0} role="button" aria-label={`${fmtDate(e.ts, e.tsPrecision)}: ${e.title}`} onKeyDown={(k) => k.key === 'Enter' && pick(e.key, true)}>
                       <title>{`${fmtDate(e.ts, e.tsPrecision)} — ${e.title}`}</title>
                       {approx ? (
                         <rect x={x0} y={cy - 7} width={x1 - x0} height={14} rx={7} fill={SEV_COLOR[e.severity]} opacity={0.55} />
                       ) : (
-                        <circle cx={x0} cy={cy} r={6 + e.severity * 1.5} fill={SEV_COLOR[e.severity]} />
+                        <circle cx={x0} cy={cy} r={5 + e.severity * 1.5} fill={SEV_COLOR[e.severity]} />
                       )}
-                      {e.corroborationCount > 0 && <circle cx={x0} cy={cy} r={12 + e.severity * 1.5} fill="none" stroke={SEV_COLOR[e.severity]} strokeDasharray="2 2" />}
+                      {e.corroborationCount > 0 && <circle cx={x0} cy={cy} r={11 + e.severity * 1.5} fill="none" stroke={SEV_COLOR[e.severity]} strokeDasharray="2 2" />}
                     </g>
                   );
                 })}
               </svg>
-            </div>
+            </section>
           )}
 
-          <div className="split">
-            <ul className="ev-list" aria-label="Events in order">
-              {events.map((e) => (
-                <li key={e.key}>
-                  <button type="button" className={`ev-item sev-${e.severity}${sel === e.key ? ' on' : ''}`} onClick={() => { setSel(e.key); setEditing(false); }}>
-                    <span className="bar" />
-                    <span>
-                      <span className="mono muted" style={{ fontSize: 11 }}>{fmtDate(e.ts, e.tsPrecision)}{e.sourceType === 'self_statement' ? ' · your account' : ''}{e.userEdited ? ' · edited' : ''}</span>
-                      <br />
-                      <span style={{ fontWeight: 500 }}>{e.title}</span>
-                    </span>
-                  </button>
-                </li>
+          <div className="tl-split">
+            <div className="tl-feed" ref={listRef} aria-label="Events in order">
+              {groups.length === 0 && <div className="card muted">No events match these filters.</div>}
+              {groups.map(([day, evs]) => (
+                <section key={day} className="tl-day">
+                  <header className="tl-day-head">
+                    <h3>{dayLabel(day)}</h3>
+                    <span className="mono muted">{evs.length} event{evs.length > 1 ? 's' : ''}</span>
+                  </header>
+                  <ol className="tl-rail">
+                    {evs.map((e) => (
+                      <li key={e.key} data-ev={e.key} style={{ ['--sev' as string]: SEV_COLOR[e.severity] }}>
+                        <span className="tl-dot" aria-hidden="true" />
+                        <button type="button" className={`tl-card${sel === e.key ? ' on' : ''}`} onClick={() => pick(e.key)}>
+                          <span className="tl-meta">
+                            <span className="mono">{timeLabel(e)}</span>
+                            <span className="chip">{e.category.replace('_', ' ')}</span>
+                            {e.severity >= 2 && <span className={`badge ${e.severity === 3 ? 'bad' : 'warn'}`}>{SEV_NAME[e.severity]}</span>}
+                            {e.sourceType === 'self_statement' && <span className="mono muted">your account</span>}
+                            {e.userEdited && <span className="mono muted">edited</span>}
+                          </span>
+                          <span className="tl-title">{e.title}</span>
+                          <span className="tl-tags">
+                            {e.actors.length > 0 && <span>{e.actors.map((a) => names.get(a) ?? a).join(', ')}{e.targets.length > 0 ? ` → ${e.targets.map((a) => names.get(a) ?? a).join(', ')}` : ''}</span>}
+                            {e.amount ? <span className="tl-money">{fmtMoney(e.amount)}</span> : null}
+                            {e.location && <span>◦ {e.location}</span>}
+                            {e.corroborationCount > 0 && <span className="tl-corro">{e.corroborationCount + 1} sources</span>}
+                          </span>
+                        </button>
+                      </li>
+                    ))}
+                  </ol>
+                </section>
               ))}
-            </ul>
+            </div>
             <aside className="drawer">
               {!selected && <div className="card muted">Select an event to see its sources.</div>}
               {selected && (

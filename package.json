@@ -9,6 +9,7 @@
     "worker": "npm run worker -w apps/api",
     "keys:generate": "node scripts/keys-generate.js",
     "seed:demo": "node scripts/seed-demo.js",
+    "seed:roles": "node --env-file=.env scripts/seed-roles.js",
     "test": "npm test -w apps/api"
   },
   "devDependencies": {

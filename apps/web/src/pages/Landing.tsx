@@ -80,10 +80,15 @@ export function Landing() {
           <Diagram />
           <p className="dot hero-word" aria-hidden="true"><DotText>Prove.</DotText></p>
           <p className="hero-sub">TraceVault turns scattered chats, screenshots and voice notes into one sealed case file, cited line by line.</p>
-          <Link to={start} className="btn btn-cta">
-            <span className="tile"><DotArrow /></span>
-            Start a case
-          </Link>
+          <div className="row" style={{ justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>
+            <Link to={start} className="btn btn-cta">
+              <span className="tile"><DotArrow /></span>
+              Start a case
+            </Link>
+            <Link to="/login?as=officer" className="btn btn-ghost" style={{ alignSelf: 'center', fontSize: 13, textDecoration: 'none' }}>
+              For police & officials →
+            </Link>
+          </div>
         </section>
 
         <section className="band" id="integrity" aria-label="Guarantees">

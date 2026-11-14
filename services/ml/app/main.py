@@ -17,7 +17,7 @@ if _env.exists():
             os.environ.setdefault(k.strip(), v.split(" #")[0].strip())
 
 from .parsers import ocr  # noqa: E402
-from .routers import case, extract, voice  # noqa: E402  (env must be loaded first)
+from .routers import case, extract, report, voice  # noqa: E402  (env must be loaded first)
 from .voice import local_whisper  # noqa: E402
 from .voice.sarvam_client import get_client  # noqa: E402
 
@@ -25,6 +25,7 @@ app = FastAPI(title="TraceVault ML", docs_url=None, redoc_url=None)
 app.include_router(voice.router)
 app.include_router(extract.router)
 app.include_router(case.router)
+app.include_router(report.router)
 
 
 @app.middleware("http")

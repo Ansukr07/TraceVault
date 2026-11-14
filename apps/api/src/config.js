@@ -14,6 +14,8 @@ const schema = z.object({
   JWT_ACCESS_SECRET: z.string().min(8).default('dev-access-secret-change-me'),
   JWT_REFRESH_SECRET: z.string().min(8).default('dev-refresh-secret-change-me'),
   MASTER_KEK_BASE64: z.string().default(''),
+  // Oversight dashboard: counts below this are shown as "<N" (small-number suppression). Dev default 1 so demo data shows.
+  OVERSIGHT_MIN_CELL: z.coerce.number().int().min(1).default(process.env.NODE_ENV === 'production' ? 5 : 1),
   // Skeleton-only escape hatch: run the API without MongoDB (health reports it as down).
   ALLOW_NO_DB: z.enum(['true', 'false']).default('false').transform((v) => v === 'true'),
 });

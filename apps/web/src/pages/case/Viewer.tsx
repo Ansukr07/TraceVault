@@ -3,8 +3,8 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, post } from '../../lib/api';
 import { useAuth } from '../../lib/auth';
-import { fmtDate, fmtMs, fmtSize, langName, useEvidence, useEvidenceBlob, type Chunk, type Evidence } from '../../lib/case';
-import { Bilingual, CaseShell, ContentWarning, HashBadge, SeverityTag } from '../../components';
+import { fmtDate, fmtMs, fmtSize, langName, useCase, useEvidence, useEvidenceBlob, type Chunk, type Evidence } from '../../lib/case';
+import { Annotations, Bilingual, CaseShell, ContentWarning, HashBadge, SeverityTag } from '../../components';
 
 type Extracted = { evidence: Evidence; artifact: { type: string; generator: any; data: any } | null; chunks: Chunk[] };
 
@@ -131,6 +131,7 @@ function ChatOriginal({ artifact, chunks, active, children }: { artifact: any; c
 
 export function ViewerPage() {
   const { id = '', eid = '' } = useParams();
+  const role = useCase(id).data?.role;
   const [sp, setSp] = useSearchParams();
   const qc = useQueryClient();
   const q = useQuery({ queryKey: ['extracted', eid], queryFn: () => api<Extracted>(`/evidence/${eid}/extracted`) });
@@ -172,8 +173,8 @@ export function ViewerPage() {
         <div className="row">
           {maxSev > 0 && <SeverityTag score={maxSev} />}
           <span className={`badge ${e.status === 'done' ? 'ok' : e.status === 'failed' ? 'bad' : 'signal'}`}>{e.status}</span>
-          <button type="button" className="btn btn-ghost btn-sm" disabled={busy} onClick={() => reprocess()}>Reprocess</button>
-          {(kind === 'audio' || kind === 'statement') && <button type="button" className="btn btn-ghost btn-sm" disabled={busy} onClick={() => reprocess(e.provider === 'sarvam' ? 'local' : 'sarvam')}>Re-transcribe with {e.provider === 'sarvam' ? 'local model' : 'Sarvam'}</button>}
+          {role === 'owner' && <button type="button" className="btn btn-ghost btn-sm" disabled={busy} onClick={() => reprocess()}>Reprocess</button>}
+          {role === 'owner' && (kind === 'audio' || kind === 'statement') && <button type="button" className="btn btn-ghost btn-sm" disabled={busy} onClick={() => reprocess(e.provider === 'sarvam' ? 'local' : 'sarvam')}>Re-transcribe with {e.provider === 'sarvam' ? 'local model' : 'Sarvam'}</button>}
         </div>
       </div>
       {e.error && <p className="err">{e.error}</p>}
@@ -224,6 +225,7 @@ export function ViewerPage() {
           )}
           <MetadataPanel e={e} />
           <section className="card"><HashBadge evidenceId={e.id} sha256={e.sha256} /></section>
+          <Annotations evidenceId={e.id} role={role} />
         </div>
       </div>
     </CaseShell>

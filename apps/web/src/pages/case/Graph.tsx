@@ -5,7 +5,7 @@ import cytoscape, { type Core } from 'cytoscape';
 import fcose from 'cytoscape-fcose';
 import { api, post } from '../../lib/api';
 import { fmtDate } from '../../lib/case';
-import { CaseShell, Cites, Empty } from '../../components';
+import { CaseShell, Cites, Empty, Stat } from '../../components';
 
 cytoscape.use(fcose);
 
@@ -15,6 +15,13 @@ type Graph = { nodes: GNode[]; edges: GEdge[]; centralFigures: string[]; timeRan
 
 const COMMUNITY = ['#6b5bd6', '#2f6fb0', '#2f7a55', '#a86a12', '#b5412a', '#7a4f9a', '#3a8f8f'];
 const TYPE_SHAPE: Record<string, string> = { PERSON: 'ellipse', UPI_ID: 'round-rectangle', BANK_ACCT: 'round-rectangle', PHONE: 'round-diamond', EMAIL: 'round-diamond', HANDLE: 'round-diamond', LOCATION: 'round-triangle', ORG: 'round-hexagon', EVIDENCE: 'round-rectangle' };
+const GROUPS: { key: string; label: string; types: string[] }[] = [
+  { key: 'people', label: 'People', types: ['PERSON'] },
+  { key: 'pay', label: 'Payment IDs', types: ['UPI_ID', 'BANK_ACCT'] },
+  { key: 'contact', label: 'Contacts', types: ['PHONE', 'EMAIL', 'HANDLE'] },
+  { key: 'other', label: 'Places & orgs', types: ['LOCATION', 'ORG'] },
+];
+const EDGE_LEGEND: [string, string][] = [['threatened', '#b5412a'], ['paid', '#2f7a55'], ['messaged', '#8e8d89'], ['possible match', '#e2603d']];
 const EDGE_COLOR: Record<string, string> = { MESSAGED: '#8e8d89', THREATENED: '#b5412a', PAID: '#2f7a55', APPEARS_WITH: '#b9b8b3', MENTIONED_IN: '#d6d5d1', SAME_AS_CANDIDATE: '#e2603d', CALLED: '#2f6fb0' };
 
 export function GraphPage() {
@@ -26,14 +33,18 @@ export function GraphPage() {
   const [showEvidence, setShowEvidence] = useState(false);
   const [sel, setSel] = useState<{ kind: 'node'; n: GNode } | { kind: 'edge'; e: GEdge } | null>(null);
   const [slider, setSlider] = useState(100);
+  const [hidden, setHidden] = useState<Set<string>>(new Set());
+  const [search, setSearch] = useState('');
   const g = q.data;
+  const toggleGroup = (k: string) => setHidden((h) => { const n = new Set(h); if (n.has(k)) n.delete(k); else n.add(k); return n; });
+  const hiddenTypes = useMemo(() => new Set(GROUPS.filter((x) => hidden.has(x.key)).flatMap((x) => x.types)), [hidden]);
 
   const range = useMemo(() => (g?.timeRange ? g.timeRange.map((t) => new Date(t).getTime()) : null), [g]);
   const cutoff = range ? range[0] + ((range[1] - range[0]) * slider) / 100 : null;
 
   useEffect(() => {
     if (!g || !box.current) return;
-    const nodes = g.nodes.filter((n) => showEvidence || n.type !== 'EVIDENCE');
+    const nodes = g.nodes.filter((n) => (showEvidence || n.type !== 'EVIDENCE') && !hiddenTypes.has(n.type));
     const ids = new Set(nodes.map((n) => n.id));
     const maxM = Math.max(1, ...nodes.map((n) => n.mentions));
     const c = cytoscape({
@@ -53,11 +64,14 @@ export function GraphPage() {
           .map((e) => ({ data: { ...e, color: EDGE_COLOR[e.type] ?? '#b9b8b3', width: Math.min(8, 1.5 + Math.log2(1 + e.count)), dashed: e.type === 'SAME_AS_CANDIDATE' ? 'dashed' : 'solid', elabel: e.type === 'PAID' ? `paid` : e.type === 'THREATENED' ? 'threatened' : '' } })),
       ],
       style: [
-        { selector: 'node', style: { 'background-color': 'data(color)', label: 'data(label)', width: 'data(size)', height: 'data(size)', shape: 'data(shape)' as any, 'font-size': 11, 'font-family': 'Geist, system-ui, sans-serif', color: '#0d0d0d', 'text-valign': 'bottom', 'text-margin-y': 6, 'text-wrap': 'ellipsis', 'text-max-width': '140px', 'border-width': 'data(border)', 'border-color': '#b5412a' } },
+        { selector: 'node', style: { 'background-color': 'data(color)', label: 'data(label)', width: 'data(size)', height: 'data(size)', shape: 'data(shape)' as any, 'font-size': 11, 'font-family': 'Geist, system-ui, sans-serif', color: '#0d0d0d', 'text-valign': 'bottom', 'text-margin-y': 6, 'text-wrap': 'ellipsis', 'text-max-width': '140px', 'text-background-color': '#f8f8f6', 'text-background-opacity': 0.85, 'text-background-padding': '2px', 'text-background-shape': 'roundrectangle', 'border-width': 'data(border)', 'border-color': '#b5412a' } },
+        { selector: 'node[?isOwner]', style: { 'border-width': 3, 'border-color': '#e2603d' } },
         { selector: 'edge', style: { 'line-color': 'data(color)', width: 'data(width)', 'curve-style': 'bezier', 'target-arrow-shape': 'triangle', 'target-arrow-color': 'data(color)', 'line-style': 'data(dashed)' as any, label: 'data(elabel)', 'font-size': 9, color: '#8e8d89', 'text-rotation': 'autorotate' } },
         { selector: 'edge[type = "MENTIONED_IN"], edge[type = "APPEARS_WITH"], edge[type = "SAME_AS_CANDIDATE"]', style: { 'target-arrow-shape': 'none' } },
         { selector: ':selected', style: { 'overlay-color': '#e2603d', 'overlay-opacity': 0.18, 'overlay-padding': 6 } },
         { selector: '.faded', style: { opacity: 0.12 } },
+        { selector: '.dim', style: { opacity: 0.14 } },
+        { selector: 'node.match', style: { 'border-width': 4, 'border-color': '#e2603d', 'overlay-color': '#e2603d', 'overlay-opacity': 0.15, 'overlay-padding': 8 } },
       ],
       layout: { name: 'fcose', animate: false, randomize: true, nodeRepulsion: 9000, idealEdgeLength: 110, nodeSeparation: 80 } as any,
       wheelSensitivity: 0.3,
@@ -65,9 +79,27 @@ export function GraphPage() {
     c.on('tap', 'node', (ev) => setSel({ kind: 'node', n: ev.target.data() }));
     c.on('tap', 'edge', (ev) => setSel({ kind: 'edge', e: ev.target.data() }));
     c.on('tap', (ev) => { if (ev.target === c) setSel(null); });
+    c.on('mouseover', 'node', (ev) => { const nb = ev.target.closedNeighborhood(); c.elements().not(nb).addClass('dim'); });
+    c.on('mouseout', 'node', () => c.elements().removeClass('dim'));
     cy.current = c;
     return () => { c.destroy(); cy.current = null; };
-  }, [g, showEvidence]);
+  }, [g, showEvidence, hiddenTypes]);
+
+  // Search: outline matching nodes and bring them into view.
+  useEffect(() => {
+    const c = cy.current;
+    if (!c) return;
+    c.nodes().removeClass('match');
+    const term = search.trim().toLowerCase();
+    if (!term) return;
+    const hits = c.nodes().filter((n) => String(n.data('label')).toLowerCase().includes(term));
+    hits.addClass('match');
+    if (hits.length) c.animate({ fit: { eles: hits, padding: 120 }, duration: 250 });
+  }, [search, g, showEvidence, hiddenTypes]);
+
+  const zoomBy = (f: number) => { const c = cy.current; if (c) c.animate({ zoom: { level: c.zoom() * f, renderedPosition: { x: c.width() / 2, y: c.height() / 2 } }, duration: 150 }); };
+  const fit = () => { const c = cy.current; if (c) c.animate({ fit: { eles: c.elements(), padding: 40 }, duration: 200 }); };
+  const relayout = () => cy.current?.layout({ name: 'fcose', animate: true, randomize: true, nodeRepulsion: 9000, idealEdgeLength: 110, nodeSeparation: 80 } as any).run();
 
   // G3: time slider hides edges that start after the cutoff.
   useEffect(() => {
@@ -93,18 +125,43 @@ export function GraphPage() {
 
   return (
     <CaseShell>
-      <div className="filters">
-        <label className="row" style={{ gap: 6, fontSize: 13 }}><input type="checkbox" checked={showEvidence} onChange={(e) => setShowEvidence(e.target.checked)} /> Evidence layer</label>
+      <div className="gr-stats">
+        <Stat n={g.nodes.filter((n) => n.type === 'PERSON').length} label="People" />
+        <Stat n={g.nodes.filter((n) => ['UPI_ID', 'BANK_ACCT'].includes(n.type)).length} label="Payment IDs" tone={g.nodes.some((n) => n.muleCluster) ? 'signal' : ''} />
+        <Stat n={g.edges.filter((e) => e.type === 'THREATENED').length} label="Threat links" />
+        <Stat n={candidates.length} label="Possible matches" />
+      </div>
+      <div className="gr-toolbar">
+        <input type="search" className="gr-search" placeholder="Find a person, number or UPI ID" value={search} onChange={(e) => setSearch(e.target.value)} aria-label="Find in graph" />
+        <div className="gr-groups" role="group" aria-label="Show node types">
+          {GROUPS.map((x) => (
+            <button key={x.key} type="button" className={`gr-chip${hidden.has(x.key) ? '' : ' on'}`} aria-pressed={!hidden.has(x.key)} onClick={() => toggleGroup(x.key)}>{x.label}</button>
+          ))}
+          <label className="gr-chip-check"><input type="checkbox" checked={showEvidence} onChange={(e) => setShowEvidence(e.target.checked)} /> Evidence layer</label>
+        </div>
         {range && (
-          <label className="row" style={{ gap: 8, fontSize: 13 }}>
-            Up to <input type="range" min={0} max={100} value={slider} onChange={(e) => setSlider(Number(e.target.value))} aria-label="Time slider" style={{ width: 180 }} />
+          <label className="row gr-time">
+            <span className="eyebrow">Up to</span>
+            <input type="range" min={0} max={100} value={slider} onChange={(e) => setSlider(Number(e.target.value))} aria-label="Time slider" />
             <span className="mono">{fmtDate(new Date(cutoff!).toISOString(), 'day')}</span>
           </label>
         )}
-        {g.centralFigures.length > 0 && <span className="muted" style={{ fontSize: 13 }}>Central figures: {g.centralFigures.map((k) => nodeById.get(k)?.label).join(', ')}</span>}
       </div>
-      <div className="split" style={{ gridTemplateColumns: undefined }}>
-        <div className="graph-box"><div className="cy" ref={box} aria-label="Relationship graph" role="img" /></div>
+      <div className="gr-split">
+        <div className="graph-box">
+          <div className="cy" ref={box} aria-label="Relationship graph" role="img" />
+          <div className="gr-controls" role="group" aria-label="Graph view">
+            <button type="button" onClick={() => zoomBy(1.25)} aria-label="Zoom in">+</button>
+            <button type="button" onClick={() => zoomBy(0.8)} aria-label="Zoom out">−</button>
+            <button type="button" onClick={fit} aria-label="Fit to screen" title="Fit">⤢</button>
+            <button type="button" onClick={relayout} aria-label="Re-arrange" title="Re-arrange">↻</button>
+          </div>
+          <div className="gr-legend" aria-hidden="true">
+            {EDGE_LEGEND.map(([l, c]) => <span key={l}><i style={{ background: c }} />{l}</span>)}
+            <span><i className="ring" />mule cluster</span>
+          </div>
+          {g.centralFigures.length > 0 && <p className="gr-central mono">Central: {g.centralFigures.map((k) => nodeById.get(k)?.label).join(', ')}</p>}
+        </div>
         <aside className="stack">
           {!sel && (
             <section className="card">

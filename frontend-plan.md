@@ -54,7 +54,7 @@ view. The Oversight dashboard is built only from aggregate counts.
 
 ## 3. Route map
 
-Status: **Built** = a route and page exist in `src/main.tsx` today (still to be checked against this plan) ·
+Status: **Built** = a route and page exist in `src/main.tsx` (not all are fully tested; see role.md's verification log) ·
 **To build** = no page yet. Priority follows spec P0/P1/P2.
 
 ### 3.1 Public
@@ -63,47 +63,48 @@ Status: **Built** = a route and page exist in `src/main.tsx` today (still to be 
 |---|---|---|---|
 | `/` | Landing | Built | P0 |
 | `/login`, `/register` | Auth (+ one-click demo in dev) | Built | P0 |
-| `/share/accept?token=` | Accept invite | To build | P0 |
-| `/verify` | Public file / bundle verifier (no login) | To build | P1 |
+| `/share/accept?token=` | Accept invite | Built | P0 |
+| `/verify` | Public file / bundle verifier (no login) | Built | P1 |
 
 ### 3.2 Complainant app
 
 | Route | Page | Status | P |
 |---|---|---|---|
 | `/cases` | Case list | Built | P0 |
-| `/cases/new` | New case (+ privacy consent step) | Built — add consent step and "start with voice" | P0 |
+| `/cases/new` | New case, 2 steps: details, then privacy consent; "add evidence" or "tell what happened" | Built | P0 |
 | `/cases/:id` | Overview | Built | P0 |
 | `/cases/:id/upload` | Upload | Built | P0 |
-| `/cases/:id/statement` | Voice statement | To build | P1 |
+| `/cases/:id/statement` | Voice statement | Built | P1 |
 | `/cases/:id/evidence` | Evidence library | Built | P0 |
 | `/cases/:id/evidence/:eid` | Viewer | Built | P0 |
 | `/cases/:id/timeline` | Timeline | Built | P0 |
-| `/cases/:id/graph` | Graph | Built (fix the `cytoscape-fcose` type error) | P0 |
+| `/cases/:id/graph` | Graph | Built | P0 |
 | `/cases/:id/inconsistencies` | Inconsistencies | Built | P0 |
 | `/cases/:id/summary` | Summary + Q&A | Built | P0 |
 | `/cases/:id/insights` | Insights | Built | P1 |
 | `/cases/:id/audit` | Audit & integrity | Built | P0 |
-| `/cases/:id/share` | Sharing | To build | P0 |
-| `/cases/:id/export` | Export | To build | P0 |
+| `/cases/:id/share` | Sharing (Officer, Legal, Collaborator invites) | Built | P0 |
+| `/cases/:id/export` | Export | Built | P0 |
 | `/cases/:id/settings` | Case settings | Built | P0 |
-| `/account` | Profile & languages | To build | P1 |
+| `/account` | Profile & languages | Built | P1 |
+| `/legal` | Shared with me (Legal role dashboard) | Built | P0 |
 
 ### 3.3 Officer Console (new)
 
 | Route | Page | Status | P |
 |---|---|---|---|
-| `/officer` | Officer inbox (shared cases) | To build | P0 |
-| `/officer/cases/:id` | Case workspace (read-only, scoped) + action rail | To build | P0 |
+| `/officer` | Officer inbox (shared cases) | Built | P0 |
+| `/cases/:id` (as officer) | Case workspace (read-only, scoped) + officer action panel; officers open the normal case route, not `/officer/cases/:id` | Built | P0 |
 | `/officer/cases/:id/*` | Same tabs as the complainant app, in scoped read-only mode | Reuse | P0 |
-| `/officer/verify` | Verify an exported bundle or a single file | To build | P1 |
-| `/officer/profile` | Officer profile, station, verification status | To build | P1 |
+| `/officer/verify` | Verify an exported bundle or a single file | Built | P1 |
+| `/officer/profile` | Officer profile, station, verification status | Built | P1 |
 
 ### 3.4 Oversight and platform admin (new)
 
 | Route | Page | Status | P |
 |---|---|---|---|
-| `/oversight` | Government / supervisory dashboard (aggregates only) | To build | P1 |
-| `/admin` | Platform ops: users, officer verification, jobs, provider usage, health | To build | P1 |
+| `/oversight` | Government / supervisory dashboard (aggregates only) | Built | P1 |
+| `/admin` | Platform ops: users, officer verification, jobs, provider usage, health (real health checks) | Built | P1 |
 
 ---
 

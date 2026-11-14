@@ -12,10 +12,22 @@ import { spawnSync } from 'node:child_process';
 
 const root = path.resolve(import.meta.dirname, '..');
 const API = (process.env.API_URL ?? 'http://localhost:4000') + '/api/v1';
-const EMAIL = process.env.DEMO_EMAIL ?? 'priya.demo@tracevault.test';
+const EMAIL = process.env.DEMO_EMAIL ?? (process.env.DEMO_CASE === 'ananya' ? 'ananya.demo@tracevault.test' : 'priya.demo@tracevault.test');
 const PASSWORD = process.env.DEMO_PASSWORD ?? 'tracevault-demo-password';
-const DATA = path.join(root, 'eval', 'data', 'priya_case');
-const FILES = [
+const ANANYA = process.env.DEMO_CASE === 'ananya';
+const DATA = path.join(root, 'eval', 'data', ANANYA ? 'ananya_case' : 'priya_case');
+const FILES = ANANYA ? [
+  ['WhatsApp Chat with Karthik Menon.txt', 'WhatsApp export – Karthik'],
+  ['01_whatsapp_persistent_contact.png', 'Screenshot 1 – persistent contact'],
+  ['02_instagram_dm_after_block.png', 'Screenshot 2 – Instagram DM'],
+  ['03_sms_surveillance.png', 'Screenshot 3 – SMS'],
+  ['04_whatsapp_threats_second_sim.png', 'Screenshot 4 – threats'],
+  ['05_instagram_fake_account.png', 'Screenshot 5 – fake account'],
+  ['06_whatsapp_demand_EDITED.png', 'Screenshot 6 – Rs 15,000 demand'],
+  ['07_telegram_second_demand.png', 'Screenshot 7 – second demand'],
+  ['hdfc_statement_sep2024.pdf', 'HDFC statement Sep 2024'],
+  ['email_from_anon.eml', 'Email from anon'],
+] : [
   ['WhatsApp Chat with Rahul K.txt', 'WhatsApp – Rahul chat'],
   ['screenshot_rahul_demand.png', 'Screenshot of demand'],
   ['sbi_statement_may2024.pdf', 'SBI statement May 2024'],
@@ -41,11 +53,11 @@ if (!fs.existsSync(path.join(DATA, 'ground_truth.json'))) {
 }
 const voiceNotes = fs.readdirSync(DATA).filter((f) => /\.(opus|wav|ogg|m4a|mp3)$/i.test(f)).map((f) => [f, `Voice note ${f.slice(4, 12)}`]);
 
-let reg = await call('POST', '/auth/register', { body: { email: EMAIL, name: 'Priya', password: PASSWORD } });
+let reg = await call('POST', '/auth/register', { body: { email: EMAIL, name: process.env.DEMO_CASE === 'ananya' ? 'Ananya' : 'Priya', password: PASSWORD } });
 if (reg.status === 409) reg = await call('POST', '/auth/login', { body: { email: EMAIL, password: PASSWORD } });
 const token = reg.body.accessToken;
 
-const c = (await call('POST', '/cases', { token, body: { title: `Priya v. Rahul K (demo ${new Date().toISOString().slice(0, 16)})`, incidentType: 'sextortion', description: 'Synthetic demo case: sextortion and UPI fraud across WhatsApp, a screenshot, a bank statement and email.', voiceConsent: voiceNotes.length > 0 } })).body.case;
+const c = (await call('POST', '/cases', { token, body: { title: `${ANANYA ? 'Ananya Rao v. Karthik Menon' : 'Priya v. Rahul K'} (demo ${new Date().toISOString().slice(0, 16)})`, incidentType: ANANYA ? 'harassment' : 'sextortion', description: ANANYA ? 'Synthetic demo case: cyber-stalking, defamation and extortion across WhatsApp, Instagram, SMS, Telegram, a bank statement and email.' : 'Synthetic demo case: sextortion and UPI fraud across WhatsApp, a screenshot, a bank statement and email.', voiceConsent: voiceNotes.length > 0 } })).body.case;
 console.log('case', c.id);
 
 for (const [name, label] of [...FILES, ...voiceNotes]) {

@@ -7,7 +7,7 @@ from typing import Any, Literal
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 
-from ..case import dedup, events as ev, graph, inconsistency, insights, resolve, summarize
+from ..case import dedup, events as ev, graph, inconsistency, insights, narrative, resolve, summarize
 from ..case.common import norm_name
 
 router = APIRouter()
@@ -92,3 +92,17 @@ class AskIn(BaseModel):
 @router.post("/case/ask")
 async def ask(body: AskIn):
     return await summarize.answer(body.question, body.llmMode, {c["id"]: c for c in body.chunks}, _pii(body.entities))
+
+
+class NarrativeIn(BaseModel):
+    segments: list[dict[str, Any]] = Field(max_length=2000)
+    lang: str | None = None
+    llmMode: Literal["cloud", "cloud_redacted", "local"] = "cloud_redacted"
+    refTs: str | None = None
+    knownNames: list[str] = []
+
+
+@router.post("/case/narrative")
+async def narrative_route(body: NarrativeIn):
+    pii = {n: "PERSON" for n in body.knownNames if len(n) >= 3}
+    return await narrative.draft(body.segments, lang=body.lang, mode=body.llmMode, ref_ts=body.refTs, pii=pii)

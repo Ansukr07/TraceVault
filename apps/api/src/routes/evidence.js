@@ -6,11 +6,12 @@ import { Router } from 'express';
 import mongoose from 'mongoose';
 import multer from 'multer';
 import { config } from '../config.js';
-import { Case, Chunk, DerivedArtifact, Evidence } from '../models/index.js';
+import { Annotation, Case, Chunk, DerivedArtifact, Evidence } from '../models/index.js';
 import { ah, httpError, requireAuth, requireCaseRole, validate, z } from '../middleware/index.js';
 import { audit } from '../services/audit.js';
 import { hashFile, openPlain, sealFile, verifyStored } from '../services/evidence-store.js';
 import { enqueueEvidence } from '../jobs/pipeline.js';
+import { evidenceAllowed, evidenceFilter, logSharedView, resolveAccess, scopeFor } from '../services/scope.js';
 
 const upload = multer({
   storage: multer.diskStorage({ destination: os.tmpdir(), filename: (_r, _f, cb) => cb(null, `tv-${crypto.randomUUID()}`) }),
@@ -54,9 +55,10 @@ caseEvidenceRouter.get(
   '/',
   requireCaseRole(),
   ah(async (req, res) => {
-    const items = await Evidence.find({ caseId: req.case._id }).sort({ idx: 1, createdAt: 1 }).lean();
+    const scope = await scopeFor(req);
+    const items = await Evidence.find({ caseId: req.case._id, ...(scope ? { _id: { $in: [...scope.ids] } } : {}) }).sort({ idx: 1, createdAt: 1 }).lean();
     const counts = await Chunk.aggregate([
-      { $match: { caseId: req.case._id } },
+      { $match: { caseId: req.case._id, ...evidenceFilter(scope) } },
       { $group: { _id: '$evidenceId', n: { $sum: 1 }, sev: { $max: '$severity.score' } } },
     ]);
     const byId = new Map(counts.map((c) => [String(c._id), c]));
@@ -117,9 +119,18 @@ const loadEvidence = (...roles) =>
     // Membership check; non-members see 404 for evidence just as for cases.
     const c = e && (await Case.findOne({ _id: e.caseId, deletedAt: null, 'members.userId': req.user._id }));
     if (!c) throw httpError(404, 'NOT_FOUND', 'Not found');
+    // Shared members: the grant must still be active (not revoked/expired) and the item inside its scope.
+    const access = await resolveAccess(c, req.user);
+    if (!access) throw httpError(404, 'NOT_FOUND', 'Not found');
     req.evidence = e;
     req.case = c;
-    req.role = c.members.find((m) => String(m.userId) === String(req.user._id)).role;
+    req.role = access.role;
+    req.grant = access.grant;
+    if (access.grant) {
+      const scope = await scopeFor(req);
+      if (!evidenceAllowed(scope, e._id)) throw httpError(404, 'NOT_FOUND', 'Not found');
+      await logSharedView(c._id, req.user, access.role, access.grant);
+    }
     if (roles.length && !roles.includes(req.role)) throw httpError(403, 'FORBIDDEN', 'Insufficient role');
     next();
   });
@@ -131,6 +142,8 @@ evidenceRouter.get(
   loadEvidence(),
   ah(async (req, res) => {
     if (req.evidence.redacted?.at) throw httpError(410, 'REDACTED', 'This original was redacted; only its hash remains');
+    // Viewing is always allowed for an active grant; saving a copy needs allowDownload (?download=1).
+    if (req.query.download && req.grant && !req.grant.allowDownload) throw httpError(403, 'DOWNLOAD_NOT_ALLOWED', 'The owner did not allow downloads for this share');
     await audit(req.case._id, { actorId: req.user._id, actorRole: req.role, action: 'EVIDENCE_DOWNLOADED', target: String(req.evidence._id) });
     res.set({
       'Content-Type': req.evidence.mime,
@@ -179,6 +192,39 @@ evidenceRouter.post(
     const r = await verifyStored(req.evidence);
     await audit(req.case._id, { actorId: req.user._id, actorRole: req.role, action: 'EVIDENCE_VERIFIED', target: String(req.evidence._id), payload: { ok: r.ok } });
     res.json(r);
+  }),
+);
+
+// Annotations (E9): owner, collaborator and legal may add notes; everyone with access can read them.
+evidenceRouter.get(
+  '/:eid/annotations',
+  loadEvidence(),
+  ah(async (req, res) => {
+    const items = await Annotation.find({ evidenceId: req.evidence._id }).sort({ createdAt: 1 }).lean();
+    res.json({ annotations: items.map((a) => ({ id: String(a._id), text: a.text, chunkId: a.chunkId ?? null, authorName: a.authorName, authorRole: a.authorRole, createdAt: a.createdAt, mine: String(a.authorId) === String(req.user._id) })) });
+  }),
+);
+
+evidenceRouter.post(
+  '/:eid/annotations',
+  loadEvidence('owner', 'collaborator', 'legal'),
+  validate(z.object({ text: z.string().trim().min(1).max(2000), chunkId: z.string().regex(/^E\d+:\d+$/).optional() })),
+  ah(async (req, res) => {
+    const a = await Annotation.create({ caseId: req.case._id, evidenceId: req.evidence._id, authorId: req.user._id, authorName: req.user.name, authorRole: req.role, text: req.body.text, chunkId: req.body.chunkId });
+    await audit(req.case._id, { actorId: req.user._id, actorRole: req.role, action: 'EVIDENCE_ANNOTATED', target: String(req.evidence._id), payload: { annotationId: String(a._id) } });
+    res.status(201).json({ annotation: { id: String(a._id), text: a.text, chunkId: a.chunkId ?? null, authorName: a.authorName, authorRole: a.authorRole, createdAt: a.createdAt, mine: true } });
+  }),
+);
+
+evidenceRouter.delete(
+  '/:eid/annotations/:aid',
+  loadEvidence('owner', 'collaborator', 'legal'),
+  ah(async (req, res) => {
+    if (!mongoose.isValidObjectId(req.params.aid)) throw httpError(404, 'NOT_FOUND', 'Not found');
+    const a = await Annotation.findOneAndDelete({ _id: req.params.aid, evidenceId: req.evidence._id, authorId: req.user._id });
+    if (!a) throw httpError(404, 'NOT_FOUND', 'Not found');
+    await audit(req.case._id, { actorId: req.user._id, actorRole: req.role, action: 'ANNOTATION_DELETED', target: String(req.evidence._id), payload: { annotationId: String(a._id) } });
+    res.status(204).end();
   }),
 );
 

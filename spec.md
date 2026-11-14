@@ -409,6 +409,8 @@ Per-case setting, changeable only by the Owner, audited.
 
 ### 5.14 Reports and export (R)
 
+> **Implementation status (2026-11-14):** R1, R2, R3 and R4 are implemented (`apps/api/src/routes/export.js`, `services/export.js`). Deviations: the PDF is rendered by PyMuPDF's HTML engine in the ML service (`/report/pdf`) instead of Puppeteer, which needs no Chromium download and falls back to embedded Noto fonts for Hindi/Kannada. Exports are role-gated: owner all; legal report + certificate; investigator all, with the bundle needing a grant that allows downloads. Shared users only ever export evidence inside their grant's scope. Every export page carries the viewer watermark, and every export is audited with the file's SHA-256. The bundle is refused with `INTEGRITY_FAILED` if the audit chain or any original fails verification, so a signature is never placed over altered records; `checkpoint.json` is Ed25519-signed (V6) and `verify.py` re-checks files, Merkle root, audit chain and signature offline. Not built: R5 (regional-language report copy).
+
 | ID | Feature | P |
 |----|---------|---|
 | R1 | Case report PDF (Puppeteer render of a React print view): summary, timeline, inconsistencies (with explanations), evidence index with SHA-256, Merkle root, audit head hash, signed checkpoint | P0 |
@@ -476,6 +478,8 @@ Sarvam is used for everything speech-related and for Indian-language translation
 **AC**: NER F1 on Hindi/Hinglish chunks is within 0.05 of English chunks on the demo case.
 
 ### 6.4 Voice statement intake ("Tell what happened") (V-INTAKE) · P1
+
+> **Implementation status (2026-11-14):** implemented end to end: recorder with pause/resume, level meter, listen-back and re-record (`VoiceStatementPage.tsx`); upload as `kind=statement` (`STATEMENT_RECORDED`); transcription; a `narrative` job that stores versioned drafts (`statements` collection) with per-sentence citations; edits saved as new versions (`STATEMENT_EDITED`, audited by hash); owner-chosen suggestion apply (`STATEMENT_SUGGESTIONS_APPLIED`); the “Your account” timeline lane and the statement-vs-evidence check (X5). Without an LLM the draft is the cleaned transcript, supported by construction; with one, cited ids are validated and unsupported sentences dropped. Drafts are in English and the spoken language (not a separately translated native narrative). Real microphone capture was not testable in the automated browser pane.
 
 A trauma-informed way for the victim to give their account in their own language without typing.
 

@@ -291,7 +291,7 @@ const shareGrant = new Schema(
     caseId: { type: oid, required: true, index: true },
     ownerId: { type: oid, required: true },
     recipientEmail: { type: String, required: true, lowercase: true, trim: true, index: true },
-    role: { type: String, enum: ['legal', 'investigator'], required: true },
+    role: { type: String, enum: ['legal', 'investigator', 'collaborator'], required: true },
     scope: { type: { type: String, enum: ['case', 'evidence'], default: 'case' }, evidenceIds: [String] },
     allowDownload: { type: Boolean, default: false },
     expiresAt: { type: Date, required: true },
@@ -340,6 +340,42 @@ export const DuplicateGroup = mongoose.model('DuplicateGroup', duplicateGroup);
 export const Inconsistency = mongoose.model('Inconsistency', inconsistency);
 export const Decision = mongoose.model('Decision', decision);
 export const CaseSnapshot = mongoose.model('CaseSnapshot', caseSnapshot);
+// Drafted narrative of a recorded voice statement (spec §6.4). Edits create a new version; none is overwritten.
+const statement = new Schema(
+  {
+    caseId: { type: oid, required: true, index: true },
+    evidenceId: { type: oid, required: true },
+    version: { type: Number, required: true },
+    lang: String,
+    textNative: String,
+    textEn: String,
+    sentences: [{ _id: false, text: String, citations: [String] }],
+    suggestions: mixed,
+    appliedSuggestions: [String],
+    generator: mixed,
+    editedBy: oid,
+    note: String,
+  },
+  { timestamps: true },
+);
+statement.index({ evidenceId: 1, version: -1 }, { unique: true });
+
 export const Summary = mongoose.model('Summary', summary);
+export const Statement = mongoose.model('Statement', statement);
 export const ProviderUsage = mongoose.model('ProviderUsage', providerUsage);
 export const ShareGrant = mongoose.model('ShareGrant', shareGrant);
+
+// Notes on an evidence item (spec E9). Stored apart from the sealed original; authors can delete only their own.
+const annotation = new Schema(
+  {
+    caseId: { type: oid, required: true, index: true },
+    evidenceId: { type: oid, required: true, index: true },
+    authorId: { type: oid, required: true },
+    authorName: String,
+    authorRole: { type: String, enum: ['owner', 'collaborator', 'legal'], required: true },
+    text: { type: String, required: true, maxlength: 2000 },
+    chunkId: String, // optional: the chunk ("E3:12") the note is about
+  },
+  { timestamps: true },
+);
+export const Annotation = mongoose.model('Annotation', annotation);

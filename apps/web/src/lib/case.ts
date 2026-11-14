@@ -47,6 +47,7 @@ export function useCaseSocket(caseId?: string) {
       refresh(['overview', 'evidence', 'timeline', 'graph', 'inconsistencies', 'entities', 'insights', 'case', 'duplicates']);
     });
     s.on('summary.ready', () => refresh(['summary', 'overview']));
+    s.on('statement.ready', () => refresh(['statements', 'evidence', 'timeline', 'inconsistencies', 'overview']));
     return () => {
       s.disconnect();
     };

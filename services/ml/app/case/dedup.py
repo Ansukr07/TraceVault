@@ -95,6 +95,10 @@ def detect(evidence: list[dict], chunks: list[dict]) -> dict:
             if o["evidenceId"] == v["evidenceId"]:
                 continue
             no = _norm(o["text"])
+            # token_set_ratio is 100% when one side's words are a subset of the other's, so a lone
+            # greeting ("Ananya,") "matches" any long message that names her. Require real overlap.
+            if min(len(nv.split()), len(no.split())) < 3:
+                continue
             sem = fuzz.token_set_ratio(nv, no) / 100
             if sem < SEMANTIC_SIM:
                 continue

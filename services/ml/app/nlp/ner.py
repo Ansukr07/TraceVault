@@ -27,6 +27,8 @@ _P = [
     ("BANK_ACCT", re.compile(r"(?:\ba/?c\b|\bacct\b|\baccount\b)\s*(?:no\.?|number|#)?\s*[:\-]?\s*([xX*]{2,}\d{3,6}|\d{9,18})", re.IGNORECASE)),
     ("VEHICLE_NO", re.compile(r"\b[A-Z]{2}[\s-]?\d{1,2}[\s-]?[A-Z]{1,3}[\s-]?\d{4}\b")),
     ("MONEY", re.compile(r"(?:\bdebit|\bcredit|\bamount|\bamt|\bwithdrawal|\bdeposit|\bdr\b|\bcr\b)\.?\s*[:\-]?\s*(\d[\d,]*\.\d{2})\b", re.IGNORECASE)),
+    # Bare amount directly before a payee: "send 15000 to name@bank" (no currency marker).
+    ("MONEY", re.compile(r"\b\d[\d,]{2,}(?=\s+(?:to|on|pe|par)\s+[\w.\-]+@[a-z]\w*)", re.IGNORECASE)),
     ("MONEY", re.compile(
         r"(?:₹|\brs\.?|\binr\b|\brupees?\b)\s?\d[\d,]*(?:\.\d+)?(?:\s?(?:k|lakh|lakhs|lac|thousand|hazaar|hazar|cr|crore)\b)?"
         r"|\b\d[\d,]*(?:\.\d+)?\s?(?:k\b|lakh\b|lakhs\b|lac\b|thousand\b|hazaar\b|hazar\b|crore\b)?\s?(?:rs\b|rupees?\b|rupaye\b|rupay\b|₹|/-)",

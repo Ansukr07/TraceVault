@@ -98,11 +98,12 @@ def extract_image(data: bytes, reference_ts: str | None = None) -> dict[str, Any
     # METADATA_MISMATCH: in-image dates vs EXIF capture date (> 1 day apart).
     cap = meta.get("captureTime")
     if cap:
-        for b in chat["bubbles"]:
-            if b["date"] and b["date"] != ref_date and abs(_days(b["date"], cap[:10])) > 1:
-                flags.append({"type": "METADATA_MISMATCH", "field": "inImageDate",
-                              "value": f"image shows {b['date']}, EXIF capture {cap[:10]}"})
-                break
+        # A scrolled screenshot spans several days but is captured at the newest message, so compare against the latest date shown.
+        dates = [b["date"] for b in chat["bubbles"] if b["date"]]
+        latest = max(dates, default=None)
+        if latest and abs(_days(latest, cap[:10])) > 1:
+            flags.append({"type": "METADATA_MISMATCH", "field": "inImageDate",
+                          "value": f"image shows {latest}, EXIF capture {cap[:10]}"})
     if res.get("unavailable"):
         flags.append({"type": "OCR_UNAVAILABLE", "field": "ocr", "value": "OCR engine not installed"})
     artifact = {"width": res["width"], "height": res["height"], "inverted": res["inverted"], "lines": res["lines"],

@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { api } from './lib/api';
 import { useAuth } from './lib/auth';
 import { DEMO } from './lib/demo';
+import { homeFor } from './lib/roles';
 
 /**
  * TraceVault mark: an ink squircle holding a 5×5 dot grid. A "V" of dots (vault, verify)
@@ -69,6 +72,14 @@ export function Nav({ variant = 'app' }: { variant?: 'marketing' | 'app' }) {
   const { user, login, logout } = useAuth();
   const { pathname } = useLocation();
   const go = useNavigate();
+  // Lawyers / NGO counsellors are ordinary accounts; show their inbox only once something is shared with them.
+  const shared = useQuery({
+    queryKey: ['officerCases'],
+    queryFn: () => api<{ cases: { role: string }[] }>('/officer/cases'),
+    enabled: !!user && (user.accountType ?? 'citizen') === 'citizen',
+    staleTime: 60_000,
+  });
+  const hasLegalShares = !!shared.data?.cases.some((c) => c.role === 'legal');
   const [demoBusy, setDemoBusy] = useState(false);
   async function tryDemo() {
     if (!DEMO) return;
@@ -127,8 +138,26 @@ export function Nav({ variant = 'app' }: { variant?: 'marketing' | 'app' }) {
           ))
         : user && (
             <>
-              <NavLink to="/cases" end onClick={close}>Cases</NavLink>
-              <NavLink to="/cases/new" onClick={close}>New case</NavLink>
+              {user.accountType === 'officer' ? (
+                <>
+                  <NavLink to="/officer" end onClick={close}>Officer Inbox</NavLink>
+                  <NavLink to="/officer/verify" onClick={close}>Verify</NavLink>
+                  <NavLink to="/officer/profile" onClick={close}>Profile</NavLink>
+                </>
+              ) : user.accountType === 'official' ? (
+                <>
+                  <NavLink to="/oversight" end onClick={close}>Oversight</NavLink>
+                  <NavLink to="/cases" onClick={close}>Cases</NavLink>
+                </>
+              ) : (
+                <>
+                  <NavLink to="/cases" end onClick={close}>Cases</NavLink>
+                  <NavLink to="/cases/new" onClick={close}>New case</NavLink>
+                  {hasLegalShares && <NavLink to="/legal" onClick={close}>Shared with me</NavLink>}
+                </>
+              )}
+              {user.isAdmin && <NavLink to="/admin" onClick={close}>Admin</NavLink>}
+              <NavLink to="/account" onClick={close}>Account</NavLink>
             </>
           )}
     </>
@@ -148,7 +177,7 @@ export function Nav({ variant = 'app' }: { variant?: 'marketing' | 'app' }) {
             <>
               <span className="who">{user.name}</span>
               {variant === 'marketing' ? (
-                <Link to="/cases" className="btn btn-dark">Open cases</Link>
+                <Link to={homeFor(user)} className="btn btn-dark">{user.accountType === 'officer' ? 'Open inbox' : user.accountType === 'official' ? 'Open dashboard' : user.isAdmin ? 'Open admin' : 'Open cases'}</Link>
               ) : (
                 <button className="btn btn-ghost" onClick={logout}>Sign out</button>
               )}

@@ -1,0 +1,131 @@
+{
+  "victim": {
+    "name": "Ananya Rao",
+    "aliases": [
+      "Ananya",
+      "Ananya Rao",
+      "Me"
+    ],
+    "owner": true
+  },
+  "persons": [
+    {
+      "name": "Karthik Menon",
+      "aliases": [
+        "Karthik Menon",
+        "Karthik",
+        "@karthik.clicks",
+        "@anu.exposed",
+        "anon.truth.blr@proton.me"
+      ],
+      "identifiers": [
+        "+91 98450 01234",
+        "+91 70190 55555",
+        "karthik.menon@okicici",
+        "ktk.pay88@ybl",
+        "karthik.clicks",
+        "anu.exposed",
+        "anon.truth.blr@proton.me"
+      ]
+    }
+  ],
+  "muleCluster": [
+    "karthik.menon@okicici",
+    "ktk.pay88@ybl"
+  ],
+  "inconsistencies": [
+    {
+      "type": "EDITED_FILE",
+      "file": "06_whatsapp_demand_EDITED.png",
+      "note": "Snapseed in EXIF; DateTimeOriginal 5 Oct vs chat 22 Sep"
+    },
+    {
+      "type": "AMOUNT_MISMATCH",
+      "values": [
+        15000,
+        25000
+      ],
+      "identifier": "karthik.menon@okicici",
+      "note": "demand in chat vs debit in bank"
+    },
+    {
+      "type": "DATE_CONFLICT",
+      "subtype": "statement_vs_evidence",
+      "statementDate": "2024-09-25",
+      "evidenceDate": "2024-09-23"
+    }
+  ],
+  "duplicates": [
+    {
+      "export": "WhatsApp Chat with Karthik Menon.txt",
+      "screenshots": [
+        "01_whatsapp_persistent_contact.png",
+        "04_whatsapp_threats_second_sim.png",
+        "06_whatsapp_demand_EDITED.png"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "ts": "2024-09-04T23:06:00",
+      "category": "harassment",
+      "note": "repeated messages and missed calls"
+    },
+    {
+      "ts": "2024-09-07T19:48:00",
+      "category": "stalking",
+      "note": "waited near office"
+    },
+    {
+      "ts": "2024-09-09T09:02:00",
+      "category": "consent_withdrawal",
+      "note": "victim says stop, blocks"
+    },
+    {
+      "ts": "2024-09-10T08:15:00",
+      "category": "block_evasion"
+    },
+    {
+      "ts": "2024-09-14T18:12:00",
+      "category": "stalking",
+      "note": "knows metro and PG location"
+    },
+    {
+      "ts": "2024-09-18T21:31:00",
+      "category": "threat",
+      "note": "private photos, HR, parents"
+    },
+    {
+      "ts": "2024-09-21T21:05:00",
+      "category": "defamation",
+      "note": "fake story @anu.exposed"
+    },
+    {
+      "ts": "2024-09-22T20:31:00",
+      "category": "extortion",
+      "amount": 15000
+    },
+    {
+      "ts": "2024-09-23",
+      "category": "payment",
+      "amount": 25000
+    },
+    {
+      "ts": "2024-09-26T19:03:00",
+      "category": "extortion",
+      "amount": 30000
+    },
+    {
+      "ts": "2024-09-27",
+      "category": "payment",
+      "amount": 10000
+    },
+    {
+      "ts": "2024-09-28T22:41:00",
+      "category": "threat",
+      "note": "email from throwaway address"
+    }
+  ],
+  "statementText": "My name is Ananya Rao, I work at Nimbus Labs in Bengaluru. Karthik Menon is a former colleague. Since early September he has been messaging and calling me repeatedly even after I told him to stop. He followed me, knew where I live, and when I blocked him he used new numbers and an Instagram account. On 18 September he threatened to send private photos to my office and my parents. On 22 September he demanded Rs 15,000 to take down a fake story about me. I paid Rs 25,000 on 25 September because I was scared. He then asked for Rs 30,000 more.",
+  "generatedAt": "2026-11-14T17:23:49"
+}

@@ -2,7 +2,25 @@
 let accessToken: string | null = null;
 let refreshing: Promise<boolean> | null = null;
 
-export type User = { id: string; email: string; name: string; isAdmin: boolean };
+export type OfficerProfile = {
+  agency: string;
+  unit: string;
+  rank?: string;
+  badgeId: string;
+  verified?: boolean;
+  rejected?: boolean;
+};
+
+export type User = {
+  id: string;
+  email: string;
+  name: string;
+  isAdmin: boolean;
+  accountType?: 'citizen' | 'officer' | 'official';
+  officer?: OfficerProfile;
+  uiLanguage?: string;
+  voiceLanguage?: string;
+};
 export class ApiError extends Error {
   constructor(public status: number, public code: string, message: string) {
     super(message);

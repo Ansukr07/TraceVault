@@ -10,6 +10,7 @@ import {
   DuplicateGroup,
   Entity,
   Evidence,
+  Statement,
   Inconsistency,
   ProviderUsage,
   Summary,
@@ -187,6 +188,7 @@ const nlpHandler = perEvidence(async (job, _ctx, e, c) => {
   );
   await Evidence.updateOne({ _id: e._id }, { $set: { status: 'done' } });
   emit(c._id, 'processing.progress', { evidenceId: String(e._id), step: 'nlp', status: 'done', pct: 100 });
+  if (e.kind === 'statement') await enqueue({ type: 'narrative', caseId: c._id, evidenceId: e._id, step: 'narrative', version: job.key.split(':').at(-1) });
   await debounceCaseJob({ type: 'case_rebuild', caseId: c._id });
   return { chunks: chunks.length };
 });
@@ -312,7 +314,31 @@ export async function generateSummary(c, inputs, { createdBy } = {}) {
   return doc;
 }
 
+/** Voice statement → cited first-person narrative + prefill suggestions (V-INTAKE). */
+export async function draftStatement(e, c) {
+  const chunks = await Chunk.find({ evidenceId: e._id }).sort({ idx: 1 }).lean();
+  const names = await Entity.find({ caseId: c._id, type: 'PERSON' }, 'aliases').lean();
+  const out = await mlJson('/case/narrative', {
+    segments: chunks.map((ch) => ({ id: ch.cid, text: ch.failed ? '[untranscribed]' : ch.text, textEn: ch.textEn, lang: ch.lang })),
+    lang: e.detectedLang,
+    llmMode: c.settings?.llmMode ?? 'cloud_redacted',
+    refTs: e.createdAt?.toISOString().slice(0, 19),
+    knownNames: names.flatMap((n) => n.aliases ?? []),
+  });
+  const last = await Statement.findOne({ evidenceId: e._id }).sort({ version: -1 }).lean();
+  const doc = await Statement.create({
+    caseId: c._id, evidenceId: e._id, version: (last?.version ?? 0) + 1, lang: out.lang, textNative: out.textNative, textEn: out.textEn,
+    sentences: out.sentences, suggestions: out.suggestions, generator: out.generator,
+  });
+  emit(c._id, 'statement.ready', { evidenceId: String(e._id), statementId: String(doc._id), version: doc.version });
+  return doc;
+}
+
 export const handlers = {
+  narrative: perEvidence(async (_job, _ctx, e, c) => {
+    const s = await draftStatement(e, c);
+    return { version: s.version, sentences: s.sentences.length };
+  }),
   extract: extractHandler,
   transcribe: extractHandler,
   nlp: nlpHandler,
