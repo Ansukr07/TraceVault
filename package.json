@@ -1,0 +1,18 @@
+{
+  "name": "tracevault",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": ["apps/*"],
+  "scripts": {
+    "dev": "concurrently -n web,api,ml -c cyan,green,magenta \"npm run dev -w apps/web\" \"npm run dev -w apps/api\" \"npm run dev:ml\"",
+    "dev:ml": "node scripts/run-ml.js",
+    "worker": "npm run worker -w apps/api",
+    "keys:generate": "node scripts/keys-generate.js",
+    "seed:demo": "node scripts/seed-demo.js",
+    "test": "npm test -w apps/api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  },
+  "engines": { "node": ">=20" }
+}
