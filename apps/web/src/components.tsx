@@ -158,18 +158,18 @@ export function CaseShell({ children, wide = false }: { children: ReactNode; wid
   const tabs: [string, string][] = isOfficerOrLegal
     ? [
         ['', 'Overview'], ['evidence', 'Evidence'], ['timeline', 'Timeline'], ['graph', 'Graph'],
-        ['inconsistencies', 'Inconsistencies'], ['summary', 'Summary'], ['insights', 'Insights'],
+        ['inconsistencies', 'Inconsistencies'], ['summary', 'Summary'], ['insights', 'Insights'], ['investigation', 'Investigate'],
         ['audit', 'Integrity'], ['export', 'Export'],
       ]
     : role === 'collaborator'
     ? [
         ['', 'Overview'], ['evidence', 'Evidence'], ['timeline', 'Timeline'], ['graph', 'Graph'],
-        ['inconsistencies', 'Inconsistencies'], ['summary', 'Summary'], ['insights', 'Insights'],
+        ['inconsistencies', 'Inconsistencies'], ['summary', 'Summary'], ['insights', 'Insights'], ['investigation', 'Investigate'],
         ['statement', 'Statement'], ['audit', 'Integrity'], ['upload', 'Add evidence'],
       ]
     : [
         ['', 'Overview'], ['evidence', 'Evidence'], ['timeline', 'Timeline'], ['graph', 'Graph'],
-        ['inconsistencies', 'Inconsistencies'], ['summary', 'Summary'], ['insights', 'Insights'],
+        ['inconsistencies', 'Inconsistencies'], ['summary', 'Summary'], ['insights', 'Insights'], ['investigation', 'Investigate'],
         ['statement', 'Statement'], ['complaint', 'Complaint'], ['audit', 'Integrity'], ['upload', 'Add evidence'], ['share', 'Share'], ['export', 'Export'],
         ['settings', 'Settings'],
       ];

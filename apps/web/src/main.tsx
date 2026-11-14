@@ -17,6 +17,7 @@ import { TimelinePage } from './pages/case/Timeline';
 import { InconsistenciesPage } from './pages/case/Inconsistencies';
 import { SummaryPage } from './pages/case/Summary';
 import { InsightsPage } from './pages/case/Insights';
+import { InvestigationPage } from './pages/case/Investigation';
 import { AuditPage } from './pages/case/Audit';
 import { SettingsPage } from './pages/case/Settings';
 import { SharePage } from './pages/case/SharePage';
@@ -102,6 +103,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="/cases/:id/inconsistencies" element={<Private><InconsistenciesPage /></Private>} />
             <Route path="/cases/:id/summary" element={<Private><SummaryPage /></Private>} />
             <Route path="/cases/:id/insights" element={<Private><InsightsPage /></Private>} />
+            <Route path="/cases/:id/investigation" element={<Private><InvestigationPage /></Private>} />
             <Route path="/cases/:id/audit" element={<Private><AuditPage /></Private>} />
             <Route path="/cases/:id/settings" element={<Private><SettingsPage /></Private>} />
             <Route path="/cases/:id/upload" element={<Private><UploadPage /></Private>} />
