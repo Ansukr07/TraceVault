@@ -1,0 +1,25 @@
+{
+  "name": "@tracevault/api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch --env-file=../../.env src/index.js",
+    "worker": "node --env-file=../../.env src/index.js --worker",
+    "test": "node --env-file-if-exists=../../.env --test \"src/**/*.test.js\""
+  },
+  "dependencies": {
+    "argon2": "^0.45.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^4.21.0",
+    "express-rate-limit": "^8.7.4",
+    "file-type": "^22.3.0",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^8.8.0",
+    "multer": "^2.5.0",
+    "pino": "^9.5.0",
+    "socket.io": "^4.8.0",
+    "zod": "^3.23.0"
+  }
+}

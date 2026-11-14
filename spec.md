@@ -11,7 +11,7 @@
 | Area | PRD v1.0 | This spec |
 |------|----------|-----------|
 | Deployment / dev env | Docker Compose (web, api, worker, ml, mongo, redis, minio) | **No Docker.** Every service runs natively as a process (Node, Python venv). One `npm run dev` starts all of them. |
-| Speech-to-text | faster-whisper (local) | **Sarvam AI** (Saarika STT, Saaras speech→English) is the primary engine. faster-whisper stays only as the offline fallback for `local` privacy mode. |
+| Speech-to-text | faster-whisper (local) | **Sarvam AI** (`saaras:v4`, `mode=transcribe` for the spoken language and `mode=translate` for English) is the primary engine. faster-whisper stays only as the offline fallback for `local` privacy mode. |
 | Voice features | Transcription only; voice intake listed as future scope | Voice is a first-class feature set (§6): evidence transcription, diarization, voice statement intake, voice Q&A, read-aloud summaries in Indian languages. |
 | Translation | Not specified (English-centric NLP) | **Sarvam Translate** turns non-English chunks into an English working copy for NER/NLI/LLM; originals are always shown and cited. |
 | Job queue | BullMQ + Redis | **MongoDB-backed job runner** (`jobs` collection). Removes Redis as a dependency. |
@@ -148,7 +148,7 @@ npm run dev
 | Storage | MongoDB GridFS (encrypted blobs). Optional: S3 / Cloudflare R2 with Object Lock |
 | Reports | Puppeteer (bundled Chromium), archiver (ZIP) |
 | ML service | Python 3.11, FastAPI, Uvicorn, Pydantic, httpx |
-| **Voice (primary)** | **Sarvam AI** via the `sarvamai` Python SDK (or raw HTTPS): Saarika (STT), Saaras (STT → English), Sarvam Translate / Mayura (text translation), Bulbul (TTS), text language identification |
+| **Voice (primary)** | **Sarvam AI** over raw HTTPS with `httpx` (no SDK dependency): Saaras v4 (`/speech-to-text`, modes `transcribe`/`translate`), Mayura (`/translate`), Bulbul v3 (`/text-to-speech`), `/text-lid` |
 | Voice (offline fallback) | faster-whisper `small` (CPU) — used only in `local` privacy mode |
 | Audio processing | ffmpeg (convert `.opus/.ogg/.m4a/.mp3/.webm` → 16 kHz mono WAV), silero-vad / webrtcvad for segmenting |
 | OCR | PaddleOCR (`en`, `devanagari`); Tesseract 5 `eng+hin` fallback |
@@ -433,7 +433,9 @@ Per-case setting, changeable only by the Owner, audited.
 
 Sarvam is used for everything speech-related and for Indian-language translation. All Sarvam calls go through one module, `services/ml/app/voice/sarvam_client.py`, so model names, retries, rate limits and usage metering live in one place.
 
-> **Model names change.** Defaults below are configurable through env vars (§9). Confirm the current model IDs, request limits and response fields against Sarvam's API docs at build time.
+> **Model names change.** Defaults below are configurable through env vars (§9). Checked against Sarvam's docs on 2026-11-14: `saaras:v4` serves both transcription and speech→English through one `/speech-to-text` endpoint (`mode=transcribe|translate`); the older Saarika + `/speech-to-text-translate` pair is legacy. Responses carry `transcript`, `language_code`, `language_probability`; timestamps are phrase-level only (no word timestamps). TTS is `bulbul:v3` (≤ 2,500 chars per request, response `audios[]` base64).
+>
+> **Implementation status (2026-11-14):** §6.1 (minus batch diarization), §6.3 routes, §6.6 synthesis route and §6.8 are implemented in `services/ml/app/voice/` + `app/lang/` + `app/routers/voice.py`, with tests in `services/ml/tests/test_voice.py`. Not yet built: §6.2 diarization (batch job API), §6.4 narrative/suggestions, §6.7 dataset generator, and the Node side (job handler, `providerUsage` persistence, routes in §10.1).
 
 ### 6.1 Evidence audio transcription (V-STT) · P0
 
@@ -442,10 +444,11 @@ Sarvam is used for everything speech-related and for Indian-language translation
 **Flow**
 1. **Normalize**: ffmpeg → 16 kHz mono PCM WAV. Keep the original untouched; the WAV is a temporary derived file.
 2. **Segment**: VAD splits speech into segments of ≤ 25 s (Sarvam's synchronous STT accepts short clips; merge very short segments, split long ones at the lowest-energy point). Each segment keeps `startMs/endMs` relative to the original file.
-3. **Transcribe** (parallel, concurrency 3–4):
-   - **Saarika** (`SARVAM_STT_MODEL`, default `saarika:v2.5`) with `language_code=unknown` for auto-detection → native-script transcript + detected language code (e.g. `hi-IN`, `kn-IN`, `en-IN`). Request timestamps where supported.
-   - **Saaras** (`SARVAM_STT_TRANSLATE_MODEL`, default `saaras:v2.5`) on the same segment → English transcript (the English working copy used by NLP).
-   - If Saaras fails, fall back to Sarvam Translate on the Saarika transcript (§6.3).
+3. **Transcribe** (parallel, concurrency 3 segments, both calls per segment concurrent):
+   - `SARVAM_STT_MODEL` (default `saaras:v4`) with `mode=transcribe, language_code=unknown` → native-script transcript + detected language code (e.g. `hi-IN`, `kn-IN`, `en-IN`) + `language_probability`.
+   - Same model with `mode=translate` on the same segment → English transcript (the English working copy used by NLP).
+   - If the translate call fails, fall back to Sarvam Translate on the original transcript (§6.3); English audio uses its own transcript as `textEn`.
+   - Segment timing comes from our VAD, not from Sarvam (Sarvam only gives phrase-level timestamps). Seek precision is therefore segment-level; ±1 s word-level seek needs local whisper word timestamps or shorter segments.
 4. **Long files / diarization**: audio longer than `SARVAM_BATCH_THRESHOLD_SEC` (default 120 s), or when the Owner asks for speaker labels, uses Sarvam's **batch STT job API with diarization**. Its speaker turns become segments with `speaker: 'SPEAKER_1'|…`. Users can rename speakers ("SPEAKER_2 = Rahul"), which links the speaker to an entity.
 5. **Persist**: a `transcript` derived artifact `{lang, provider:'sarvam', model, segments:[{startMs, endMs, speaker?, text, textEn, words?}]}`; one chunk per segment with `text` (original), `textEn`, `lang`, `locator.startMs/endMs`.
 6. **Fallback**: on `voiceMode=local`, a Sarvam outage (after 3 retries), or a missing API key, the job uses faster-whisper `small` with `word_timestamps=True, vad_filter=True`. The artifact records `provider:'local_whisper'` and the viewer shows a "local transcription" badge.
@@ -490,14 +493,14 @@ A trauma-informed way for the victim to give their account in their own language
 ### 6.5 Voice Q&A (V-ASK) · P2
 
 - A mic button in the Q&A box records a question (≤ 30 s), sends it to `POST /cases/:id/ask/voice`.
-- Saarika transcribes it (language auto-detected); the question is answered through the normal cited Q&A pipeline (N10) in English, then translated back to the question's language with Sarvam Translate.
+- Saaras (`mode=transcribe`) transcribes it (language auto-detected); the question is answered through the normal cited Q&A pipeline (N10) in English, then translated back to the question's language with Sarvam Translate.
 - The answer is shown as text with citation chips and, if `voiceMode=sarvam`, spoken with Bulbul TTS (§6.6).
 - The question audio is **not stored**: it is discarded after transcription. The audit entry stores only the question text's hash.
 
 ### 6.6 Read-aloud summaries and answers (V-TTS) · P2
 
 - A **Listen** button on the summary page and on each Q&A answer, with a language picker (English + Sarvam-supported Indian languages) and a voice picker.
-- The validated summary is translated (if needed), stripped of citation markers, split to Sarvam's per-request text limit at sentence boundaries, synthesized with **Bulbul** (`SARVAM_TTS_MODEL`, default `bulbul:v2`), and concatenated.
+- The validated summary is translated (if needed), stripped of citation markers, split to Sarvam's per-request text limit at sentence boundaries, synthesized with **Bulbul** (`SARVAM_TTS_MODEL`, default `bulbul:v3`), and concatenated.
 - The audio player highlights the sentence being read; citations stay clickable in the text.
 - Generated audio is cached per `(summaryId, lang, voice)` in GridFS as a derived artifact, so the same summary isn't synthesized twice; it is deleted when the summary is regenerated.
 - Severity-3 content is introduced with a spoken content warning before it is read.
@@ -515,7 +518,7 @@ A trauma-informed way for the victim to give their account in their own language
 | Timeouts | 30 s per sync call; batch jobs polled every 5 s up to 15 min |
 | Retries | 3 attempts with exponential backoff on 429/5xx/timeouts; no retry on 4xx validation errors |
 | Rate limiting | Client-side token bucket (`SARVAM_MAX_RPS`, default 5) shared across workers |
-| Metering | Every call records `{provider, endpoint, model, audioSeconds | chars, latencyMs, status}` in `providerUsage` (no content) |
+| Metering | Every call (including failed attempts) yields `{provider, endpoint, model, audioSeconds | chars, latencyMs, status}`. The ML service has no DB, so each response returns these as `usage` (for `/tts`, the `X-Provider-Usage` header) and Node writes them to `providerUsage`. No content is ever included |
 | Soft cap | When the daily cap (`SARVAM_DAILY_AUDIO_SEC_CAP`) is reached, new jobs fall back to local transcription and the Owner is notified |
 | Health | `/health` checks reachability with a tiny request at most once every 5 min |
 | Testing | `SARVAM_MOCK=true` returns recorded fixtures so tests and offline dev don't call the API |
@@ -630,11 +633,10 @@ OLLAMA_MODEL=qwen2.5:7b-instruct
 # --- sarvam (voice + translation) ---
 SARVAM_API_KEY=
 SARVAM_BASE_URL=https://api.sarvam.ai
-SARVAM_STT_MODEL=saarika:v2.5
-SARVAM_STT_TRANSLATE_MODEL=saaras:v2.5
+SARVAM_STT_MODEL=saaras:v4         # used with mode=transcribe and mode=translate
 SARVAM_TRANSLATE_MODEL=mayura:v1
-SARVAM_TTS_MODEL=bulbul:v2
-SARVAM_TTS_DEFAULT_SPEAKER=
+SARVAM_TTS_MODEL=bulbul:v3
+SARVAM_TTS_DEFAULT_SPEAKER=shubh
 SARVAM_BATCH_THRESHOLD_SEC=120
 SARVAM_MAX_RPS=5
 SARVAM_DAILY_AUDIO_SEC_CAP=7200
@@ -685,11 +687,11 @@ All PRD §12.2 routes apply, except that file inputs are **multipart `file`** in
 
 | Method | Path | Input | Output |
 |--------|------|-------|--------|
-| POST | `/transcribe` | `file`, `provider: sarvam|local`, `diarize?`, `numSpeakers?`, `redactMode` | `{lang, provider, model, durationMs, segments:[{startMs,endMs,speaker?,text,textEn,words?}]}` |
-| POST | `/voice/transcribe-query` | `file` (≤ 30 s) | `{text, lang}` |
-| POST | `/translate` | `{items:[{id,text,src?}], target:'en-IN'|..., redact:Boolean}` | `{items:[{id,text,src,provider}]}` |
-| POST | `/lang/detect` | `{items:[{id,text}]}` | `{items:[{id,lang,confidence}]}` |
-| POST | `/tts` | `{text, lang, voice}` | `audio/wav` stream + `X-Sentence-Timings` header |
+| POST | `/transcribe` | `file`, `provider: sarvam|local`, `diarize?`, `numSpeakers?`, `segments?` (JSON `[[startMs,endMs]]` to retry only those) | `{lang, provider: sarvam|local_whisper|none, model, durationMs, segments:[{startMs,endMs,speaker?,text,textEn,lang,langConfidence,failed?,words?}], fallback: null|'sarvam_unconfigured'|'sarvam_failed'|'local_unavailable', diarization, usage[]}` |
+| POST | `/voice/transcribe-query` | `file` (≤ 30 s) | `{text, lang, durationMs, usage[]}` |
+| POST | `/translate` | `{items:[{id,text,src?,pii?:{literal:TYPE}}], target:'en-IN'|..., redact:Boolean}` | `{items:[{id,text|null,src,provider,model,redacted,error?}], usage[]}` (`text:null` → keep the original) |
+| POST | `/lang/detect` | `{items:[{id,text}], useProvider?}` | `{items:[{id,lang,confidence,ambiguous,source,needsTranslation}], usage[]}`; romanized Hindi is `hi-Latn` |
+| POST | `/tts` | `{text, lang, voice}` (citation markers stripped server-side) | `audio/wav` (16 kHz) + `X-Sentence-Timings` + `X-Provider-Usage` headers |
 | POST | `/case/narrative` | `{transcript, lang}` | `{textNative, textEn, sentences[], suggestions{}}` |
 | POST | `/case/insights` | `{chunks, events}` | `{escalation[], heatmap[][], firstContact, peakHours[]}` |
 | GET | `/health` | — | models loaded, GPU, ffmpeg/tesseract found, Sarvam/Claude/Ollama status |
@@ -736,7 +738,7 @@ All PRD §12.2 routes apply, except that file inputs are **multipart `file`** in
 | Category | Requirement |
 |----------|-------------|
 | Performance | API p95 < 300 ms for non-ML routes; timeline/graph payload < 1 MB for 2k events |
-| Voice latency | Voice note ≤ 60 s transcribed (Saarika + Saaras) in < 10 s; voice Q&A round trip < 8 s |
+| Voice latency | Voice note ≤ 60 s transcribed (Saaras transcribe + translate) in < 10 s; voice Q&A round trip < 8 s |
 | Throughput | 50 files/case; 5 concurrent cases on one machine |
 | Reliability | 3 retries with backoff; partial results visible; a failed step or provider never blocks other evidence; automatic local fallback when Sarvam is unavailable |
 | Reproducibility | Generator, model, provider and prompt versions recorded on every artifact |

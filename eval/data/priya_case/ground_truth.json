@@ -1,0 +1,82 @@
+{
+  "persons": [
+    {
+      "name": "Rahul K",
+      "aliases": [
+        "Rahul K",
+        "Rahul",
+        "rk.alt.2024@gmail.com",
+        "@rahul_k_official"
+      ],
+      "identifiers": [
+        "rahul.k@okaxis",
+        "quickcash.77@ybl",
+        "+919876543210",
+        "rk.alt.2024@gmail.com",
+        "rahul_k_official"
+      ]
+    },
+    {
+      "name": "Priya",
+      "aliases": [
+        "Priya",
+        "Priya S",
+        "Me"
+      ],
+      "owner": true
+    }
+  ],
+  "muleCluster": [
+    "rahul.k@okaxis",
+    "quickcash.77@ybl"
+  ],
+  "inconsistencies": [
+    {
+      "type": "EDITED_FILE",
+      "file": "screenshot_rahul_demand.png"
+    },
+    {
+      "type": "AMOUNT_MISMATCH",
+      "values": [
+        5000,
+        50000
+      ],
+      "identifier": "rahul.k@okaxis"
+    },
+    {
+      "type": "DATE_CONFLICT",
+      "subtype": "statement_vs_evidence",
+      "statementDate": "2024-05-20",
+      "evidenceDate": "2024-05-16"
+    }
+  ],
+  "events": [
+    {
+      "ts": "2024-05-15T20:30:00",
+      "category": "extortion",
+      "amount": 5000
+    },
+    {
+      "ts": "2024-05-16",
+      "category": "payment",
+      "amount": 50000
+    },
+    {
+      "ts": "2024-05-18T21:12:00",
+      "category": "extortion",
+      "amount": 20000
+    },
+    {
+      "ts": "2024-05-19",
+      "category": "payment",
+      "amount": 20000
+    },
+    {
+      "ts": "2024-05-20T07:55:00",
+      "category": "threat"
+    }
+  ],
+  "voiceNotes": [],
+  "statementText": "On 20 May I paid Rs 50,000 to rahul.k@okaxis because he said he would make my photos viral. He also told me to come to Forum Mall.",
+  "generatedAt": "2026-11-14T14:45:06"
+}

@@ -671,7 +671,7 @@ Base: `/api/v1` · Auth: `Authorization: Bearer <jwt>` · Errors: `{ error: { co
 | POST | `/case/ask` | `{question, caseCtx}` | `{answer, sentences[]}` |
 | GET | `/health` | — | model load status, GPU availability |
 
-The ML service fetches files through **short-TTL presigned URLs** issued by Node and never has DB credentials. Results return to Node, which persists them.
+File inputs are sent by Node as **multipart file bytes** (decrypted from GridFS) instead of `fileUrl`; the ML service never has DB credentials. Results return to Node, which persists them. `/transcribe` takes `provider: sarvam|local` and `diarize?`; voice/translation/TTS endpoints (`/translate`, `/lang/detect`, `/tts`, `/voice/transcribe-query`, `/case/narrative`) are in spec.md §10.2.
 
 ---
 
@@ -681,7 +681,7 @@ The ML service fetches files through **short-TTL presigned URLs** issued by Node
 Built with a script plus an LLM, with **ground truth JSON** checked in:
 - 1 WhatsApp export (~300 messages over 6 weeks, Hinglish, escalating threats, money requests)
 - 8 screenshots: 5 genuine chat screenshots (rendered from the export with an HTML chat template, then screenshotted), 1 resized re-share (near-duplicate), 1 with the **date edited** and `Software=Snapseed` EXIF (planted inconsistency), 1 Instagram DM screenshot from a second handle of the same person (entity-resolution test)
-- 2 voice notes (TTS, Hindi + English) containing a threat and a location
+- 3 voice notes generated with Sarvam Bulbul TTS (Hindi, English, Kannada) containing a threat and a location, plus one 2-speaker call recording for diarization
 - 1 bank statement PDF with UPI debits, one amount **different from what the chat claims** (planted inconsistency)
 - 1 email from the harasser's alternate address mentioning the same phone number (entity-resolution link)
 - 1 police complaint draft PDF with a **wrong date** for the first incident (planted inconsistency)
@@ -692,7 +692,8 @@ Ground truth: event list with timestamps, entity clusters, duplicate pairs, inco
 | Component | Metric | Target |
 |-----------|--------|--------|
 | OCR | Character error rate (CER) on screenshots | ≤ 5% |
-| STT | Word error rate (WER) | ≤ 15% (Hinglish) |
+| STT (Sarvam) | Word error rate (WER) | ≤ 15% (Hindi, English, Hinglish, Kannada) |
+| Translation | NER F1 gap, Hindi/Hinglish vs English chunks | ≤ 0.05 |
 | NER | Entity-level F1 (PHONE/EMAIL/UPI/MONEY/PERSON) | ≥ 0.85 |
 | Entity resolution | Pairwise F1 / B³ | ≥ 0.85 |
 | Dedup | Precision / recall per tier | ≥ 0.9 / ≥ 0.8 |
@@ -704,7 +705,7 @@ Ground truth: event list with timestamps, entity clusters, duplicate pairs, inco
 
 Comparison with a baseline: **manual reconstruction time** (one teammate timed doing it by hand) vs TraceVault time. Show this on the pitch slide.
 
-`eval/run_eval.py` produces a markdown/JSON report; a CI job runs it on every merge to `main`.
+`eval/run_eval.py` produces a markdown/JSON report; a CI job runs it on every merge to `main` with `SARVAM_MOCK=true` (recorded fixtures), and the team runs it with real Sarvam calls for the pitch numbers.
 
 ---
 
@@ -717,12 +718,14 @@ Comparison with a baseline: **manual reconstruction time** (one teammate timed d
 | `/cases` | Case list | Cards with status, evidence count, last activity |
 | `/cases/:id` | **Overview** | Stats (evidence, people, events, inconsistencies), processing progress, key moments, mini timeline, top entities |
 | `/cases/:id/upload` | Upload | Dropzone, per-file client hash display, progress, duplicate warning on hash collision |
+| `/cases/:id/statement` | Voice statement | Recorder, guided prompts, transcript, draft narrative editor, suggestions |
+| `/cases/:id/settings` | Case settings | LLM / voice / translation privacy modes, Sarvam consent, delete case |
 | `/cases/:id/evidence` | Evidence library | Table/grid, filters by kind/source/person, duplicate grouping |
 | `/cases/:id/evidence/:eid` | **Viewer** | Original (image with OCR boxes / PDF / audio waveform / chat-styled view) ‖ extracted text with entity highlights, metadata panel, hash + "verify file" button |
 | `/cases/:id/timeline` | **Timeline** | vis-timeline lanes (by source/person), severity colours, approx-range bars, filters, event drawer with citations, edit event |
 | `/cases/:id/graph` | **Graph** | Cytoscape fcose layout, node-type toggles, time slider, centrality sizing, community colours, merge suggestion handling |
 | `/cases/:id/inconsistencies` | Inconsistencies | Side-by-side cards with both sources, severity, dismiss/explain |
-| `/cases/:id/summary` | **Summary** | Sections, citation chips with hover preview, ⚠ badges, regenerate, Q&A box |
+| `/cases/:id/summary` | **Summary** | Sections, citation chips with hover preview, ⚠ badges, regenerate, language picker + Listen (Bulbul), Q&A box with mic |
 | `/cases/:id/audit` | **Audit & integrity** | Chain table (seq, actor, action, hash prefix), Verify button with green/red result report, Merkle root, signed checkpoints |
 | `/cases/:id/share` | Sharing | Create grant form, active grants, view counts, revoke |
 | `/cases/:id/export` | Export | Report PDF / bundle ZIP / certificate draft |
@@ -742,12 +745,12 @@ Comparison with a baseline: **manual reconstruction time** (one teammate timed d
 |----------|-------------|
 | Performance | API p95 < 300 ms for non-ML endpoints; timeline/graph payload < 1 MB for 2k events (server-side filtering) |
 | Throughput | Pipeline handles 50 files/case and 5 concurrent cases on one GPU box |
-| Scalability | Stateless API and ML containers; horizontal scale via Redis queue; storage on S3 |
+| Scalability | Stateless API and ML processes; more workers via `WORKER_IN_PROCESS=false` processes claiming from the Mongo job queue; storage can move to S3 |
 | Reliability | Job retries with exponential backoff (3 attempts); partial results visible; a failed step never blocks other evidence |
 | Reproducibility | Generator versions recorded; deterministic seeds; prompt versions stored |
 | Privacy | Data minimization; local-LLM mode; no third-party analytics on case pages; DPDP Act 2023-aligned consent and deletion |
-| Observability | pino logs (no content), BullMQ dashboard (bull-board), `/health` endpoints, per-step timing metrics |
-| Portability | `docker compose up` brings up the full stack; seed script loads the demo case |
+| Observability | pino logs (no content), admin jobs dashboard, `/health` endpoints (incl. Sarvam/Claude reachability), per-step timing metrics, Sarvam usage metering |
+| Portability | Runs natively on Windows, macOS and Linux with no Docker: `npm run dev` brings up web, API and ML; seed script loads the demo case |
 
 ---
 
@@ -770,7 +773,7 @@ tracevault/
 │       │   ├── middleware/      # auth, rbac, scope, rateLimit, validate
 │       │   ├── models/          # Mongoose schemas (§8)
 │       │   ├── services/        # storage, crypto (envelope, ed25519), audit-chain, merkle, report, share
-│       │   ├── queue/           # BullMQ queues, flows, workers, ml-client
+│       │   ├── jobs/            # Mongo-backed runner, pipeline DAG, debounce, ml-client
 │       │   ├── sockets/
 │       │   └── templates/       # report + BSA certificate HTML
 │       └── test/
@@ -778,7 +781,9 @@ tracevault/
 │   └── ml/                      # Python FastAPI
 │       ├── app/
 │       │   ├── main.py
-│       │   ├── routers/         # parse, ocr, stt, nlp, case
+│       │   ├── routers/         # parse, ocr, voice, translate, nlp, case
+│       │   ├── voice/           # sarvam_client.py, local_whisper.py, audio.py (ffmpeg), vad.py, tts.py
+│       │   ├── lang/            # detect.py, translate.py, redact.py
 │       │   ├── parsers/         # whatsapp.py, screenshot_chat.py, pdf.py, eml.py, metadata.py
 │       │   ├── nlp/             # ner.py, temporal.py, severity.py, embed.py
 │       │   ├── case/            # resolve.py, dedup.py, events.py, timeline.py, graph.py, inconsistency.py, summarize.py
@@ -791,7 +796,9 @@ tracevault/
 │   ├── generate_case.py
 │   └── run_eval.py
 ├── tools/verify_bundle/verify.py   # offline bundle verifier
-├── docker-compose.yml
+├── scripts/                     # keys-generate.js, seed-demo.js
+├── ecosystem.config.cjs         # pm2 (demo box)
+├── package.json                 # workspaces + concurrently "dev" script
 ├── .env.example
 └── README.md
 ```
@@ -804,28 +811,28 @@ tracevault/
 |--------|-------|
 | **FE** | React app: upload, viewer, timeline, graph, summary, audit pages |
 | **BE** | Express API, auth/RBAC, storage + sealing, audit chain, queue orchestration, sockets, report export |
-| **ML-1** | Parsers, OCR, STT, metadata, chunking, embeddings, dedup |
+| **ML-1** | Parsers, OCR, Sarvam voice module (STT, translation, TTS, local fallback), metadata, chunking, embeddings, dedup |
 | **ML-2** | NER, temporal, entity resolution, events, timeline, inconsistencies, summary + citation validation |
 
 | Hours | Milestone | Done when |
 |-------|-----------|-----------|
-| 0–2 | Setup | Repo, docker-compose (mongo/redis/minio), schemas agreed, **demo dataset script started** (ML-2), API contract frozen |
-| 2–8 | Skeletons | Auth + case CRUD + upload with hashing + audit chain (BE); routing, layout, upload page (FE); WhatsApp parser + OCR + STT endpoints (ML-1); NER + temporal on sample text (ML-2) |
-| 8–14 | Pipeline end to end | BullMQ flow calls all ML endpoints and persists chunks and entities; viewer shows extracted text with highlights; **first full run on the demo case** |
+| 0–2 | Setup | Everyone runs `npm run dev` natively; MongoDB replica set (local or Atlas) up; Sarvam + Claude keys working; schemas agreed, **demo dataset script started** (ML-2), API contract frozen |
+| 2–8 | Skeletons | Auth + case CRUD + upload with hashing + GridFS sealing + audit chain + job runner (BE); routing, layout, upload page (FE); WhatsApp parser + OCR + Sarvam `/transcribe` (ML-1); NER + temporal on sample text (ML-2) |
+| 8–14 | Pipeline end to end | Job runner calls all ML endpoints and persists chunks and entities; Sarvam translation working; viewer shows extracted text with highlights; **first full run on the demo case** |
 | 14–20 | Intelligence | Entity resolution, dedup (incl. cross-modal), events, timeline, graph; FE timeline + graph pages live |
-| 20–25 | Wow features | Inconsistency detection, cited summary + validator, Verify-integrity page with the tamper demo |
+| 20–25 | Wow features | Inconsistency detection, cited summary + validator, Verify-integrity page with the tamper demo, voice statement intake |
 | 25–28 | Share + export | Share grant flow, report PDF with hashes and certificate draft; eval script numbers |
 | 28–30 | Polish + pitch | Bug bash, seed demo data, rehearse a 3-minute demo, record a backup video |
 
-**Cut line** (drop in this order if behind): Q&A → diarization → Merkle/OTS → bundle ZIP → email parsing → screenshot bubble parsing (fall back to plain OCR blocks).
+**Cut line** (drop in this order if behind): read-aloud TTS → voice Q&A → typed Q&A → diarization → Merkle/OTS → bundle ZIP → email parsing → voice statement intake → screenshot bubble parsing (fall back to plain OCR blocks).
 
 ### 17.1 Demo script (3 minutes)
 1. **Problem** (20 s): "Priya has 13 files across 5 formats. Police ask her for a timeline."
 2. **Upload** (20 s): drag all files in; hashes appear instantly; live progress.
-3. **Timeline** (40 s): 6 weeks of escalation, colour-coded; click a threat → plays the exact second of the voice note.
+3. **Timeline** (40 s): 6 weeks of escalation, colour-coded; click a threat → plays the exact second of the Hindi voice note, with Sarvam's English translation beside it.
 4. **Graph** (30 s): "Rahul", an Instagram handle and a second email are auto-linked into one person; 2 UPI IDs form a mule cluster.
 5. **Inconsistencies** (30 s): edited screenshot caught (EXIF Snapseed + date mismatch); chat claims ₹5,000 but bank shows ₹50,000.
-6. **Summary** (20 s): every sentence cited; hover shows the source.
+6. **Summary** (20 s): every sentence cited; hover shows the source; switch to Hindi and press Listen.
 7. **Integrity** (20 s): tamper with one DB byte → Verify turns red at entry #47. Export the report with hashes and the certificate draft.
 
 ---
@@ -836,7 +843,11 @@ tracevault/
 |------|--------|-----------|
 | LLM hallucination in summaries/events | Destroys trust (legal context) | Chunk-ID-grounded prompts, ID validation, NLI support check, ⚠ badges, human edit |
 | Hinglish / Devanagari OCR and NER quality | Missed entities | PaddleOCR + Tesseract `hin`; GLiNER multilingual; regex for high-value entities (phones, UPI, ₹) |
-| Whisper is slow on CPU | Demo latency | `small` model + VAD; pre-process the demo case; GPU (Colab/Kaggle tunnel) if available |
+| Sarvam outage, rate limit or quota during the demo | No transcripts | Pre-process the demo case; automatic local faster-whisper fallback; daily usage soft cap; mock fixtures |
+| Sending audio to a cloud provider | Privacy objection | Explicit consent per case, Indian provider, local voice mode, voice Q&A audio not retained |
+| Machine translation shifts meaning | Wrong entities / contradictions | Always cite and display the original; regex NER on the original text |
+| Native setup differs across laptops (no Docker) | Lost hours | One-page setup in spec.md §13; `/health` names missing tools; Atlas as zero-install DB |
+| MongoDB not running as a replica set | Audit-chain transactions fail | Startup check refuses to run and prints the fix |
 | Scope creep | Unfinished demo | P0/P1/P2 discipline; cut line (§17) |
 | Sending sensitive data to a cloud LLM | Privacy objection from judges | Redacted and local modes; explain clearly in the pitch |
 | Screenshot chat parsing varies by app/theme | Wrong senders | Fall back to block-level chunks; dark-mode inversion; target WhatsApp light/dark only for the MVP |
@@ -850,7 +861,7 @@ tracevault/
 - Direct integrations: National Cybercrime Reporting Portal (cybercrime.gov.in) complaint pre-fill, Google Takeout/Instagram data download import.
 - Mobile capture app that hashes at capture time (stronger chain of custody).
 - Multi-victim pattern linking for NGOs and police (same offender across cases, with consent).
-- Regional language UI and voice-guided intake.
+- Full regional-language UI; voice-only intake over a phone line (IVR) for victims without smartphones; Sarvam streaming STT for live call capture (with consent).
 
 ---
 

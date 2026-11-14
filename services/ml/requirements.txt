@@ -1,0 +1,8 @@
+fastapi>=0.115
+uvicorn[standard]>=0.32
+pydantic>=2.9
+httpx>=0.27
+python-multipart>=0.0.12
+# Sarvam is called over httpx (no SDK). Added per milestone:
+# faster-whisper (optional, local STT fallback), paddleocr, spacy, gliner, dateparser, phonenumbers, rapidfuzz,
+# sentence-transformers, imagehash, datasketch, networkx, PyMuPDF, anthropic
