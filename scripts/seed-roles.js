@@ -14,6 +14,7 @@ async function upsert(email, fields) {
   return User.findOneAndUpdate({ email }, { $set: { name: fields.name, accountType: fields.accountType ?? 'citizen', isAdmin: !!fields.isAdmin, ...(fields.officer ? { officer: fields.officer } : {}) }, $setOnInsert: { email, passwordHash } }, { upsert: true, new: true });
 }
 
+await upsert(process.env.DEMO_EMAIL ?? 'priya.demo@tracevault.test', { name: 'Priya' }); // complainant demo login
 const admin = await upsert('admin.demo@tracevault.test', { name: 'Platform Admin', isAdmin: true });
 const official = await upsert('official.demo@tracevault.test', { name: 'Meera Nair (Home Dept.)', accountType: 'official' });
 const officer = await upsert('officer.demo@tracevault.test', {

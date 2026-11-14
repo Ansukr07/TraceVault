@@ -4,6 +4,7 @@
   "installCommand": "npm ci",
   "buildCommand": "npm run build -w @tracevault/web",
   "outputDirectory": "apps/web/dist",
+  "build": { "env": { "VITE_DEMO_LOGIN": "true" } },
   "functions": {
     "api/index.js": {
       "maxDuration": 300,
