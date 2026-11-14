@@ -52,3 +52,8 @@ export async function mlBinary(path, payload, { timeoutMs = 300_000 } = {}) {
   if (!r.ok) await handle(r, path);
   return { buffer: Buffer.from(await r.arrayBuffer()), headers: r.headers };
 }
+
+export async function mlDelete(path, { timeoutMs = 60_000 } = {}) {
+  const r = await fetch(`${config.ML_BASE_URL}${path}`, { method: 'DELETE', headers: headers(), signal: AbortSignal.timeout(timeoutMs) });
+  return handle(r, path);
+}
