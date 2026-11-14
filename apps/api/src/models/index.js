@@ -68,7 +68,11 @@ const caseSchema = new Schema(
       voiceConsentBy: Schema.Types.ObjectId,
       translateMode: { type: String, enum: ['sarvam', 'sarvam_redacted', 'off'], default: 'sarvam_redacted' },
       // 'cloud' lets a cloud OCR (Google Vision) read scripts the local engine cannot, e.g. Kannada. Images leave the server, so opt-in.
-      ocrMode: { type: String, enum: ['local', 'cloud'], default: 'local' },
+      // 'cloud': local first, then Google Vision / Sarvam Vision for scripts the local engine cannot read (e.g. Kannada).
+      // 'sarvam': Sarvam Vision first. Both send images off the server, so they are opt-in.
+      ocrMode: { type: String, enum: ['local', 'cloud', 'sarvam'], default: 'local' },
+      // System1 (Laya incident-type model): 'local' keeps case text on this server; 'hosted' may use Hugging Face inference.
+      system1Mode: { type: String, enum: ['local', 'hosted'], default: 'local' },
       uiLanguage: { type: String, default: 'en-IN' },
     },
     // Regional routing for complaints (regional-states-india-spec.md §7). Free text and flags the user stated; never inferred.

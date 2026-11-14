@@ -464,7 +464,8 @@ caseDataRouter.patch(
       voiceMode: z.enum(['sarvam', 'local']).optional(),
       voiceConsent: z.boolean().optional(),
       translateMode: z.enum(['sarvam', 'sarvam_redacted', 'off']).optional(),
-      ocrMode: z.enum(['local', 'cloud']).optional(),
+      ocrMode: z.enum(['local', 'cloud', 'sarvam']).optional(),
+      system1Mode: z.enum(['local', 'hosted']).optional(),
       timezone: z.string().max(60).optional(),
     }),
   ),
@@ -478,6 +479,7 @@ caseDataRouter.patch(
         if (!b.voiceMode) s.voiceMode = 'local';
         if (!b.translateMode) s.translateMode = 'off';
         if (!b.ocrMode) s.ocrMode = 'local';
+        if (!b.system1Mode) s.system1Mode = 'local';
       }
       s.llmMode = b.llmMode;
     }
@@ -495,6 +497,7 @@ caseDataRouter.patch(
     }
     if (b.translateMode) s.translateMode = b.translateMode;
     if (b.ocrMode) s.ocrMode = b.ocrMode;
+    if (b.system1Mode) s.system1Mode = b.system1Mode;
     if (b.timezone) c.timezone = b.timezone;
     await c.save();
     await audit(c._id, { actorId: req.user._id, actorRole: req.role, action: 'PRIVACY_SETTINGS_CHANGED', target: String(c._id), payload: { ...b, voiceConsent: b.voiceConsent } });
