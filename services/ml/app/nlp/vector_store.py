@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import threading
 from typing import Any
 
 
@@ -10,20 +11,28 @@ class CaseVectorStore:
     def __init__(self) -> None:
         self._collection = None
         self._error: str | None = None
+        self._lock = threading.Lock()
 
     def _get_collection(self):
-        if self._collection is None and self._error is None:
-            try:
-                import chromadb
+        # Chroma's client cache is not safe to initialise from several threads at once (concurrent /nlp/enrich
+        # calls raced into a KeyError on the path). Initialise under a lock, and retry on the next call instead of
+        # remembering a transient failure forever.
+        if self._collection is not None:
+            return self._collection
+        with self._lock:
+            if self._collection is None:
+                try:
+                    import chromadb
 
-                path = os.getenv("CHROMA_PERSIST_DIRECTORY", "./data/chroma")
-                client = chromadb.PersistentClient(path=path)
-                self._collection = client.get_or_create_collection(
-                    name=os.getenv("CHROMA_COLLECTION", "tracevault_chunks"),
-                    metadata={"hnsw:space": "cosine"},
-                )
-            except Exception as exc:
-                self._error = str(exc)
+                    path = os.getenv("CHROMA_PERSIST_DIRECTORY", "./data/chroma")
+                    client = chromadb.PersistentClient(path=path)
+                    self._collection = client.get_or_create_collection(
+                        name=os.getenv("CHROMA_COLLECTION", "tracevault_chunks"),
+                        metadata={"hnsw:space": "cosine"},
+                    )
+                    self._error = None
+                except Exception as exc:  # noqa: BLE001
+                    self._error = f"{type(exc).__name__}: {exc}"
         if self._collection is None:
             raise RuntimeError(f"ChromaDB unavailable: {self._error}")
         return self._collection

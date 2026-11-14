@@ -101,7 +101,8 @@ const OBJECTIVE = 'Investigate this case: who did what and when, what payments w
 /** Planner + selected agents + System1 review. */
 export async function runInvestigation(c, scope, objective = OBJECTIVE) {
   const t0 = Date.now();
-  const caseCtx = await buildCaseCtx(c, scope);
+  // The objective doubles as the retrieval agent's question, so its cited passages answer what was asked.
+  const caseCtx = await buildCaseCtx(c, scope, { question: objective });
   if (!caseCtx.chunks.length) {
     const err = new Error('No processed evidence in scope yet');
     err.status = 409;

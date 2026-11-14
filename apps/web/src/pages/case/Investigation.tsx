@@ -26,6 +26,7 @@ const AGENT_NAMES: Record<string, string> = {
   evidence_quality: 'Evidence quality', financial_investigation: 'Financial investigation', knowledge_graph: 'Knowledge graph',
   evidence_gap: 'Evidence gaps', rag_investigation: 'Cited retrieval', investigation_replay: 'Investigation replay', report_generation: 'Report draft',
 };
+const uniq = (ids?: string[]) => [...new Set(ids ?? [])];
 const inr = (n: number) => `₹${Math.round(n).toLocaleString('en-IN')}`;
 
 export function InvestigationPage() {
@@ -161,7 +162,7 @@ function Financial({ r, caseId }: { r: any; caseId: string }) {
                 <tr key={i}>
                   <td>{x.amount != null ? inr(Number(x.amount)) : x.transaction?.amount ? inr(Number(x.transaction.amount)) : '—'}</td>
                   <td>{x.matched ? <span>{x.transaction?.upiId} · {inr(Number(x.transaction?.amount))}</span> : <span className="muted">no matching row</span>}</td>
-                  <td><Cites ids={x.citations ?? []} caseId={caseId} /></td>
+                  <td><Cites ids={uniq(x.citations)} caseId={caseId} /></td>
                 </tr>
               ))}
             </tbody>
@@ -214,7 +215,7 @@ function Replay({ r, caseId }: { r: any; caseId: string }) {
       <h2 style={{ fontSize: 18 }}>Investigation replay</h2>
       <ul className="list">
         {(r.items as any[]).map((it) => (
-          <li key={it.id}><span><span className="mono muted">{fmtDate(it.timestamp)}</span> {it.title} <Cites ids={it.sourceIds ?? []} caseId={caseId} /></span></li>
+          <li key={it.id}><span><span className="mono muted">{fmtDate(it.timestamp)}</span> {it.title} <Cites ids={uniq(it.sourceIds)} caseId={caseId} /></span></li>
         ))}
       </ul>
       {(r.untimedEventIds ?? []).length > 0 && <p className="muted" style={{ fontSize: 12 }}>{r.untimedEventIds.length} events have no time and are left out.</p>}

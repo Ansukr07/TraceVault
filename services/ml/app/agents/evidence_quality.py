@@ -86,7 +86,7 @@ def _inspect(state: AgentState) -> AgentState:
         citations.extend(item_citations)
 
     related_items = list(related.values())
-    citations.extend(item["chunkId"] for item in related_items)
+    citations.extend(item["chunkId"] for item in related_items if "chunkId" in item)  # skip retrieval-warning entries
     return {"result": {"caseId": ctx["caseId"], "status": "reviewed", "reviewedEvidenceIds": [str(i.get("id") or i.get("evidenceId") or "unknown") for i in targets], "findings": findings, "relatedEvidence": related_items, "citations": list(dict.fromkeys(citations)), "method": "metadata_and_extraction_signals_plus_case_scoped_vector_retrieval", "limitations": ["Visual appearance and authenticity are not independently verified; review the original file."]}}
 
 
