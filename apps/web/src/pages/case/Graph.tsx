@@ -5,7 +5,7 @@ import cytoscape, { type Core } from 'cytoscape';
 import fcose from 'cytoscape-fcose';
 import { api, post } from '../../lib/api';
 import { fmtDate } from '../../lib/case';
-import { CaseShell, Cites, Empty, Stat } from '../../components';
+import { CaseShell, Cites, Empty, PageLoading, Stat } from '../../components';
 
 cytoscape.use(fcose);
 
@@ -23,6 +23,24 @@ const GROUPS: { key: string; label: string; types: string[] }[] = [
 ];
 const EDGE_LEGEND: [string, string][] = [['threatened', '#b5412a'], ['paid', '#2f7a55'], ['messaged', '#8e8d89'], ['possible match', '#e2603d']];
 const EDGE_COLOR: Record<string, string> = { MESSAGED: '#8e8d89', THREATENED: '#b5412a', PAID: '#2f7a55', APPEARS_WITH: '#b9b8b3', MENTIONED_IN: '#d6d5d1', SAME_AS_CANDIDATE: '#e2603d', CALLED: '#2f6fb0' };
+
+type PersonOut = { name: string; sentences: { text: string; citations: string[]; supported?: boolean }[]; answer: string };
+function PersonSummary({ caseId, nodeKey }: { caseId: string; nodeKey: string }) {
+  const [out, setOut] = useState<PersonOut | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  useEffect(() => { setOut(null); setErr(''); }, [nodeKey]);
+  const run = async () => { setBusy(true); setErr(''); try { setOut(await post<PersonOut>(`/cases/${caseId}/entities/summary`, { key: nodeKey })); } catch (x) { setErr((x as Error).message); } finally { setBusy(false); } };
+  return (
+    <div className="stack" style={{ gap: 6 }}>
+      {!out && <button type="button" className="btn btn-ghost btn-sm" disabled={busy} onClick={run}>{busy ? 'Summarizing…' : 'Summarize everything about this person'}</button>}
+      {err && <p className="err">{err}</p>}
+      {out && (out.sentences.length ? out.sentences.map((s, i) => (
+        <p key={i} style={{ fontSize: 13 }}>{s.text} <Cites ids={s.citations} caseId={caseId} />{s.supported === false && <span className="badge" title="Not fully supported by the cited text"> ⚠</span>}</p>
+      )) : <p className="muted" style={{ fontSize: 13 }}>{out.answer}</p>)}
+    </div>
+  );
+}
 
 export function GraphPage() {
   const { id = '' } = useParams();
@@ -99,6 +117,16 @@ export function GraphPage() {
 
   const zoomBy = (f: number) => { const c = cy.current; if (c) c.animate({ zoom: { level: c.zoom() * f, renderedPosition: { x: c.width() / 2, y: c.height() / 2 } }, duration: 150 }); };
   const fit = () => { const c = cy.current; if (c) c.animate({ fit: { eles: c.elements(), padding: 40 }, duration: 200 }); };
+  // G7: PNG of the whole graph for the report.
+  const exportPng = () => {
+    const c = cy.current;
+    if (!c) return;
+    const url = c.png({ full: true, scale: 2, bg: '#ffffff' });
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `tracevault-graph-${id}.png`;
+    a.click();
+  };
   const relayout = () => cy.current?.layout({ name: 'fcose', animate: true, randomize: true, nodeRepulsion: 9000, idealEdgeLength: 110, nodeSeparation: 80 } as any).run();
 
   // G3: time slider hides edges that start after the cutoff.
@@ -117,7 +145,7 @@ export function GraphPage() {
     setTimeout(() => qc.invalidateQueries({ queryKey: ['graph', id] }), 2500);
   }
 
-  if (q.isLoading) return <CaseShell><p className="muted">Loading…</p></CaseShell>;
+  if (q.isLoading) return <CaseShell><PageLoading variant="graph" label="Loading relationship graph" /></CaseShell>;
   if (!g || g.nodes.length === 0) return <CaseShell><Empty title="No graph yet">The graph appears once people and identifiers are found in the evidence.</Empty></CaseShell>;
   const nodeById = new Map(g.nodes.map((n) => [n.id, n]));
   const connected = sel?.kind === 'node' ? g.edges.filter((e) => e.source === sel.n.id || e.target === sel.n.id) : [];
@@ -155,6 +183,7 @@ export function GraphPage() {
             <button type="button" onClick={() => zoomBy(0.8)} aria-label="Zoom out">−</button>
             <button type="button" onClick={fit} aria-label="Fit to screen" title="Fit">⤢</button>
             <button type="button" onClick={relayout} aria-label="Re-arrange" title="Re-arrange">↻</button>
+            <button type="button" onClick={exportPng} aria-label="Export as PNG" title="Export as PNG">⤓</button>
           </div>
           <div className="gr-legend" aria-hidden="true">
             {EDGE_LEGEND.map(([l, c]) => <span key={l}><i style={{ background: c }} />{l}</span>)}
@@ -179,6 +208,7 @@ export function GraphPage() {
               <p className="eyebrow">{sel.n.type.replace('_', ' ')}{sel.n.isOwner ? ' · complainant' : ''}</p>
               <h3 style={{ fontSize: 20 }}>{sel.n.label}</h3>
               <p className="muted" style={{ fontSize: 13 }}>{sel.n.mentions} mentions{sel.n.muleCluster ? ' · in a cluster with several payment identifiers' : ''}</p>
+              {sel.n.type === 'PERSON' && <PersonSummary caseId={id} nodeKey={sel.n.id} />}
               <ul className="list">
                 {connected.filter((e) => e.type !== 'MENTIONED_IN').slice(0, 12).map((e) => {
                   const other = nodeById.get(e.source === sel.n.id ? e.target : e.source);

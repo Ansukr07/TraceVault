@@ -1,10 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { io, type Socket } from 'socket.io-client';
 import { api, getToken } from './api';
 
-export type CaseSettings = { llmMode: 'cloud' | 'cloud_redacted' | 'local'; voiceMode: 'sarvam' | 'local'; voiceConsentAt?: string; translateMode: 'sarvam' | 'sarvam_redacted' | 'off' };
-export type CaseT = { id: string; title: string; incidentType: string; description: string; status: string; timezone: string; settings: CaseSettings; role: string; createdAt: string };
+export type CaseSettings = { llmMode: 'cloud' | 'cloud_redacted' | 'local'; voiceMode: 'sarvam' | 'local'; voiceConsentAt?: string; translateMode: 'sarvam' | 'sarvam_redacted' | 'off'; ocrMode?: 'local' | 'cloud' };
+export type CaseT = { id: string; title: string; incidentType: string; description: string; status: string; timezone: string; settings: CaseSettings; role: string; createdAt: string; sealedAt?: string | null; sealedRoot?: string | null; addendumOf?: string | null };
 export type Entity = { type: string; text: string; start: number; end: number; norm: unknown; precision?: string; direction?: string };
 export type Chunk = {
   cid: string; idx: number; unit: string; text: string; textEn?: string | null; lang?: string; langConfidence?: number; translation?: { provider: string; model: string; redacted: boolean };
@@ -27,32 +26,40 @@ export const useCase = (id?: string) => useQuery({ queryKey: ['case', id], query
 export const useEvidence = (id?: string) =>
   useQuery({ queryKey: ['evidence', id], queryFn: () => api<{ evidence: Evidence[] }>(`/cases/${id}/evidence`).then((r) => r.evidence), enabled: !!id });
 
-/** Live processing events for one case. Invalidates case queries when something finishes. */
-export function useCaseSocket(caseId?: string) {
+type JobRow = { type: string; evidenceId: string | null; status: string; progress: number; error: string | null };
+const isActive = (j: JobRow) => j.status === 'queued' || j.status === 'running';
+
+/**
+ * Processing progress for one case. Polls /jobs (3s while work is pending, 15s otherwise) instead of holding a socket,
+ * because the API runs as serverless functions. The poll also wakes the background worker on the server.
+ * Invalidates case queries when jobs progress or finish.
+ */
+export function useCaseProgress(caseId?: string) {
   const qc = useQueryClient();
-  const [last, setLast] = useState<{ event: string; data: any } | null>(null);
+  const q = useQuery({
+    queryKey: ['jobs', caseId],
+    queryFn: () => api<{ jobs: JobRow[] }>(`/cases/${caseId}/jobs`).then((r) => r.jobs),
+    enabled: !!caseId,
+    refetchInterval: (query) => (query.state.data?.some(isActive) ? 3000 : 15000),
+    refetchIntervalInBackground: false,
+  });
+  const prev = useRef<JobRow[] | null>(null);
   useEffect(() => {
-    if (!caseId) return;
-    const s: Socket = io('/cases', { auth: { token: getToken() }, transports: ['websocket', 'polling'] });
-    s.on('connect', () => s.emit('join', caseId));
-    const refresh = (keys: string[]) => keys.forEach((k) => qc.invalidateQueries({ queryKey: [k, caseId] }));
-    for (const ev of ['processing.progress', 'processing.error', 'provider.fallback']) {
-      s.on(ev, (data) => {
-        setLast({ event: ev, data });
-        if (data?.status === 'done' || ev === 'processing.error') refresh(['evidence', 'overview']);
-      });
+    const jobs = q.data;
+    if (!jobs || !caseId) return;
+    const before = prev.current;
+    prev.current = jobs;
+    if (!before) return;
+    const sig = (js: JobRow[]) => js.map((j) => `${j.type}:${j.evidenceId}:${j.status}`).sort().join('|');
+    if (sig(before) === sig(jobs)) return;
+    const keys = ['evidence', 'overview'];
+    // Something finished (or failed): the derived views have new data.
+    if (before.filter(isActive).length > jobs.filter(isActive).length || !jobs.some(isActive)) {
+      keys.push('timeline', 'graph', 'inconsistencies', 'entities', 'insights', 'case', 'duplicates', 'summary', 'statements');
     }
-    s.on('processing.done', (data) => {
-      setLast({ event: 'processing.done', data });
-      refresh(['overview', 'evidence', 'timeline', 'graph', 'inconsistencies', 'entities', 'insights', 'case', 'duplicates']);
-    });
-    s.on('summary.ready', () => refresh(['summary', 'overview']));
-    s.on('statement.ready', () => refresh(['statements', 'evidence', 'timeline', 'inconsistencies', 'overview']));
-    return () => {
-      s.disconnect();
-    };
-  }, [caseId, qc]);
-  return last;
+    keys.forEach((k) => qc.invalidateQueries({ queryKey: [k, caseId] }));
+  }, [q.data, caseId, qc]);
+  return q.data ?? [];
 }
 
 /** Batch-loads citation previews (one request per render batch, cached per id). */

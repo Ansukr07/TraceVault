@@ -8,9 +8,10 @@ import { CaseShell, CitationChip, Empty, SeverityTag } from '../../components';
 type Ref = { evidenceId: string; chunkId?: string; field?: string; quote: string; quoteEn?: string | null };
 type Item = { key: string; type: string; subtype?: string; severity: number; title: string; explanation: string; refs: Ref[]; confidence: number; status: 'open' | 'dismissed' | 'explained'; note: string | null };
 
+const MAX_SHOWN = 25; // spec §8: default cap, the rest sit behind "Show more"
 const TYPE_LABEL: Record<string, string> = {
   EDITED_FILE: 'Edited file', METADATA_MISMATCH: 'Metadata mismatch', DATE_CONFLICT: 'Date conflict', AMOUNT_MISMATCH: 'Amount mismatch',
-  SENDER_MISMATCH: 'Sender mismatch', IMPOSSIBLE_SEQUENCE: 'Impossible sequence', CONTENT_CONTRADICTION: 'Content contradiction',
+  SENDER_MISMATCH: 'Sender mismatch', COVERAGE_GAP: 'Coverage note', IMPOSSIBLE_SEQUENCE: 'Impossible sequence', CONTENT_CONTRADICTION: 'Content contradiction',
 };
 
 function Card({ caseId, it, label }: { caseId: string; it: Item; label: (eid: string) => string }) {
@@ -80,6 +81,7 @@ export function InconsistenciesPage() {
   const { id = '' } = useParams();
   const q = useQuery({ queryKey: ['inconsistencies', id], queryFn: () => api<{ items: Item[] }>(`/cases/${id}/inconsistencies`).then((r) => r.items) });
   const ev = useEvidence(id);
+  const [showAll, setShowAll] = useState(false);
   const label = (eid: string) => {
     const e = ev.data?.find((x) => x.id === eid);
     return e ? `E${e.idx} · ${e.sourceLabel || e.filename}` : 'Evidence';
@@ -93,7 +95,10 @@ export function InconsistenciesPage() {
         These are places where your evidence disagrees with itself. Checking them before filing makes your case stronger. Explained items appear in the report with your note.
       </p>
       {q.data && items.length === 0 && <Empty title="No inconsistencies found">Edited files, conflicting dates and mismatched amounts would appear here.</Empty>}
-      {open.map((it) => <Card key={it.key} caseId={id} it={it} label={label} />)}
+      {open.slice(0, showAll ? undefined : MAX_SHOWN).map((it) => <Card key={it.key} caseId={id} it={it} label={label} />)}
+      {!showAll && open.length > MAX_SHOWN && (
+        <button type="button" className="btn btn-ghost" onClick={() => setShowAll(true)}>Show {open.length - MAX_SHOWN} more</button>
+      )}
       {dismissed.length > 0 && <p className="eyebrow" style={{ marginTop: 12 }}>Dismissed</p>}
       {dismissed.map((it) => <Card key={it.key} caseId={id} it={it} label={label} />)}
     </CaseShell>

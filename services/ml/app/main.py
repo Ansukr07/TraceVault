@@ -17,7 +17,7 @@ if _env.exists():
             os.environ.setdefault(k.strip(), v.split(" #")[0].strip())
 
 from .parsers import ocr  # noqa: E402
-from .routers import case, extract, report, voice  # noqa: E402  (env must be loaded first)
+from .routers import authenticity, case, extract, report, voice  # noqa: E402  (env must be loaded first)
 from .voice import local_whisper  # noqa: E402
 from .voice.sarvam_client import get_client  # noqa: E402
 
@@ -26,6 +26,7 @@ app.include_router(voice.router)
 app.include_router(extract.router)
 app.include_router(case.router)
 app.include_router(report.router)
+app.include_router(authenticity.router)
 
 
 @app.middleware("http")

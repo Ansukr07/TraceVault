@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, ApiError, getToken, patch, post } from '../../lib/api';
 import { hashFile } from '../../lib/hashFile';
+import { uploadEvidence } from '../../lib/upload';
 import { fmtDate, fmtMoney, fmtMs, langName, useCase } from '../../lib/case';
 import { CaseShell, Cites, Empty } from '../../components';
 
@@ -95,12 +96,7 @@ function Recorder({ caseId, disabled, onSaved }: { caseId: string; disabled?: bo
     try {
       const file = new File([blob], `statement-${new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-')}.webm`, { type: 'audio/webm' });
       const sha = await hashFile(file, setPct);
-      const fd = new FormData();
-      fd.set('clientSha256', sha);
-      fd.set('kind', 'statement');
-      fd.set('sourceLabel', 'Your voice statement');
-      fd.set('file', file);
-      await api(`/cases/${caseId}/evidence`, { method: 'POST', body: fd });
+      await uploadEvidence(caseId, file, sha, { kind: 'statement', sourceLabel: 'Your voice statement' });
       discard();
       onSaved();
     } catch (e) {

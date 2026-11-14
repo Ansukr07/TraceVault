@@ -8,6 +8,7 @@ import { RefreshToken, User } from '../models/index.js';
 import { ah, httpError, requireAuth, validate, z } from '../middleware/index.js';
 import { audit } from '../services/audit.js';
 import { sha256Hex } from '../services/crypto.js';
+import { hashRecovery, newRecoveryCodes, newSecret, openSecret, otpauthUri, sealSecret, verifyTotp } from '../services/totp.js';
 
 export const authRouter = Router();
 
@@ -34,7 +35,25 @@ const publicUser = (u) => ({
   officer: u.officer?.agency ? { agency: u.officer.agency, unit: u.officer.unit, rank: u.officer.rank, badgeId: u.officer.badgeId, verified: !!u.officer.verifiedAt, rejected: !!u.officer.rejectedAt } : undefined,
   uiLanguage: u.uiLanguage,
   voiceLanguage: u.voiceLanguage,
+  totpEnabled: !!u.totp?.enabledAt,
 });
+
+/** Checks a TOTP code or a single-use recovery code. Burns the time-step / recovery code on success. */
+async function checkSecondFactor(user, code) {
+  const c = String(code ?? '').trim();
+  if (!c) return false;
+  const step = verifyTotp(openSecret(user.totp.secret), c);
+  if (step !== null && step > (user.totp.lastStep ?? -1)) {
+    await User.updateOne({ _id: user._id }, { $set: { 'totp.lastStep': step } });
+    return true;
+  }
+  const h = hashRecovery(c);
+  if (user.totp.recovery?.includes(h)) {
+    const r = await User.updateOne({ _id: user._id, 'totp.recovery': h }, { $pull: { 'totp.recovery': h } });
+    return r.modifiedCount === 1;
+  }
+  return false;
+}
 
 async function issueRefresh(res, userId, familyId = crypto.randomUUID()) {
   const token = crypto.randomBytes(32).toString('base64url');
@@ -82,12 +101,16 @@ authRouter.post(
 authRouter.post(
   '/login',
   loginLimiter,
-  validate(z.object({ email: z.string().email(), password: z.string().min(1) })),
+  validate(z.object({ email: z.string().email(), password: z.string().min(1), totp: z.string().max(32).optional() })),
   ah(async (req, res) => {
     const user = await User.findOne({ email: req.body.email.toLowerCase() });
     // Same error for unknown user / wrong password / disabled.
     const ok = user && !user.disabled && (await argon2.verify(user.passwordHash, req.body.password));
     if (!ok) throw httpError(401, 'BAD_CREDENTIALS', 'Invalid email or password');
+    if (user.totp?.enabledAt) {
+      if (!req.body.totp) throw httpError(401, 'TOTP_REQUIRED', 'Enter the 6-digit code from your authenticator app');
+      if (!(await checkSecondFactor(user, req.body.totp))) throw httpError(401, 'BAD_TOTP', 'Invalid or already used code');
+    }
     await audit(`user:${user._id}`, { actorId: user._id, actorRole: 'user', action: 'LOGIN', target: String(user._id) });
     await issueRefresh(res, user._id);
     res.json({ accessToken: signAccess(user), user: publicUser(user) });
@@ -138,5 +161,47 @@ meRouter.patch(
   ah(async (req, res) => {
     const u = await User.findByIdAndUpdate(req.user._id, req.body, { new: true });
     res.json({ user: publicUser(u) });
+  }),
+);
+
+// ------------------------------------------------------------------ two-factor (A5)
+meRouter.post(
+  '/totp/setup',
+  ah(async (req, res) => {
+    if (req.user.totp?.enabledAt) throw httpError(409, 'TOTP_ENABLED', 'Two-factor is already on');
+    const secret = newSecret();
+    await User.updateOne({ _id: req.user._id }, { $set: { 'totp.pending': sealSecret(secret) } });
+    res.json({ secret, otpauthUri: otpauthUri(secret, req.user.email) });
+  }),
+);
+
+meRouter.post(
+  '/totp/enable',
+  validate(z.object({ code: z.string().length(6) })),
+  ah(async (req, res) => {
+    const u = await User.findById(req.user._id);
+    if (!u.totp?.pending?.ct) throw httpError(400, 'NO_SETUP', 'Start setup first');
+    const secret = openSecret(u.totp.pending);
+    const step = verifyTotp(secret, req.body.code);
+    if (step === null) throw httpError(400, 'BAD_TOTP', 'That code is not valid. Check the time on your phone.');
+    const codes = newRecoveryCodes();
+    u.totp = { secret: sealSecret(secret), enabledAt: new Date(), lastStep: step, recovery: codes.map(hashRecovery) };
+    await u.save();
+    await audit(`user:${u._id}`, { actorId: u._id, actorRole: 'user', action: 'TOTP_ENABLED', target: String(u._id) });
+    res.json({ recoveryCodes: codes });
+  }),
+);
+
+meRouter.post(
+  '/totp/disable',
+  validate(z.object({ password: z.string().min(1), code: z.string().min(6).max(32) })),
+  ah(async (req, res) => {
+    const u = await User.findById(req.user._id);
+    if (!u.totp?.enabledAt) throw httpError(400, 'TOTP_OFF', 'Two-factor is not on');
+    if (!(await argon2.verify(u.passwordHash, req.body.password))) throw httpError(401, 'BAD_CREDENTIALS', 'Wrong password');
+    if (!(await checkSecondFactor(u, req.body.code))) throw httpError(401, 'BAD_TOTP', 'Invalid or already used code');
+    await User.updateOne({ _id: u._id }, { $unset: { totp: '' } });
+    await audit(`user:${u._id}`, { actorId: u._id, actorRole: 'user', action: 'TOTP_DISABLED', target: String(u._id) });
+    res.status(204).end();
   }),
 );

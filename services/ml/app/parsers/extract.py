@@ -19,6 +19,7 @@ from typing import Any
 from . import metadata as md
 from . import ocr
 from .screenshot import parse_screenshot
+from .json_chat import parse_json_chat
 from .whatsapp import parse_whatsapp
 
 MAX_PARAGRAPH = 800
@@ -43,8 +44,10 @@ def _paragraphs(text: str) -> list[str]:
 
 # ------------------------------------------------------------------ chat export
 def extract_chat(data: bytes) -> dict[str, Any]:
-    text = data.decode("utf-8", errors="replace")
-    chat = parse_whatsapp(text)
+    head = data.decode("utf-8-sig", errors="ignore").lstrip()[:1]
+    chat = parse_json_chat(data) if head in ("{", "[") else None
+    if chat is None:
+        chat = parse_whatsapp(data.decode("utf-8", errors="replace"))
     chunks = []
     for m in chat.messages:
         if m.is_system:
@@ -75,10 +78,10 @@ def extract_chat(data: bytes) -> dict[str, Any]:
 
 
 # ------------------------------------------------------------------ image
-def extract_image(data: bytes, reference_ts: str | None = None) -> dict[str, Any]:
+def extract_image(data: bytes, reference_ts: str | None = None, ocr_provider: str = "local") -> dict[str, Any]:
     meta, flags = md.image_metadata(data)
     hashes = md.image_hashes(data)
-    res = ocr.ocr_image(data)
+    res = ocr.ocr_image(data, provider=ocr_provider)
     ref_date = (meta.get("captureTime") or reference_ts or "")[:10] or None
     chat = parse_screenshot(res, ref_date)
     chunks: list[dict[str, Any]] = []
@@ -103,13 +106,15 @@ def extract_image(data: bytes, reference_ts: str | None = None) -> dict[str, Any
         latest = max(dates, default=None)
         if latest and abs(_days(latest, cap[:10])) > 1:
             flags.append({"type": "METADATA_MISMATCH", "field": "inImageDate",
-                          "value": f"image shows {latest}, EXIF capture {cap[:10]}"})
+                          "value": f"image shows {latest}, EXIF capture {cap[:10]}",
+                          "contentDate": latest, "captureDate": cap[:10]})
     if res.get("unavailable"):
         flags.append({"type": "OCR_UNAVAILABLE", "field": "ocr", "value": "OCR engine not installed"})
     artifact = {"width": res["width"], "height": res["height"], "inverted": res["inverted"], "lines": res["lines"],
-                "screenshotChat": chat}
+                "screenshotChat": chat, "ocrProvider": res.get("provider")}
+    meta["ocrProvider"] = res.get("provider")
     return {"artifactType": "ocr", "artifact": artifact, "chunks": chunks, "metadata": meta, "flags": flags,
-            "hashes": hashes, "children": []}
+            "hashes": hashes, "children": [], "usage": res.get("usage", [])}
 
 
 def _days(a: str, b: str) -> int:

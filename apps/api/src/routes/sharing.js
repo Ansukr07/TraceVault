@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import argon2 from 'argon2';
 import { Router } from 'express';
 import { config } from '../config.js';
+import { sarvamAudioSecondsToday } from '../jobs/pipeline.js';
 import { AuditEntry, Case, Evidence, ProviderUsage, ShareGrant, User } from '../models/index.js';
 import { Job } from '../jobs/runner.js';
 import { ah, httpError, requireAdmin, requireAuth, requireCaseRole, validate, z } from '../middleware/index.js';
@@ -438,7 +439,10 @@ adminRouter.get(
       { $group: { _id: { day: { $dateToString: { format: '%Y-%m-%d', date: '$ts' } }, provider: '$provider' }, calls: { $sum: 1 }, audioSeconds: { $sum: { $ifNull: ['$audioSeconds', 0] } }, chars: { $sum: { $ifNull: ['$chars', 0] } } } },
       { $sort: { '_id.day': 1 } },
     ]);
-    res.json({ usage: rows.map((r) => ({ day: r._id.day, provider: r._id.provider ?? 'unknown', calls: r.calls, audioSeconds: Math.round(r.audioSeconds), chars: r.chars })) });
+    res.json({
+      usage: rows.map((r) => ({ day: r._id.day, provider: r._id.provider ?? 'unknown', calls: r.calls, audioSeconds: Math.round(r.audioSeconds), chars: r.chars })),
+      softCap: { audioSecondsPerDay: config.SARVAM_DAILY_AUDIO_SEC_CAP, usedToday: Math.round(await sarvamAudioSecondsToday()) },
+    });
   }),
 );
 

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, ApiError, getToken, post } from '../../lib/api';
 import { fmtDate, LANG_NAME, useCase } from '../../lib/case';
-import { CaseShell, Cites, Empty } from '../../components';
+import { CaseShell, Cites, Empty, PageLoading } from '../../components';
 
 type Sentence = { text: string; citations: string[]; supported?: boolean; support?: number; textEn?: string; machineTranslated?: boolean };
 type Summary = { version: number; lang: string; sections: { title: string; sentences: Sentence[] }[]; generator: any; stats: { sentences: number; cited: number; unsupported: number }; createdAt: string };
@@ -127,7 +127,7 @@ export function SummaryPage() {
   let idx = -1;
   return (
     <CaseShell>
-      {q.isLoading && <p className="muted">Loading…</p>}
+      {q.isLoading && <PageLoading variant="text" label="Loading summary" />}
       {q.error && <p className="err">{(q.error as Error).message}</p>}
       {q.data === null && <Empty title="No summary yet">A cited summary is written once evidence has been processed.</Empty>}
       {s && (

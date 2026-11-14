@@ -69,6 +69,34 @@ async def transcribe_sarvam(client: SarvamClient, pcm, usage: UsageLog,
     ]))
 
 
+def _split_turn(start: int, end: int) -> list[tuple[int, int]]:
+    """Turns longer than the 25 s STT window are cut into equal parts (same speaker)."""
+    n = max(1, -(-(end - start) // audio.MAX_SEGMENT_MS))
+    step = (end - start) / n
+    return [(int(start + i * step), int(start + (i + 1) * step)) for i in range(n)]
+
+
+async def transcribe_diarized(client: SarvamClient, pcm, wav: bytes, usage: UsageLog,
+                              num_speakers: int | None) -> list[dict[str, Any]]:
+    """Speaker turns from the batch API; each turn is then transcribed (+translated) like a normal segment."""
+    turns = await client.diarize(wav, num_speakers=num_speakers, audio_seconds=audio.duration_ms(pcm) / 1000, usage=usage)
+    if not turns:
+        raise SarvamError("diarization returned no speaker turns")
+    work: list[tuple[str, audio.Segment]] = []
+    for t in turns:
+        if t["endMs"] - t["startMs"] < 300:
+            continue
+        for a, b in _split_turn(t["startMs"], t["endMs"]):
+            work.append((t["speaker"], audio.Segment(a, b)))
+    sem = asyncio.Semaphore(STT_CONCURRENCY)
+    segs = await asyncio.gather(*[
+        _sarvam_segment(client, audio.slice_wav(pcm, g), g, usage, sem) for _, g in work
+    ])
+    for (speaker, _), seg in zip(work, segs):
+        seg["speaker"] = speaker
+    return list(segs)
+
+
 async def transcribe_local(wav: bytes) -> dict[str, Any]:
     if not local_whisper.available():
         raise SarvamUnavailable("local fallback unavailable: faster-whisper is not installed")
@@ -82,20 +110,32 @@ async def transcribe_local(wav: bytes) -> dict[str, Any]:
 
 
 async def transcribe(data: bytes, *, provider: str = "sarvam", client: SarvamClient,
-                     segments: list[tuple[int, int]] | None = None) -> dict[str, Any]:
+                     segments: list[tuple[int, int]] | None = None, diarize: bool = False,
+                     num_speakers: int | None = None) -> dict[str, Any]:
     """Returns the `transcript` artifact payload plus `usage` and `fallback` info."""
     wav = audio.normalize(data)
     pcm = audio.read_pcm(wav)
     dur = audio.duration_ms(pcm)
     usage = UsageLog()
     fallback_reason: str | None = None
+    diarization: dict[str, Any] = {"requested": diarize, "applied": False, "numSpeakers": num_speakers}
 
     if provider == "sarvam":
         if not client.available:
             fallback_reason = "sarvam_unconfigured"
         else:
             try:
-                segs = await transcribe_sarvam(client, pcm, usage, only=segments)
+                segs = None
+                if diarize and not segments:
+                    try:
+                        segs = await transcribe_diarized(client, pcm, wav, usage, num_speakers)
+                        diarization["applied"] = True
+                    except SarvamUnavailable:
+                        raise
+                    except SarvamError as e:  # plain transcription still beats nothing
+                        diarization["error"] = str(e)[:200]
+                if segs is None:
+                    segs = await transcribe_sarvam(client, pcm, usage, only=segments)
             except SarvamUnavailable:
                 fallback_reason = "sarvam_unconfigured"
             else:
@@ -106,6 +146,7 @@ async def transcribe(data: bytes, *, provider: str = "sarvam", client: SarvamCli
                     return {
                         "lang": _dominant_lang(segs), "provider": "sarvam", "model": client.cfg.stt_model,
                         "durationMs": dur, "segments": segs, "usage": usage.records, "fallback": None,
+                        "diarization": diarization,
                     }
 
     try:
@@ -115,9 +156,10 @@ async def transcribe(data: bytes, *, provider: str = "sarvam", client: SarvamCli
         segs = [{"startMs": s.start_ms, "endMs": s.end_ms, "text": UNTRANSCRIBED, "textEn": None,
                  "lang": None, "failed": True, "error": str(e)} for s in audio.segment(pcm)]
         return {"lang": None, "provider": "none", "model": None, "durationMs": dur, "segments": segs,
-                "usage": usage.records, "fallback": fallback_reason or "local_unavailable"}
+                "usage": usage.records, "fallback": fallback_reason or "local_unavailable", "diarization": diarization}
     return {"lang": res["lang"], "provider": "local_whisper", "model": f"faster-whisper:{_whisper_name()}",
-            "durationMs": dur, "segments": res["segments"], "usage": usage.records, "fallback": fallback_reason}
+            "durationMs": dur, "segments": res["segments"], "usage": usage.records, "fallback": fallback_reason,
+            "diarization": diarization}
 
 
 def _whisper_name() -> str:

@@ -11,6 +11,7 @@ import { Case, Evidence } from '../models/index.js';
 import { audit, withTransaction } from './audit.js';
 import { createDecryptor, createEncryptor } from './crypto.js';
 import { detectEvidence } from './detect.js';
+import { enqueueEvidenceTimestamp } from './timestamps.js';
 
 export const bucket = () => new mongoose.mongo.GridFSBucket(mongoose.connection.db, { bucketName: 'evidence' });
 
@@ -77,6 +78,7 @@ export async function sealFile({ caseDoc, tmpPath, originalName, sha256, uploade
       return e;
     });
     fileId = null;
+    await enqueueEvidenceTimestamp(doc); // F2: independent time witness; never fails the upload
     return { evidence: doc, duplicateOf: canonical?._id ?? null };
   } finally {
     if (fileId) await bucket().delete(fileId).catch(() => {});

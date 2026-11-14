@@ -263,3 +263,43 @@ def test_tts_route_timings(api):
     timings = json.loads(r.headers["x-sentence-timings"])
     assert len(timings) == 3 and timings[1]["startMs"] == timings[0]["endMs"]
     assert audio.duration_ms(audio.read_pcm(r.content)) == timings[-1]["endMs"]
+
+
+# ------------------------------------------------------------------ diarization (spec 6.2)
+def test_parse_diarized_labels_speakers_in_order_of_appearance():
+    body = {"diarized_transcript": {"entries": [
+        {"transcript": "hello", "start_time_seconds": 0.0, "end_time_seconds": 2.0, "speaker_id": "1"},
+        {"transcript": "hi", "start_time_seconds": 2.5, "end_time_seconds": 4.0, "speaker_id": "0"},
+        {"transcript": "again", "start_time_seconds": 4.5, "end_time_seconds": 6.0, "speaker_id": "1"},
+        {"transcript": "", "start_time_seconds": 6.0, "end_time_seconds": 6.0, "speaker_id": "1"},
+    ]}}
+    turns = sc._parse_diarized(body)
+    assert [t["speaker"] for t in turns] == ["SPEAKER_1", "SPEAKER_2", "SPEAKER_1"]
+    assert turns[0]["startMs"] == 0 and turns[1]["startMs"] == 2500
+
+
+def test_split_turn_respects_stt_window():
+    from app.voice.transcribe import _split_turn
+
+    parts = _split_turn(1000, 61_000)
+    assert len(parts) == 3 and parts[0][0] == 1000 and parts[-1][1] == 61_000
+    assert all(b - a <= audio.MAX_SEGMENT_MS for a, b in parts)
+
+
+def test_diarize_route_mock_labels_alternating_speakers(api):
+    wav = make_wav(tone(2000), quiet(1500), tone(2000), quiet(1500), tone(2000))
+    r = api.post("/transcribe", files={"file": ("call.wav", wav, "audio/wav")},
+                 data={"provider": "sarvam", "diarize": "true", "numSpeakers": "2"})
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert body["diarization"]["applied"] is True
+    assert [s["speaker"] for s in body["segments"]] == ["SPEAKER_1", "SPEAKER_2", "SPEAKER_1"]
+    assert all(s["textEn"] for s in body["segments"])
+
+
+def test_diarization_failure_falls_back_to_plain_transcription():
+    fake = FakeSarvam(fail={"/speech-to-text/job/v1": [400]})
+    wav = make_wav(tone(2000), quiet(1500), tone(2000))
+    res = run(transcribe(wav, client=client_with(fake), diarize=True))
+    assert res["diarization"]["applied"] is False and "error" in res["diarization"]
+    assert res["provider"] == "sarvam" and all("speaker" not in s for s in res["segments"])

@@ -14,6 +14,7 @@ export function AuthPage({ mode }: { mode: 'login' | 'register' }) {
 
   const [err, setErr] = useState('');
   const [busy, setBusy] = useState(false);
+  const [needTotp, setNeedTotp] = useState(false);
   const isLogin = mode === 'login';
 
   const [accountType, setAccountType] = useState<'citizen' | 'officer'>(roleParam === 'officer' ? 'officer' : 'citizen');
@@ -28,7 +29,7 @@ export function AuthPage({ mode }: { mode: 'login' | 'register' }) {
       const password = String(f.get('password'));
       let user;
       if (isLogin) {
-        user = await login(email, password);
+        user = await login(email, password, String(f.get('totp') ?? '').trim() || undefined);
       } else {
         const name = String(f.get('name')).trim();
         const extra = accountType === 'officer' ? {
@@ -45,7 +46,8 @@ export function AuthPage({ mode }: { mode: 'login' | 'register' }) {
 
       nav(next && next.startsWith('/') && !next.startsWith('//') ? next : homeFor(user));
     } catch (x) {
-      setErr((x as Error).message);
+      if ((x as { code?: string }).code === 'TOTP_REQUIRED') setNeedTotp(true);
+      setErr((x as { code?: string }).code === 'TOTP_REQUIRED' ? '' : (x as Error).message);
     } finally {
       setBusy(false);
     }
@@ -98,6 +100,13 @@ export function AuthPage({ mode }: { mode: 'login' | 'register' }) {
                 <span>Password {!isLogin && <span className="hint">· at least 10 characters</span>}</span>
                 <input name="password" type="password" required minLength={isLogin ? 1 : 10} autoComplete={isLogin ? 'current-password' : 'new-password'} />
               </label>
+
+              {isLogin && needTotp && (
+                <label className="field">
+                  <span>Authenticator code <span className="hint">· or a recovery code</span></span>
+                  <input name="totp" inputMode="numeric" autoComplete="one-time-code" autoFocus required maxLength={32} />
+                </label>
+              )}
 
               {!isLogin && accountType === 'officer' && (
                 <div className="card" style={{ background: 'var(--paper-2)', padding: 14, marginTop: 4 }}>

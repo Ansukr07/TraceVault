@@ -226,6 +226,7 @@ section[id] { scroll-margin-top: 96px; }
   margin: 0 8px; background: var(--surface); border-radius: var(--r-lg);
   display: grid; grid-template-columns: 1fr;
 }
+.band + .band { margin-top: 8px; }
 .band > div { padding: 28px 24px; display: flex; flex-direction: column; gap: 18px; }
 .band > div + div { border-top: 1px solid var(--line); }
 .band .stat-num { font-size: var(--fs-stat); margin-top: auto; }

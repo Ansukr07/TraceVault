@@ -181,6 +181,10 @@ Each feature lists acceptance criteria (**AC**) that define "done".
 | A5 | TOTP two-factor authentication | P2 |
 | A6 | User profile: name, preferred UI language, preferred voice language | P1 |
 
+> **Implementation status (2026-11-14):** A4 built: per-user limits on upload (60/min), voice routes (reprocess, voice Q&A, read-aloud; 20/min) and LLM routes (Q&A, summary regeneration; 20/min), tunable with `RL_UPLOAD_PER_MIN`, `RL_VOICE_PER_MIN`, `RL_LLM_PER_MIN` (`middleware/rateLimit.js`). A5 built (below).
+
+> **A5 (2026-11-14):** TOTP 2FA (RFC 6238 on `node:crypto`, no extra dependency; `services/totp.js`). `POST /me/totp/setup|enable|disable`; secrets are KEK-encrypted, 8 single-use recovery codes stored as hashes, each time-step usable once. Login answers `TOTP_REQUIRED` until a code is sent; Account page has the setup flow.
+
 **AC**
 - Passwords are hashed with argon2id; plain passwords never appear in logs.
 - Access JWT expires in 15 min; refresh token is in an `httpOnly; Secure; SameSite=Strict` cookie, rotated on every use; reuse of an old refresh token revokes the whole token family.
@@ -197,6 +201,10 @@ Each feature lists acceptance criteria (**AC**) that define "done".
 | C4 | Case timezone (default `Asia/Kolkata`) | P1 |
 | C5 | Crypto-shred delete: derived data purged, wrapped keys destroyed, tombstone audit entry keeps the hashes | P1 |
 | C6 | Case "seal": freezes the evidence set; further uploads go into a new, linked addendum | P2 |
+
+> **Implementation status (2026-11-14):** C5 built: deleting a case captures the Merkle root, purges derived data and GridFS ciphertext, destroys the wrapped data keys, keeps hash-only evidence rows, and writes a `CASE_DELETED` tombstone with the root. Not exercised against a live MongoDB. C6 built (below).
+
+> **C6 (2026-11-14):** `POST /cases/:id/seal` (owner) freezes the evidence set and audits `CASE_SEALED` with the Merkle root and audit head; uploads then return `CASE_SEALED`, and `POST /cases/:id/addendum` creates a linked case. UI in case Settings. Not exercised against a live MongoDB.
 
 **AC**
 - Incident types: `harassment`, `fraud`, `stalking`, `sextortion`, `other`.
@@ -258,6 +266,8 @@ Each feature lists acceptance criteria (**AC**) that define "done".
 | Email | Header block + body paragraphs | `part`, `paragraphIdx` |
 | Voice statement | 1 speech segment | `startMs`, `endMs` |
 
+> **I9/I10 (2026-11-14):** Telegram Desktop and Instagram/Facebook JSON chat exports are detected (`.json` containing `messages`) and parsed into the same chat model as WhatsApp (`parsers/json_chat.py`, Instagram mojibake repaired). Google Takeout is not covered. **V9:** optional ClamAV via clamd (`CLAMAV_HOST`), refuses infected files, fails closed if the scanner is down.
+
 ### 5.5 Intelligence (N)
 
 | ID | Feature | P |
@@ -310,6 +320,8 @@ Each feature lists acceptance criteria (**AC**) that define "done".
 | G5 | Centrality sizing ("central figures") and Louvain community colours (mule-account clusters) | P1 |
 | G6 | Accept / reject merge suggestions directly from the graph | P1 |
 | G7 | Export the graph as PNG for the report | P2 |
+
+> **G7 / S9 (2026-11-14):** the graph toolbar exports a PNG; a person node has "Summarize everything about this person" (`POST /cases/:id/entities/summary`: the cited Q&A pipeline over that person's chunks).
 
 ### 5.8 Inconsistencies (X)
 
@@ -419,6 +431,8 @@ Per-case setting, changeable only by the Owner, audited.
 | R4 | Transcripts appendix: original-language transcript + English translation for each audio item, with provider/model noted | P1 |
 | R5 | Report in English plus an optional regional-language copy of the summary section | P2 |
 
+> **R5 / V7 (2026-11-14):** `report.pdf?lang=hi-IN` (picker on the Export page) appends a machine-translated summary copy; English stays authoritative. `POST /cases/:id/timestamp` submits the Merkle root (hash only) to OpenTimestamps calendars and stores the `.ots` proof (pending until Bitcoin-attested; not exercised against the live calendars). `tools/verify_bundle/verify.py`, `eval/run_eval.py` (demo-case scores, mock mode: identifier F1 0.91, 3/3 planted inconsistencies, 5/5 events), `ecosystem.config.cjs` and `README.md` now exist.
+
 ### 5.15 Admin and operations (O)
 
 | ID | Feature | P |
@@ -462,6 +476,8 @@ Sarvam is used for everything speech-related and for Indian-language translation
 - A failed segment doesn't fail the file: the segment is marked `[untranscribed]` with a retry button.
 
 ### 6.2 Speaker diarization (V-DIAR) · P1
+
+> **Implementation status (2026-11-14):** built: batch diarization in `sarvam_client.diarize` (create → upload → start → poll → download) feeding `transcribe(diarize=True)`; each speaker turn is transcribed and translated like a segment and tagged `SPEAKER_n`; a diarization failure falls back to plain transcription with the error recorded. Node: `speakers` collection, `GET /evidence/:eid/speakers`, `PATCH /evidence/:eid/speakers/:label` (audited `SPEAKER_RENAMED`; the name becomes the chunk `sender`, so timeline actor and ER follow after a rebuild), `reprocess` accepts `diarize`/`numSpeakers`, viewer "Identify speakers" button and rename chips. Also built: the daily Sarvam audio soft cap (O4; falls back to local, `provider.fallback` reason `sarvam_daily_cap`, shown in `/admin/usage`) and consent enforced on explicit Sarvam re-transcribes. Not built: automatic self-identification linking and the `CALLED` graph edge from call turns. The batch endpoint shapes follow Sarvam's docs but are untested against the live service.
 
 - Via Sarvam batch STT with diarization (see 6.1 step 4), optional `num_speakers` hint from the user.
 - Speaker → entity linking: manual ("this voice is Rahul") or automatic when the transcript contains a self-identification ("main Rahul bol raha hoon") and ER resolves it with confidence ≥ 0.85.

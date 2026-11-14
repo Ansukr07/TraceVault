@@ -98,7 +98,7 @@ def pdf_metadata(doc) -> tuple[dict[str, Any], list[dict[str, Any]]]:
             flags.append({"type": "EDITED_FILE", "field": f, "value": meta[f]})
     if meta["createdAt"] and meta["modifiedAt"]:
         gap = (datetime.fromisoformat(meta["modifiedAt"]) - datetime.fromisoformat(meta["createdAt"])).total_seconds()
-        if gap > 86400:
+        if gap > 7 * 86400:  # copy/export/re-save routinely moves ModDate by days; only large gaps matter (spec §4.5)
             flags.append({"type": "METADATA_MISMATCH", "field": "ModDate", "value": f"created {meta['createdAt']}, modified {meta['modifiedAt']}"})
     return {k: v for k, v in meta.items() if v is not None}, flags
 

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "cutover": "2024-07-01",
+  "note": "Reference only. A lawyer must confirm every row against the official texts.",
+  "status": "unverified",
+  "reviewedBy": null,
+  "rows": [
+    { "ipc": "354", "bns": "74", "subject": "Assault or criminal force to outrage modesty" },
+    { "ipc": "354A", "bns": "75", "subject": "Sexual harassment" },
+    { "ipc": "354C", "bns": "77", "subject": "Voyeurism" },
+    { "ipc": "354D", "bns": "78", "subject": "Stalking" },
+    { "ipc": "509", "bns": "79", "subject": "Insulting the modesty of a woman" },
+    { "ipc": "503, 506", "bns": "351", "subject": "Criminal intimidation" },
+    { "ipc": "504", "bns": "352", "subject": "Intentional insult" },
+    { "ipc": "383-389", "bns": "308", "subject": "Extortion" },
+    { "ipc": "415, 420", "bns": "318", "subject": "Cheating" },
+    { "ipc": "416, 419", "bns": "319", "subject": "Cheating by personation" },
+    { "ipc": "463-471", "bns": "335, 336, 340", "subject": "Forgery and use of forged documents" },
+    { "ipc": "499, 500", "bns": "356", "subject": "Defamation" },
+    { "ipc": "120B", "bns": "61", "subject": "Criminal conspiracy" }
+  ]
+}

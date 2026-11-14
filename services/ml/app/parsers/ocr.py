@@ -51,14 +51,67 @@ def _run(img) -> list[dict[str, Any]]:
     return [ln for ln in lines if ln["text"]]
 
 
-def ocr_image(data: bytes | Any) -> dict[str, Any]:
-    """`data` = encoded image bytes or a PIL image. Returns {width, height, lines, inverted}."""
+def _is_poor(lines: list[dict[str, Any]]) -> bool:
+    """The bundled Chinese/English model returns little, low-confidence or CJK junk for Kannada/Hindi text."""
+    if not lines:
+        return True
+    text = "".join(ln["text"] for ln in lines)
+    cjk = sum(1 for ch in text if "\u3400" <= ch <= "\u9fff")
+    mean = sum(ln["conf"] for ln in lines) / len(lines)
+    return mean < 0.6 or (cjk / max(1, len(text))) > 0.2
+
+
+class _UsageSink:
+    """Collects usage records without importing the Sarvam log type."""
+
+    def __init__(self, out: list[dict[str, Any]]):
+        self.out = out
+
+    def add(self, **rec: Any) -> None:
+        self.out.append(rec)
+
+
+def _cloud_ocr(img, usage: list[dict[str, Any]]) -> dict[str, Any] | None:
+    from ..lang.google_cloud import GoogleError, get_google
+
+    g = get_google()
+    if not g.available:
+        return None
+    buf = io.BytesIO()
+    img.save(buf, "PNG")
+    try:
+        return g.ocr(buf.getvalue(), usage=_UsageSink(usage))
+    except GoogleError as e:
+        usage.append({"provider": "google", "endpoint": "vision_ocr", "status": "error", "error": str(e)[:200]})
+        return None
+
+
+def _cloud_result(img, cloud: dict[str, Any], usage: list[dict[str, Any]]) -> dict[str, Any]:
+    lines = sorted(cloud["lines"], key=lambda ln: (ln["bbox"][1], ln["bbox"][0]))
+    return {"width": img.width, "height": img.height, "lines": lines, "inverted": False, "provider": "google_vision", "usage": usage}
+
+
+def ocr_image(data: bytes | Any, provider: str = "local") -> dict[str, Any]:
+    """`data` = encoded image bytes or a PIL image. Returns {width, height, lines, inverted, provider, usage}.
+
+    provider: 'local' (RapidOCR, nothing leaves the machine) | 'auto' (local, then Google Vision when the local
+    result is poor and a key is set) | 'google' (Vision first, local as fallback). The Google options send the image
+    to Google, so callers must only pass them when the case allows it.
+    """
     from PIL import Image, ImageOps
 
     img = data if hasattr(data, "size") else Image.open(io.BytesIO(data))
     img = ImageOps.exif_transpose(img).convert("RGB")
+    usage: list[dict[str, Any]] = []
+    if provider == "google":
+        cloud = _cloud_ocr(img, usage)
+        if cloud and cloud["lines"]:
+            return _cloud_result(img, cloud, usage)
     if not available():
-        return {"width": img.width, "height": img.height, "lines": [], "inverted": False, "unavailable": True}
+        cloud = _cloud_ocr(img, usage) if provider == "auto" else None
+        if cloud and cloud["lines"]:
+            return _cloud_result(img, cloud, usage)
+        return {"width": img.width, "height": img.height, "lines": [], "inverted": False, "unavailable": True, "provider": None, "usage": usage}
     lines = _run(img)
     inverted = False
     # Dark mode: mean luminance low and little found → try inverted.
@@ -69,5 +122,10 @@ def ocr_image(data: bytes | Any) -> dict[str, Any]:
         inv = _run(ImageOps.invert(img))
         if len(inv) > len(lines):
             lines, inverted = inv, True
+    used = "rapidocr"
+    if provider in ("auto", "google") and _is_poor(lines):
+        cloud = _cloud_ocr(img, usage)
+        if cloud and len("".join(ln["text"] for ln in cloud["lines"])) > len("".join(ln["text"] for ln in lines)):
+            lines, inverted, used = cloud["lines"], False, "google_vision"
     lines.sort(key=lambda ln: (ln["bbox"][1], ln["bbox"][0]))
-    return {"width": img.width, "height": img.height, "lines": lines, "inverted": inverted}
+    return {"width": img.width, "height": img.height, "lines": lines, "inverted": inverted, "provider": used, "usage": usage}

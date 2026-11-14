@@ -41,6 +41,20 @@ export async function detectEvidence(file, originalName) {
     return null;
   }
 
+  // Telegram / Instagram JSON exports (spec I9, I10): the ML parser rejects JSON that isn't a chat.
+  if (ext === 'json' && (await looksLikeText(file))) {
+    const fh = await fs.open(file, 'r');
+    try {
+      const buf = Buffer.alloc(65536);
+      const { bytesRead } = await fh.read(buf, 0, buf.length, 0);
+      const head = buf.subarray(0, bytesRead).toString('utf8').replace(/^﻿/, '').trimStart();
+      if (/^[{[]/.test(head) && head.includes('"messages"')) return { kind: 'chat_export', mime: 'application/json' };
+    } finally {
+      await fh.close();
+    }
+    return null;
+  }
+
   if ((ext === 'txt' || ext === 'eml') && (await looksLikeText(file))) {
     return ext === 'txt' ? { kind: 'chat_export', mime: 'text/plain' } : { kind: 'email', mime: 'message/rfc822' };
   }

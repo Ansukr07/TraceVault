@@ -30,14 +30,20 @@ export const CONCURRENCY = { ocr: 4, transcribe: 3, transcribe_local: 1, nlp: 4 
 const DEFAULT_CONCURRENCY = 8;
 const LOCK_MS = 5 * 60_000;
 
+// Serverless has no always-on worker: whatever enqueues work also wakes a drain (set by jobs/kick.js).
+let enqueueHook = () => {};
+export const setEnqueueHook = (fn) => { enqueueHook = fn; };
+
 /** Enqueue once per key. Re-enqueueing an existing key is a no-op (returns the existing job). */
-export async function enqueue({ type, caseId, evidenceId, step = type, version = 1, payload, runAt = new Date() }) {
+export async function enqueue({ type, caseId, evidenceId, step = type, version = 1, payload, runAt = new Date(), maxAttempts }) {
   const key = `${evidenceId ?? caseId}:${step}:${version}`;
   try {
-    return await Job.findOneAndUpdate({ key }, { $setOnInsert: { type, caseId, evidenceId, key, payload, runAt } }, { upsert: true, new: true });
+    return await Job.findOneAndUpdate({ key }, { $setOnInsert: { type, caseId, evidenceId, key, payload, runAt, ...(maxAttempts ? { maxAttempts } : {}) } }, { upsert: true, new: true });
   } catch (e) {
     if (e.code === 11000) return Job.findOne({ key }); // lost an upsert race
     throw e;
+  } finally {
+    enqueueHook();
   }
 }
 
@@ -45,7 +51,15 @@ export async function enqueue({ type, caseId, evidenceId, step = type, version =
  * Debounced case-level job: every call pushes runAt forward, so N uploads in a burst trigger one rebuild.
  * If the previous rebuild already finished or failed it is re-armed.
  */
-export async function debounceCaseJob({ type, caseId, delayMs = 5000 }) {
+export async function debounceCaseJob(args) {
+  try {
+    return await debounceCaseJobInner(args);
+  } finally {
+    enqueueHook();
+  }
+}
+
+async function debounceCaseJobInner({ type, caseId, delayMs = 5000 }) {
   const key = `${caseId}:${type}:debounced`;
   const runAt = new Date(Date.now() + delayMs);
   // Don't disturb a running job: it gets re-armed (below) once it finishes.
@@ -77,6 +91,7 @@ export class Runner {
     this.id = `${process.pid}-${crypto.randomBytes(3).toString('hex')}`;
     this.active = new Map(); // type -> count
     this.caseLocks = new Set(); // case-level jobs: one per case at a time
+    this.inflight = new Set();
     this.timer = null;
     this.stopped = true;
   }
@@ -114,8 +129,32 @@ export class Runner {
     );
     if (!job) return false;
     this.active.set(job.type, (this.active.get(job.type) ?? 0) + 1);
-    this.run(job).finally(() => this.active.set(job.type, this.active.get(job.type) - 1));
+    const p = this.run(job).finally(() => {
+      this.active.set(job.type, this.active.get(job.type) - 1);
+      this.inflight.delete(p);
+    });
+    this.inflight.add(p);
     return true;
+  }
+
+  /**
+   * Serverless worker: run queued jobs inside one function invocation, then return.
+   * Stops claiming after claimBudgetMs (already-running jobs are allowed to finish); a job cut off by the platform
+   * keeps its lock and is requeued when the lock expires. Waits for jobs due within lookaheadMs (debounced rebuilds).
+   */
+  async drain({ claimBudgetMs = 150_000, lookaheadMs = 15_000 } = {}) {
+    const end = Date.now() + claimBudgetMs;
+    await Job.updateMany({ status: 'running', lockedUntil: { $lt: new Date() } }, { $set: { status: 'queued', lockedBy: null, lockedUntil: null } });
+    const types = Object.keys(this.handlers);
+    while (Date.now() < end) {
+      if (await this.tick()) continue;
+      const next = await Job.findOne({ status: 'queued', type: { $in: types } }, 'runAt').sort({ runAt: 1 }).lean();
+      const wait = next ? next.runAt.getTime() - Date.now() : null;
+      if (wait !== null && wait <= lookaheadMs && Date.now() + wait < end) await new Promise((r) => setTimeout(r, Math.max(wait, 0) + 100));
+      else if (this.inflight.size) await Promise.race([...this.inflight, new Promise((r) => setTimeout(r, 1000))]); // capacity full or nothing due: wait for a slot
+      else break;
+    }
+    await Promise.allSettled([...this.inflight]);
   }
 
   async run(job) {

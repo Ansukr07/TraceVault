@@ -46,6 +46,8 @@ class SarvamConfig:
     timeout_s: float = 30.0
     max_attempts: int = 3
     mock: bool = False
+    batch_poll_s: float = 5.0
+    batch_timeout_s: float = 900.0
 
     @classmethod
     def from_env(cls) -> "SarvamConfig":
@@ -58,6 +60,7 @@ class SarvamConfig:
             tts_speaker=_env("SARVAM_TTS_DEFAULT_SPEAKER", "shubh"),
             max_rps=float(_env("SARVAM_MAX_RPS", "5")),
             mock=os.environ.get("SARVAM_MOCK", "").lower() == "true",
+            batch_poll_s=float(_env("SARVAM_BATCH_POLL_SEC", "5")),
         )
 
 
@@ -213,6 +216,68 @@ class SarvamClient:
             raise SarvamError("/text-to-speech: empty response")
         return base64.b64decode(audios[0])
 
+    async def _get(self, endpoint: str, usage: UsageLog | None, meter: dict[str, Any]) -> dict:
+        if not self.cfg.api_key:
+            raise SarvamUnavailable("SARVAM_API_KEY is not set")
+        await self.bucket.take()
+        t0 = time.monotonic()
+        r = await self._client().get(endpoint)
+        if usage:
+            usage.add(endpoint=endpoint, status=r.status_code, latencyMs=int((time.monotonic() - t0) * 1000), **meter)
+        if r.status_code >= 400:
+            raise SarvamError(f"{endpoint}: HTTP {r.status_code}", status=r.status_code, retryable=r.status_code >= 500)
+        return r.json()
+
+    async def diarize(self, wav: bytes, *, num_speakers: int | None = None, audio_seconds: float = 0.0,
+                      usage: UsageLog | None = None) -> list[dict[str, Any]]:
+        """Speaker turns via Sarvam's batch STT job API (spec 6.2).
+
+        Returns [{startMs, endMs, speaker: 'SPEAKER_1', text}]. Flow: create, upload, start, poll, download.
+        Endpoint shapes follow Sarvam's batch docs but have NOT been exercised against the live service
+        (no key in CI); every step is defensive and failures raise SarvamError so the caller falls back.
+        """
+        if self.cfg.mock:
+            return _mock_diarize(wav, num_speakers, self.cfg.stt_model, usage, audio_seconds)
+        meter = {"model": self.cfg.stt_model, "audioSeconds": round(audio_seconds, 2)}
+        params: dict[str, Any] = {"model": self.cfg.stt_model, "mode": "transcribe", "language_code": "unknown",
+                                  "with_diarization": True}
+        if num_speakers:
+            params["num_speakers"] = num_speakers
+        job = await self._post("/speech-to-text/job/v1", usage, meter, json={"job_parameters": params})
+        job_id = job.get("job_id")
+        if not job_id:
+            raise SarvamError("batch job creation returned no job_id")
+        name = "audio.wav"
+        up = await self._post("/speech-to-text/job/v1/upload-files", usage, meter, json={"job_id": job_id, "files": [name]})
+        url = ((up.get("upload_urls") or {}).get(name) or {}).get("file_url")
+        if not url:
+            raise SarvamError("batch upload returned no url")
+        async with httpx.AsyncClient(timeout=self.cfg.batch_timeout_s, transport=self._transport) as raw:
+            put = await raw.put(url, content=wav, headers={"x-ms-blob-type": "BlockBlob", "Content-Type": "audio/wav"})
+            if put.status_code >= 400:
+                raise SarvamError(f"batch upload failed: HTTP {put.status_code}")
+        await self._post(f"/speech-to-text/job/v1/{job_id}/start", usage, meter, json={})
+        deadline = time.monotonic() + self.cfg.batch_timeout_s
+        while True:
+            st = await self._get(f"/speech-to-text/job/v1/{job_id}/status", usage, meter)
+            state = str(st.get("job_state", "")).lower()
+            if state in ("completed", "success", "succeeded"):
+                break
+            if state in ("failed", "error"):
+                raise SarvamError(f"batch job failed: {st.get('error_message') or state}")
+            if time.monotonic() > deadline:
+                raise SarvamError("batch job timed out")
+            await asyncio.sleep(self.cfg.batch_poll_s)
+        dl = await self._post("/speech-to-text/job/v1/download-files", usage, meter, json={"job_id": job_id, "files": [name]})
+        out_url = next(iter((dl.get("download_urls") or {}).values()), {}).get("file_url")
+        if not out_url:
+            raise SarvamError("batch download returned no url")
+        async with httpx.AsyncClient(timeout=self.cfg.timeout_s, transport=self._transport) as raw:
+            res = await raw.get(out_url)
+            res.raise_for_status()
+            body = res.json()
+        return _parse_diarized(body)
+
     async def ping(self) -> dict[str, Any]:
         """Cheap reachability/key check for /health (text-lid on one word)."""
         if self.cfg.mock:
@@ -243,6 +308,40 @@ def _mock_stt(wav: bytes, mode: str, model: str, usage: UsageLog | None, audio_s
     if mode == "translate":
         return SttResult(text=f"[mock English transcript {digest[:8]}]", lang="en-IN", lang_confidence=None, model=model)
     return SttResult(text=f"[mock transcript {digest[:8]}]", lang="hi-IN", lang_confidence=0.9, model=model)
+
+
+def _parse_diarized(body: dict[str, Any]) -> list[dict[str, Any]]:
+    entries = (body.get("diarized_transcript") or {}).get("entries") or []
+    labels: dict[str, str] = {}
+    turns = []
+    for e in entries:
+        raw = str(e.get("speaker_id", "0"))
+        label = labels.setdefault(raw, f"SPEAKER_{len(labels) + 1}")
+        turns.append({"startMs": int(float(e.get("start_time_seconds", 0)) * 1000),
+                      "endMs": int(float(e.get("end_time_seconds", 0)) * 1000),
+                      "speaker": label, "text": (e.get("transcript") or "").strip()})
+    return [t for t in turns if t["endMs"] > t["startMs"]]
+
+
+def _mock_diarize(wav: bytes, num_speakers: int | None, model: str, usage: UsageLog | None,
+                  audio_seconds: float) -> list[dict[str, Any]]:
+    """Deterministic fixture: a `<hash>.json` with `turns`, else VAD segments alternating between speakers."""
+    import json
+    from pathlib import Path
+
+    from . import audio as _audio
+
+    if usage:
+        usage.add(endpoint="/speech-to-text/job/v1", model=model, audioSeconds=round(audio_seconds, 2), status="mock", latencyMs=0)
+    fixture = Path(__file__).parent / "mock" / f"{hashlib.sha256(wav).hexdigest()[:16]}.json"
+    if fixture.exists():
+        turns = json.loads(fixture.read_text(encoding="utf-8")).get("turns")
+        if turns:
+            return turns
+    n = max(2, num_speakers or 2)
+    segs = _audio.segment(_audio.read_pcm(wav))
+    return [{"startMs": g.start_ms, "endMs": g.end_ms, "speaker": f"SPEAKER_{i % n + 1}", "text": ""}
+            for i, g in enumerate(segs)]
 
 
 _client_singleton: SarvamClient | None = None

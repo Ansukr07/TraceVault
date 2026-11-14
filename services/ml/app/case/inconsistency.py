@@ -10,9 +10,20 @@ from collections import defaultdict
 from itertools import product
 
 from .common import fmt_money, parse_ts, quote, stable_key
+from .dedup import TZ_SLACK_S
 
 FLAG_SEVERITY = {"EDITED_FILE": 2, "METADATA_MISMATCH": 2, "IMPOSSIBLE_SEQUENCE": 2, "SENDER_MISMATCH": 2}
 FIN_IDS = ("UPI_ID", "BANK_ACCT", "PHONE")
+SELF_ALIASES = {"me", "you", "i", "myself", "complainant"}
+MIN_WORDS_SENDER = 4  # spec §4.2: shorter messages repeat naturally
+BURST_LIMIT = 3  # spec §3: more than this many same-type flags between one evidence pair -> one parent flag
+AMOUNT_WINDOW_DAYS = 2  # spec §4.1
+MIN_CONFIDENCE = 0.55  # spec §8 emit threshold
+
+
+def _close_enough(a: set[int], b: set[int]) -> bool:
+    """Amounts within 1% or ₹1 are rounding, within 2% / ₹10 are fee noise (spec §4.1, §5)."""
+    return any(abs(x - y) <= max(10, 0.02 * max(x, y)) for x in a for y in b)
 
 
 def _ref(c: dict) -> dict:
@@ -26,6 +37,11 @@ def detect(evidence: list[dict], chunks: list[dict], dedup: dict, resolved: dict
     out: list[dict] = []
 
     def add(t: str, sev: int, title: str, explanation: str, refs: list[dict], confidence: float, **extra) -> None:
+        if confidence < MIN_CONFIDENCE:
+            return
+        # Never compare an item with itself / its exact copy (spec G1).
+        if len({r["evidenceId"] for r in refs}) < 2 and t in ("SENDER_MISMATCH", "AMOUNT_MISMATCH", "CONTENT_CONTRADICTION"):
+            return
         key = stable_key(t, *sorted(f"{r['evidenceId']}/{r.get('chunkId') or r.get('field', '')}" for r in refs))
         if any(o["key"] == key for o in out):
             return
@@ -50,7 +66,14 @@ def detect(evidence: list[dict], chunks: list[dict], dedup: dict, resolved: dict
                 "IMPOSSIBLE_SEQUENCE": f"{name}: messages are out of time order",
                 "SENDER_MISMATCH": f"{name}: sender headers disagree",
             }
-            add(t, FLAG_SEVERITY[t], titles[t], f"{f.get('field')}: {f.get('value')}.", [ref], 0.9)
+            sev = FLAG_SEVERITY[t]
+            if t == "METADATA_MISMATCH" and f.get("contentDate") and f.get("captureDate"):
+                # Capture before the content date is impossible; a gap over 7 days is harmful (spec §4.3).
+                cd, cap = f["contentDate"], f["captureDate"]
+                gap_days = (parse_ts(cap) - parse_ts(cd)).days if parse_ts(cap) and parse_ts(cd) else 0
+                if gap_days < 0 or gap_days > 7:
+                    sev = 3
+            add(t, sev, titles[t], f"{f.get('field')}: {f.get('value')}.", [ref], 0.9)
 
     # Cross-modal contradictions (same message seen twice with different content/date)
     for p in dedup.get("contradictions", []):
@@ -73,19 +96,45 @@ def detect(evidence: list[dict], chunks: list[dict], dedup: dict, resolved: dict
                 [_ref(v), _ref(o)], 0.8)
 
     # SENDER_MISMATCH across cross-modal duplicates
+    # Spec §4.2: resolve "Me/You" to the device owner first; skip generic short messages; if the owner is
+    # unknown or labels flip in bulk, raise ONE parent flag per evidence pair asking who "Me" is.
     alias = resolved["aliasToEntity"]
+    from .common import norm_name
     from .events import _alias_key
 
+    owner_known = any(e.get("isOwner") for e in resolved["entities"])
+    pair_hits: dict[tuple, list[tuple[dict, dict, bool]]] = defaultdict(list)
     for g in dedup.get("groups", []):
         if g["kind"] != "cross_modal":
             continue
         a, b = (by_id.get(m.get("chunkId")) for m in g["members"])
-        if not a or not b or not a.get("sender") or not b.get("sender"):
+        if not a or not b or a["evidenceId"] == b["evidenceId"] or not a.get("sender") or not b.get("sender"):
             continue
-        sa, sb = alias.get(_alias_key(a["sender"], resolved)), alias.get(_alias_key(b["sender"], resolved))
-        if sa and sb and sa != sb:
-            add("SENDER_MISMATCH", 3, "Same message attributed to different senders",
-                f"{_ev_name(ev_by_id, a)} shows it from {a['sender']}, {_ev_name(ev_by_id, b)} from {b['sender']}.", [_ref(a), _ref(b)], 0.8)
+        if len((a.get("text") or "").split()) < MIN_WORDS_SENDER:
+            continue  # "ok", "thanks", emoji: repeats naturally
+        ka, kb = _alias_key(a["sender"], resolved), _alias_key(b["sender"], resolved)
+        sa, sb = alias.get(ka) or ka, alias.get(kb) or kb
+        if sa == sb:
+            continue
+        self_side = norm_name(a["sender"]) in SELF_ALIASES or norm_name(b["sender"]) in SELF_ALIASES
+        pair_hits[tuple(sorted((a["evidenceId"], b["evidenceId"])))].append((a, b, self_side and not owner_known))
+    for pair, hits in pair_hits.items():
+        unsure = any(h[2] for h in hits)
+        if unsure or len(hits) > BURST_LIMIT:
+            a, b, _ = hits[0]
+            n1, n2 = _ev_name(ev_by_id, a), _ev_name(ev_by_id, b)
+            add("SENDER_MISMATCH", 1, f"Speaker labels differ between {n1} and {n2} ({len(hits)} message{'s' if len(hits) > 1 else ''})",
+                f"The same messages are attributed to different speakers (e.g. {a['sender']} vs {b['sender']}). This is usually a perspective or alias "
+                f"issue (\"Me\" in a screenshot is the phone owner). Confirm who \"Me\" is before treating it as tampering.",
+                [_ref(h[i]) for h in hits[:2] for i in (0, 1)], 0.6, subtype="speaker_labels",
+                reasonChecked=["not a duplicate pair", "short messages excluded", "owner unresolved or labels flip in bulk"])
+            continue
+        for a, b, _ in hits:
+            long_msg = len((a.get("text") or "").split()) >= 10
+            add("SENDER_MISMATCH", 2, "Same message attributed to different senders",
+                f"{_ev_name(ev_by_id, a)} shows it from {a['sender']}, {_ev_name(ev_by_id, b)} from {b['sender']}.",
+                [_ref(a), _ref(b)], 0.7 if long_msg else 0.6,
+                reasonChecked=["Me/You resolved to owner", "aliases resolved", "not a duplicate pair"])
 
     # AMOUNT_MISMATCH: chat amount vs document amount for the same identifier within ±3 days.
     ident_chunks: dict[str, list[dict]] = defaultdict(list)
@@ -111,8 +160,16 @@ def detect(evidence: list[dict], chunks: list[dict], dedup: dict, resolved: dict
             aa, ab = _amounts(a) or _neighbour_amounts(a, chunks), _amounts(b)
             if not aa or not ab or aa & ab:
                 continue
+            if _close_enough(aa, ab):
+                continue  # rounding / fee noise (spec §4.1)
             ta, tb = parse_ts(a.get("refTs")), parse_ts(_doc_time(b))
-            if ta and tb and abs((ta - tb).total_seconds()) > 3 * 86400:
+            if ta and tb and abs((ta - tb).total_seconds()) > AMOUNT_WINDOW_DAYS * 86400:
+                continue
+            # Another debit to the same identifier in the window may be the matching one, or several may sum to it.
+            window_docs = [d for d in docs if d["evidenceId"] != a["evidenceId"]
+                           and (not ta or not parse_ts(_doc_time(d)) or abs((ta - parse_ts(_doc_time(d))).total_seconds()) <= AMOUNT_WINDOW_DAYS * 86400)]
+            all_amts = [x for d in window_docs for x in _amounts(d)]
+            if aa & set(all_amts) or any(sum(all_amts) == x for x in aa):
                 continue
             sig = (ik, max(aa), max(ab), b["id"])
             if sig in seen_amount:
@@ -135,15 +192,55 @@ def detect(evidence: list[dict], chunks: list[dict], dedup: dict, resolved: dict
         else:
             shared = bool(set(s["identifiers"]) & set(d["identifiers"])) and not (s["amount"] or d["amount"])
         ts, td = parse_ts(s["ts"]), parse_ts(d["ts"])
-        if shared and ts and td and abs((ts - td).days) > 1:
+        if shared and ts and td and abs((ts - td).total_seconds()) > 86400 + TZ_SLACK_S:
             sc, dc = by_id.get(s["citations"][0]), by_id.get(d["citations"][0])
             if sc and dc:
                 add("DATE_CONFLICT", 2, "Your statement and the evidence give different dates",
                     f"Your statement places this on {s['ts'][:10]}, while {_ev_name(ev_by_id, dc)} shows {d['ts'][:10]}. Check before filing.",
                     [_ref(sc), _ref(dc)], 0.7, subtype="statement_vs_evidence")
 
+    _coverage_gaps(chunks, ev_by_id, dedup, add)
+
     out.sort(key=lambda o: (-o["severity"], -o["confidence"]))
     return out
+
+
+def _coverage_gaps(chunks: list[dict], ev_by_id: dict, dedup: dict, add) -> None:
+    """Spec §6: a screenshot message missing from a full export that covers its time window.
+    Info-level only (severity 1), worded as 'not found', never as a conflict."""
+    from rapidfuzz import fuzz
+
+    from .common import norm_name
+
+    exports: dict[str, list[dict]] = defaultdict(list)
+    for c in chunks:
+        if c.get("unit") == "message" and c.get("refTs"):
+            exports[c["evidenceId"]].append(c)
+    if not exports:
+        return
+    paired = {m.get("chunkId") for g in dedup.get("groups", []) for m in g["members"]}
+    paired |= {p["visualChunkId"] for p in dedup.get("contradictions", [])}
+    for c in chunks:
+        if c.get("unit") != "bubble" or c["id"] in paired or c.get("lowConfidence"):
+            continue
+        text, tc = norm_name(c.get("text") or ""), parse_ts(c.get("refTs"))
+        if len(text.split()) < 6 or not tc:
+            continue
+        covering = []
+        for eid, ms in exports.items():
+            times = [t for t in (parse_ts(m["refTs"]) for m in ms) if t]
+            if times and min(times) <= tc <= max(times):
+                covering.append((eid, ms))
+        if not covering:
+            continue  # no export covers this moment
+        if any(fuzz.token_set_ratio(text, norm_name(m.get("text") or "")) >= 60 for _, ms in exports.items() for m in ms):
+            continue
+        for eid, ms in covering[:1]:
+            name =(ev_by_id.get(eid) or {}).get("sourceLabel") or (ev_by_id.get(eid) or {}).get("filename") or "the chat export"
+            add("COVERAGE_GAP", 1, "Message not found in the chat export",
+                f"This screenshot message was not found in {name}, although the export covers {tc.date()}. It may have been deleted, or the screenshot may not match the export.",
+                [_ref(c)], 0.6, subtype="not_in_export", reasonChecked=["export covers the time window", "fuzzy-matched entire export"])
+            break
 
 
 def _amounts(c: dict) -> set[int]:

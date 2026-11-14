@@ -5,6 +5,8 @@ import { Router } from 'express';
 import archiver from 'archiver';
 import { ah, httpError, requireAuth, requireCaseRole } from '../middleware/index.js';
 import { audit } from '../services/audit.js';
+import { Timestamp } from '../models/index.js';
+import { trustPem } from '../services/timestamps.js';
 import { readPlain } from '../services/evidence-store.js';
 import { mlJson } from '../services/ml-client.js';
 import {
@@ -14,7 +16,7 @@ import {
 export const exportRouter = Router({ mergeParams: true });
 exportRouter.use(requireAuth);
 
-async function renderPdf(html, { title, footer, header }) {
+export async function renderPdf(html, { title, footer, header }) {
   const r = await fetch(`${process.env.ML_BASE_URL ?? 'http://127.0.0.1:8000'}/report/pdf`, {
     method: 'POST',
     headers: { 'X-Internal-Secret': process.env.ML_INTERNAL_SECRET ?? 'change-me', 'Content-Type': 'application/json' },
@@ -25,7 +27,7 @@ async function renderPdf(html, { title, footer, header }) {
   return Buffer.from(await r.arrayBuffer());
 }
 
-const send = (res, buf, name, type) => {
+export const send = (res, buf, name, type) => {
   res.set({ 'Content-Type': type, 'Content-Length': buf.length, 'Content-Disposition': `attachment; filename="${name}"`, 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
   res.end(buf);
 };
@@ -59,7 +61,7 @@ exportRouter.get(
   '/report.pdf',
   requireCaseRole('owner', 'legal', 'investigator'),
   ah(async (req, res) => {
-    const d = await collect(req);
+    const d = await collect(req, { lang: typeof req.query.lang === 'string' ? req.query.lang : undefined });
     const html = await reportHtml(d, { transcripts: req.query.transcripts !== '0' });
     const pdf = await renderPdf(html, { title: `Report: ${d.c.title}`, footer: d.stamp, header: 'TraceVault · digital evidence report' });
     await audit(d.c._id, { actorId: req.user._id, actorRole: req.role, action: 'REPORT_EXPORTED', target: String(d.c._id), payload: { sha256: fileHash(pdf), merkleRoot: d.merkle, auditHead: d.auditHead } });
@@ -101,7 +103,7 @@ exportRouter.get(
     const checkpoint = signCheckpoint({
       caseId: String(d.c._id), merkleRoot: d.merkle, auditHead: d.auditHead, auditCount: d.audits.length, manifestSha256: fileHash(manifestBytes), exportedAt,
     });
-    const readme = `TraceVault evidence bundle\n==========================\nCase: ${d.c.title}\nExported: ${exportedAt}\n\noriginals/      the unmodified files as uploaded (their SHA-256 is in manifest.json)\nmanifest.json   file list, Merkle root, audit head\naudit.jsonl     the hash-chained audit log\ncheckpoint.json Ed25519-signed summary of the above\npublic_key.pem  verifies the signature\nverify.py       offline check, Python 3 only:  python verify.py\n\nThis bundle was generated for: ${req.user.email}\n`;
+    const readme = `TraceVault evidence bundle\n==========================\nCase: ${d.c.title}\nExported: ${exportedAt}\n\noriginals/      the unmodified files as uploaded (their SHA-256 is in manifest.json)\nmanifest.json   file list, Merkle root, audit head\naudit.jsonl     the hash-chained audit log\ncheckpoint.json Ed25519-signed summary of the above\npublic_key.pem  verifies the signature\ntimestamps/     RFC 3161 time-stamp tokens (independent proof of when each hash existed)\nverify.py       offline check, Python 3 only:  python verify.py\n\nThis bundle was generated for: ${req.user.email}\n`;
 
     res.set({ 'Content-Type': 'application/zip', 'Content-Disposition': `attachment; filename="tracevault-bundle-${String(d.c._id).slice(-6)}.zip"`, 'Cache-Control': 'no-store' });
     const zip = archiver('zip', { zlib: { level: 6 } });
@@ -114,6 +116,17 @@ exportRouter.get(
     zip.append(auditJsonl(d.audits), { name: 'audit.jsonl' });
     zip.append(JSON.stringify(checkpoint, null, 2), { name: 'checkpoint.json' });
     if (checkpoint.publicKeyPem) zip.append(checkpoint.publicKeyPem, { name: 'public_key.pem' });
+    // F2: RFC 3161 tokens + an index so verify.py can check them offline.
+    const stampIndex = [];
+    for (const t of await Timestamp.find({ _id: { $in: d.timestamps.map((x) => x._id) } })) {
+      const file = `timestamps/${t.subject.type}_${safeName(t.subject.ref)}_${t._id.toString().slice(-6)}.tsr`;
+      zip.append(t.token, { name: file });
+      stampIndex.push({ file, type: t.subject.type, ref: t.subject.ref, hash: t.subject.hash, genTime: t.genTime, tsa: t.tsa?.name, serial: t.serial });
+    }
+    if (stampIndex.length) {
+      zip.append(JSON.stringify(stampIndex, null, 2), { name: 'timestamps/index.json' });
+      if (trustPem()) zip.append(trustPem(), { name: 'timestamps/trust.pem' });
+    }
     zip.append(VERIFY_PY, { name: 'verify.py' });
     zip.append(readme, { name: 'README.txt' });
     await zip.finalize();

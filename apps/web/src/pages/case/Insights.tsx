@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../lib/api';
 import { fmtDate } from '../../lib/case';
-import { CaseShell, CitationChip, Empty } from '../../components';
+import { CaseShell, CitationChip, Empty, PageLoading } from '../../components';
 
 type Insights = {
   escalation: { week: string; messages: number; avgSeverity: number; maxSeverity: number; severe: number }[];
@@ -16,7 +16,7 @@ export function InsightsPage() {
   const { id = '' } = useParams();
   const q = useQuery({ queryKey: ['insights', id], queryFn: () => api<{ insights: Insights | null }>(`/cases/${id}/insights`).then((r) => r.insights) });
   const d = q.data;
-  if (q.isLoading) return <CaseShell><p className="muted">Loading…</p></CaseShell>;
+  if (q.isLoading) return <CaseShell><PageLoading variant="cards" label="Loading insights" /></CaseShell>;
   if (!d || d.messageCount === 0) return <CaseShell><Empty title="Not enough messages yet">Patterns appear once chats or screenshots with timestamps are processed.</Empty></CaseShell>;
   const maxHeat = Math.max(1, ...d.heatmap.flat());
   const maxSev = 3;

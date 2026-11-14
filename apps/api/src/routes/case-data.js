@@ -23,8 +23,11 @@ import { verifyChain } from '../services/audit-chain.js';
 import { merkleRoot } from '../services/merkle.js';
 import { verifyStored } from '../services/evidence-store.js';
 import { mlBinary, mlJson, mlMultipart } from '../services/ml-client.js';
+import { kickJobs } from '../jobs/kick.js';
 import { caseProgress, chunkPayload, generateSummary, loadCaseInputs } from '../jobs/pipeline.js';
 import { debounceCaseJob } from '../jobs/runner.js';
+import { translatedSummary } from '../services/summary-translate.js';
+import { llmLimiter, voiceLimiter } from '../middleware/rateLimit.js';
 import { citationAllowed, evidenceFilter, restrictCitations, scopeFor } from '../services/scope.js';
 
 const inScope = (scope, ids = []) => !scope || ids.some((i) => scope.ids.has(String(i)));
@@ -90,7 +93,12 @@ caseDataRouter.get(
   }),
 );
 
-caseDataRouter.get('/jobs', requireCaseRole(), ah(async (req, res) => res.json({ jobs: await caseProgress(req.case._id) })));
+// Polled by the UI while a case is open. On serverless this doubles as the worker heartbeat: pending work wakes a drain.
+caseDataRouter.get('/jobs', requireCaseRole(), ah(async (req, res) => {
+  const jobs = await caseProgress(req.case._id);
+  if (jobs.some((j) => j.status === 'queued' || j.status === 'running')) kickJobs();
+  res.json({ jobs });
+}));
 
 // ------------------------------------------------------------------ chunks (citation previews)
 caseDataRouter.get(
@@ -263,7 +271,7 @@ caseDataRouter.get(
   requireCaseRole(),
   ah(async (req, res) => {
     const [items, statuses] = await Promise.all([
-      Inconsistency.find({ caseId: req.case._id }).sort({ severity: -1 }).lean(),
+      Inconsistency.find({ caseId: req.case._id }).sort({ severity: -1, confidence: -1 }).lean(),
       Decision.find({ caseId: req.case._id, kind: 'inconsistency_status' }).lean(),
     ]);
     const st = new Map(statuses.map((d) => [d.key, d.data]));
@@ -302,27 +310,7 @@ caseDataRouter.get(
     const restrict = (sm) => (!scope ? sm : { ...sm, sections: sm.sections.map((sec) => ({ ...sec, sentences: sec.sentences.map((x) => ({ ...x, citations: restrictCitations(scope, x.citations) })).filter((x) => !x.citations.length || x.citations.some((c) => c !== 'RESTRICTED')) })) });
     if (lang === 'en-IN') return res.json({ summary: restrict(strip(base)) });
     // S8: translate the validated English summary sentence by sentence; citations unchanged.
-    let tr = await Summary.findOne({ caseId: req.case._id, lang, version: base.version }).lean();
-    if (!tr) {
-      if (req.case.settings?.translateMode === 'off') throw httpError(409, 'TRANSLATION_OFF', 'Translation is turned off for this case');
-      const items = base.sections.flatMap((s, si) => s.sentences.map((x, xi) => ({ id: `${si}.${xi}`, text: x.text, src: 'en-IN' })));
-      const r = await mlJson('/translate', { items, target: lang, redact: req.case.settings?.translateMode === 'sarvam_redacted' });
-      await ProviderUsage.insertMany((r.usage ?? []).map((u) => ({ ...u, caseId: req.case._id })));
-      const by = new Map(r.items.map((i) => [i.id, i.text]));
-      tr = (
-        await Summary.create({
-          caseId: req.case._id,
-          version: base.version,
-          lang,
-          generator: { ...base.generator, translation: { provider: 'sarvam' } },
-          stats: base.stats,
-          sections: base.sections.map((s, si) => ({
-            ...s,
-            sentences: s.sentences.map((x, xi) => ({ ...x, textEn: x.text, text: by.get(`${si}.${xi}`) ?? x.text, machineTranslated: by.has(`${si}.${xi}`) })),
-          })),
-        })
-      ).toObject();
-    }
+    const tr = await translatedSummary(req.case, base, lang);
     res.json({ summary: restrict(strip(tr)) });
   }),
 );
@@ -330,6 +318,7 @@ caseDataRouter.get(
 caseDataRouter.post(
   '/summary/regenerate',
   requireCaseRole('owner'),
+  llmLimiter,
   ah(async (req, res) => {
     const doc = await generateSummary(req.case, null, { createdBy: req.user._id });
     await Summary.deleteMany({ caseId: req.case._id, lang: { $ne: 'en-IN' }, version: { $lt: doc.version } });
@@ -348,6 +337,7 @@ async function answerQuestion(c, question, scope) {
 caseDataRouter.post(
   '/ask',
   requireCaseRole(),
+  llmLimiter,
   validate(z.object({ question: z.string().min(2).max(1000), lang: z.string().optional() })),
   ah(async (req, res) => {
     const out = await answerQuestion(req.case, req.body.question, await scopeFor(req));
@@ -359,12 +349,39 @@ caseDataRouter.post(
   }),
 );
 
+// S9: "Everything about <person>": the cited Q&A pipeline restricted to chunks that mention that entity.
+caseDataRouter.post(
+  '/entities/summary',
+  requireCaseRole(),
+  llmLimiter,
+  validate(z.object({ key: z.string().min(1).max(300) })),
+  ah(async (req, res) => {
+    const ent = await Entity.findOne({ caseId: req.case._id, key: req.body.key, type: 'PERSON' }).lean();
+    const scope = await scopeFor(req);
+    if (!ent || !inScope(scope, ent.evidenceIds)) throw httpError(404, 'NOT_FOUND', 'No such person');
+    let { chunks } = await loadCaseInputs(req.case._id);
+    const ids = new Set(ent.mentionChunkIds ?? []);
+    chunks = chunks.filter((ch) => ids.has(ch.cid) && (!scope || scope.ids.has(String(ch.evidenceId))));
+    if (!chunks.length) return res.json({ name: ent.name, answer: 'No cited evidence mentions this person.', sentences: [] });
+    const entities = await Entity.find({ caseId: req.case._id, type: 'PERSON' }, 'type aliases name').lean();
+    const out = await mlJson('/case/ask', {
+      question: `Summarize everything the evidence says about ${ent.name}: who they are, what they did and when.`,
+      llmMode: req.case.settings?.llmMode ?? 'cloud_redacted',
+      chunks: chunks.map(chunkPayload),
+      entities: entities.map(strip),
+    });
+    await audit(req.case._id, { actorId: req.user._id, actorRole: req.role, action: 'PERSON_SUMMARY', target: ent.key });
+    res.json({ name: ent.name, ...out });
+  }),
+);
+
 const audioUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024, files: 1 } });
 
 // V-ASK: the question audio is transcribed and discarded; only the question hash is audited.
 caseDataRouter.post(
   '/ask/voice',
   requireCaseRole(),
+  voiceLimiter,
   audioUpload.single('audio'),
   ah(async (req, res) => {
     if (!req.file) throw httpError(400, 'NO_FILE', 'Attach audio in the "audio" field');
@@ -389,6 +406,7 @@ caseDataRouter.post(
 caseDataRouter.post(
   '/summary/speak',
   requireCaseRole(),
+  voiceLimiter,
   validate(z.object({ lang: z.string().default('en-IN'), voice: z.string().optional(), text: z.string().max(20000).optional() })),
   ah(async (req, res) => {
     if (req.case.settings?.voiceMode !== 'sarvam') throw httpError(409, 'VOICE_DISABLED', 'Read-aloud needs Sarvam voice processing enabled for this case');
@@ -446,6 +464,7 @@ caseDataRouter.patch(
       voiceMode: z.enum(['sarvam', 'local']).optional(),
       voiceConsent: z.boolean().optional(),
       translateMode: z.enum(['sarvam', 'sarvam_redacted', 'off']).optional(),
+      ocrMode: z.enum(['local', 'cloud']).optional(),
       timezone: z.string().max(60).optional(),
     }),
   ),
@@ -458,6 +477,7 @@ caseDataRouter.patch(
       if (b.llmMode === 'local' && s.llmMode !== 'local') {
         if (!b.voiceMode) s.voiceMode = 'local';
         if (!b.translateMode) s.translateMode = 'off';
+        if (!b.ocrMode) s.ocrMode = 'local';
       }
       s.llmMode = b.llmMode;
     }
@@ -474,6 +494,7 @@ caseDataRouter.patch(
       s.voiceMode = 'local';
     }
     if (b.translateMode) s.translateMode = b.translateMode;
+    if (b.ocrMode) s.ocrMode = b.ocrMode;
     if (b.timezone) c.timezone = b.timezone;
     await c.save();
     await audit(c._id, { actorId: req.user._id, actorRole: req.role, action: 'PRIVACY_SETTINGS_CHANGED', target: String(c._id), payload: { ...b, voiceConsent: b.voiceConsent } });

@@ -21,6 +21,8 @@ import { AuditPage } from './pages/case/Audit';
 import { SettingsPage } from './pages/case/Settings';
 import { SharePage } from './pages/case/SharePage';
 import { ExportPage } from './pages/case/ExportPage';
+import { ComplaintPage } from './pages/case/Complaint';
+import { SafetyBar } from './features';
 import { VoiceStatementPage } from './pages/case/VoiceStatementPage';
 import { AcceptInvitePage } from './pages/AcceptInvitePage';
 import { VerifyBundlePage } from './pages/VerifyBundlePage';
@@ -33,7 +35,35 @@ import { SharedWithMePage } from './pages/legal/SharedWithMePage';
 import './styles.css';
 import './app.css';
 
-const qc = new QueryClient();
+const qc = new QueryClient({ defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false } } });
+
+/** Catches render errors so one bad page never leaves a blank white screen. Resets when the route changes. */
+class ErrorBoundary extends React.Component<{ children: React.ReactNode; resetKey: string }, { error: Error | null }> {
+  state = { error: null as Error | null };
+  static getDerivedStateFromError(error: Error) { return { error }; }
+  componentDidUpdate(prev: { resetKey: string }) { if (prev.resetKey !== this.props.resetKey && this.state.error) this.setState({ error: null }); }
+  componentDidCatch(error: Error) { console.error('Page crashed:', error); }
+  render() {
+    if (!this.state.error) return this.props.children;
+    return (
+      <main className="wrap page">
+        <h2>Something went wrong on this page</h2>
+        <p className="muted">{this.state.error.message}</p>
+        <button type="button" className="btn btn-dark" onClick={() => this.setState({ error: null })}>Try again</button>{' '}
+        <button type="button" className="btn btn-light" onClick={() => window.location.reload()}>Reload</button>
+      </main>
+    );
+  }
+}
+/** Quick exit + discreet mode on every signed-in page (future spec F5). */
+function SafetyWhenSignedIn() {
+  const { user } = useAuth();
+  return <SafetyBar signedIn={!!user} />;
+}
+function Guarded({ children }: { children: React.ReactNode }) {
+  const { pathname } = useLocation();
+  return <ErrorBoundary resetKey={pathname}>{children}</ErrorBoundary>;
+}
 
 /** Signed-in only. `allow` narrows it to certain accounts; others are sent to their own home (never shown an error page). */
 function Private({ children, allow }: { children: React.ReactElement; allow?: (u: User) => boolean }) {
@@ -53,7 +83,7 @@ createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={qc}>
       <AuthProvider>
         <BrowserRouter>
-          <Routes>
+          <Guarded><Routes>
             {/* 3.1 Public */}
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<AuthPage mode="login" />} />
@@ -77,6 +107,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="/cases/:id/upload" element={<Private><UploadPage /></Private>} />
             <Route path="/cases/:id/share" element={<Private><SharePage /></Private>} />
             <Route path="/cases/:id/export" element={<Private><ExportPage /></Private>} />
+            <Route path="/cases/:id/complaint" element={<Private><ComplaintPage /></Private>} />
             <Route path="/cases/:id/statement" element={<Private><VoiceStatementPage /></Private>} />
             <Route path="/legal" element={<Private><SharedWithMePage /></Private>} />
             <Route path="/account" element={<Private><AccountPage /></Private>} />
@@ -91,7 +122,8 @@ createRoot(document.getElementById('root')!).render(
             <Route path="/admin" element={<Private allow={onlyAdmin}><AdminPage /></Private>} />
 
             <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+          </Routes></Guarded>
+          <SafetyWhenSignedIn />
         </BrowserRouter>
       </AuthProvider>
     </QueryClientProvider>

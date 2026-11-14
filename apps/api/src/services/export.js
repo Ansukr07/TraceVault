@@ -3,8 +3,9 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { translatedSummary } from './summary-translate.js';
 import {
-  AuditEntry, Chunk, Decision, DerivedArtifact, Entity, Evidence, Inconsistency, Summary, TimelineEvent, User,
+  AuditEntry, Chunk, Decision, DerivedArtifact, Entity, Evidence, Inconsistency, Summary, TimelineEvent, Timestamp, User,
 } from '../models/index.js';
 import { canonicalJSON, genesisHash, verifyChain } from './audit-chain.js';
 import { merkleRoot } from './merkle.js';
@@ -26,9 +27,11 @@ const SEV = ['Benign', 'Concerning', 'Harmful', 'Severe'];
 /** Ed25519 signing for checkpoints (V6). The key is created by `npm run keys:generate`. */
 function loadKey() {
   const root = path.resolve(import.meta.dirname, '../../../..');
+  // Serverless has no key file: ED25519_PRIVATE_KEY_PEM holds the PEM inline (newlines may be written as \n).
+  const inline = process.env.ED25519_PRIVATE_KEY_PEM?.replace(/\\n/g, '\n');
   const p = path.resolve(root, process.env.ED25519_PRIVATE_KEY_PEM_PATH ?? './keys/audit_ed25519.pem');
-  if (!fs.existsSync(p)) return null;
-  const privateKey = crypto.createPrivateKey(fs.readFileSync(p));
+  if (!inline && !fs.existsSync(p)) return null;
+  const privateKey = crypto.createPrivateKey(inline ?? fs.readFileSync(p));
   return { privateKey, publicPem: crypto.createPublicKey(privateKey).export({ type: 'spki', format: 'pem' }) };
 }
 
@@ -39,13 +42,20 @@ export function signCheckpoint(payload) {
   return { payload, signature, publicKeyPem: key.publicPem, algorithm: 'Ed25519' };
 }
 
+/** R5: optional regional-language copy of the summary (machine translation; the English text stays authoritative). */
+async function nativeSummary(c, summary, scope, lang) {
+  if (!summary || !lang || lang.startsWith('en')) return null;
+  const tr = await translatedSummary(c, summary, lang);
+  return scope ? { ...tr, sections: tr.sections.map((s) => ({ ...s, sentences: s.sentences.map((x) => ({ ...x, citations: restrictCitations(scope, x.citations) })) })) } : tr;
+}
+
 /** Everything the exports need, restricted to the viewer's scope. */
-export async function collect(req) {
+export async function collect(req, { lang } = {}) {
   const c = req.case;
   const cid = c._id;
   const scope = await scopeFor(req);
   const evFilter = scope ? { _id: { $in: [...scope.ids] } } : {};
-  const [evidence, entities, events, incs, decisions, summary, audits, ownerUser] = await Promise.all([
+  const [evidence, entities, events, incs, decisions, summary, audits, ownerUser, stamps] = await Promise.all([
     Evidence.find({ caseId: cid, ...evFilter }).sort({ idx: 1 }).lean(),
     Entity.find({ caseId: cid }).sort({ mentionCount: -1 }).lean(),
     TimelineEvent.find({ caseId: cid }).sort({ ts: 1 }).lean(),
@@ -54,6 +64,7 @@ export async function collect(req) {
     Summary.findOne({ caseId: cid, lang: 'en-IN' }).sort({ version: -1 }).lean(),
     AuditEntry.find({ caseId: String(cid) }).sort({ seq: 1 }).lean(),
     User.findById(c.members.find((m) => m.role === 'owner')?.userId, 'name').lean(),
+    Timestamp.find({ caseId: cid, token: { $exists: true } }, '-token').sort({ genTime: 1 }).lean(),
   ]);
   const inScope = (ids = []) => !scope || ids.some((i) => scope.ids.has(String(i)));
   const status = new Map(decisions.map((d) => [d.key, d.data]));
@@ -64,7 +75,10 @@ export async function collect(req) {
     events: events.filter((e) => inScope(e.evidenceIds)).map((e) => ({ ...e, citations: restrictCitations(scope, e.citations) })),
     incs: visibleIncs,
     summary: summary && scope ? { ...summary, sections: summary.sections.map((s) => ({ ...s, sentences: s.sentences.map((x) => ({ ...x, citations: restrictCitations(scope, x.citations) })) })) } : summary,
+    summaryNative: await nativeSummary(c, summary, scope, lang),
     audits,
+    // F2: only time-stamps for evidence inside the viewer's scope (case-level anchors are always safe to show).
+    timestamps: stamps.filter((t) => t.subject.type !== 'evidence' || !scope || scope.ids.has(t.subject.ref)),
     chain: verifyChain(String(cid), audits),
     merkle: merkleRoot(evidence.map((e) => e.sha256)),
     auditHead: audits.at(-1)?.hash ?? genesisHash(String(cid)),
@@ -72,7 +86,7 @@ export async function collect(req) {
   };
 }
 
-const CSS = `<style>
+export const CSS = `<style>
 body { font-family: sans-serif; font-size: 9.5pt; color: #1a1a18; line-height: 1.35; }
 h1 { font-size: 20pt; margin: 0 0 2pt 0; } h2 { font-size: 13pt; margin: 16pt 0 5pt 0; border-bottom: 1px solid #b9b8b3; padding-bottom: 2pt; }
 h3 { font-size: 10.5pt; margin: 9pt 0 3pt 0; } p { margin: 0 0 5pt 0; }
@@ -103,6 +117,19 @@ function transcriptsAppendix(artifacts, evidence) {
   return out.join('\n');
 }
 
+const STAMP_LABEL = { evidence: 'Original file', audit_head: 'Audit log head', merkle_root: 'Evidence set (Merkle root)' };
+const TRUST_LABEL = { trusted: 'authority trusted', untrusted: 'authority NOT in the trust list', unchecked: 'authority not checked' };
+
+/** F2: independent RFC 3161 time-stamps. Each row proves the hash existed at that time, per the named authority. */
+function timestampsSection(stamps, evidence) {
+  const idx = new Map(evidence.map((e) => [String(e._id), e.idx]));
+  const rows = stamps.map((t) => {
+    const what = t.subject.type === 'evidence' ? `${STAMP_LABEL.evidence} E${idx.get(t.subject.ref) ?? '?'}` : `${STAMP_LABEL[t.subject.type]}${t.subject.type === 'audit_head' ? ` (entry #${esc(t.subject.ref)})` : ''}`;
+    return `<tr><td>${what}</td><td class="mono">${esc(t.genTime ? new Date(t.genTime).toISOString().slice(0, 19).replace('T', ' ') : '')} UTC</td><td>${esc(t.tsa?.name ?? '')}<br/><span class="small muted">serial ${esc(t.serial ?? '')} · ${esc(TRUST_LABEL[t.trust] ?? t.trust)}</span></td><td class="mono small">${esc(t.subject.hash)}</td></tr>`;
+  });
+  return `<p class="small muted">Each row is an RFC 3161 time-stamp issued by an independent authority over the SHA-256 shown. It proves that hash existed no later than the stated time. Tokens are in the evidence bundle and can be checked offline.</p><table><tr><th width="22%">Stamped item</th><th width="20%">Time</th><th width="22%">Authority</th><th>SHA-256</th></tr>${rows.join('')}</table>`;
+}
+
 /** R1 + R4: the case report. */
 export async function reportHtml(d, { transcripts = true } = {}) {
   const { c, evidence } = d;
@@ -128,6 +155,14 @@ export async function reportHtml(d, { transcripts = true } = {}) {
     for (const s of d.summary.sections.filter((x) => x.sentences.length)) {
       h.push(`<h3>${esc(s.title)}</h3>`);
       for (const x of s.sentences) h.push(`<p>${esc(x.text)}${x.supported === false ? ' <span class="bad small">[not fully supported]</span>' : ''}${cites(x.citations)}</p>`);
+    }
+  }
+
+  if (d.summaryNative) {
+    h.push(`<h2>1a. Summary (${esc(LANG[d.summaryNative.lang] ?? d.summaryNative.lang)})</h2><p class="small muted">Machine translation (Sarvam) of the English summary above. The English text is the authoritative version; citations are unchanged.</p>`);
+    for (const s of d.summaryNative.sections.filter((x) => x.sentences.length)) {
+      h.push(`<h3>${esc(s.title)}</h3>`);
+      for (const x of s.sentences) h.push(`<p>${esc(x.text)}${cites(x.citations)}</p>`);
     }
   }
 
@@ -166,10 +201,12 @@ export async function reportHtml(d, { transcripts = true } = {}) {
   }
   h.push('</table>');
 
-  if (artifacts.length) h.push(`<h2>7. Transcripts appendix</h2>${transcriptsAppendix(artifacts, evidence)}`);
+  let sec = 7;
+  if (d.timestamps?.length) h.push(`<h2>${sec++}. Trusted timestamps</h2>${timestampsSection(d.timestamps, evidence)}`);
+  if (artifacts.length) h.push(`<h2>${sec++}. Transcripts appendix</h2>${transcriptsAppendix(artifacts, evidence)}`);
 
   const tail = d.audits.slice(-12);
-  h.push(`<h2>${artifacts.length ? '8' : '7'}. Audit log (last ${tail.length} of ${d.audits.length} entries)</h2><table><tr><th width="5%">#</th><th width="22%">Time (UTC)</th><th>Action</th><th>Entry hash</th></tr>`);
+  h.push(`<h2>${sec}. Audit log (last ${tail.length} of ${d.audits.length} entries)</h2><table><tr><th width="5%">#</th><th width="22%">Time (UTC)</th><th>Action</th><th>Entry hash</th></tr>`);
   for (const a of tail) h.push(`<tr><td class="mono">${a.seq}</td><td class="mono">${esc(a.ts.slice(0, 19).replace('T', ' '))}</td><td>${esc(a.actorRole ?? 'system')} · ${esc(a.action)}</td><td class="mono">${a.hash.slice(0, 40)}…</td></tr>`);
   h.push('</table>');
   h.push(`<div class="warn small"><b>About this report.</b> It is generated from sealed originals and machine-derived text (OCR, speech-to-text, translation, entity extraction). Machine output can contain errors: check any quoted passage against the original file, whose SHA-256 is listed above. This report assists a complaint; it is not legal advice and does not itself establish admissibility.</div>`);
@@ -209,10 +246,12 @@ const VERIFY_PY = `#!/usr/bin/env python3
     python verify.py [bundle_dir]
 
 Checks: (1) every original's SHA-256 against manifest.json, (2) the Merkle root, (3) the hash-chained audit log in
-audit.jsonl, (4) the Ed25519 signature on checkpoint.json (needs the optional 'cryptography' package).
+audit.jsonl, (4) the Ed25519 signature on checkpoint.json (needs the optional 'cryptography' package),
+(5) RFC 3161 time-stamps in timestamps/ (the stamped hash must match the bundle; the authority's signature is
+checked too when openssl and timestamps/trust.pem are available).
 Exit code 0 = everything verified, 1 = something is wrong.
 """
-import base64, hashlib, json, os, sys
+import base64, calendar, hashlib, json, os, shutil, subprocess, sys, time
 
 root = sys.argv[1] if len(sys.argv) > 1 else os.path.dirname(os.path.abspath(__file__))
 fails = []
@@ -300,6 +339,70 @@ else:
         print("   skipped: pip install cryptography to verify the signature")
     except Exception as ex:  # noqa: BLE001
         fails.append("signature invalid"); print("   FAIL signature invalid:", type(ex).__name__)
+
+def der(b, o=0):
+    tag, n, h = b[o], b[o + 1], 2
+    if n & 0x80:
+        k = n & 0x7F
+        n, h = int.from_bytes(b[o + 2:o + 2 + k], "big"), 2 + k
+    return tag, b[o + h:o + h + n], o + h + n
+
+
+def der_kids(v):
+    out, o = [], 0
+    while o < len(v):
+        tag, val, o = der(v, o)
+        out.append((tag, val))
+    return out
+
+
+def read_tsr(b):
+    ks = der_kids(der(b)[1])
+    content = ks[1][1] if ks[0][0] == 0x30 else der(b)[1]
+    sd = der_kids(der(der_kids(content)[1][1])[1])
+    encap = der_kids(sd[2][1])
+    tst = der_kids(der(der(encap[1][1])[1])[1])
+    return der_kids(tst[2][1])[1][1].hex(), tst[4][1].decode()
+
+
+print("\\n[5] Trusted timestamps")
+if not os.path.exists(os.path.join(root, "timestamps", "index.json")):
+    print("   none in this bundle")
+else:
+    audit_hash = {}
+    for line in read("audit.jsonl", "r").splitlines():
+        a = json.loads(line)
+        audit_hash[a["seq"]] = a["hash"]
+    file_hash = {f["evidenceId"]: f["sha256"] for f in manifest["files"]}
+    trust = os.path.join(root, "timestamps", "trust.pem")
+    ossl = shutil.which("openssl")
+    for s in json.loads(read("timestamps/index.json")):
+        try:
+            imprint, gen = read_tsr(read(s["file"]))
+        except Exception:  # noqa: BLE001
+            fails.append("unreadable timestamp " + s["file"]); print("   FAIL unreadable", s["file"]); continue
+        bad = []
+        if imprint != s["hash"]:
+            bad.append("token was issued for a different hash")
+        if s["type"] == "evidence" and s["ref"] in file_hash and file_hash[s["ref"]] != s["hash"]:
+            bad.append("the original changed after it was time-stamped")
+        if s["type"] == "audit_head" and audit_hash.get(int(s["ref"]), s["hash"]) != s["hash"]:
+            bad.append("audit entry " + s["ref"] + " changed after it was time-stamped")
+        if s["type"] == "merkle_root" and manifest.get("scope") == "whole-case" and int(s["ref"]) == len(manifest["files"]) and s["hash"] != manifest["merkleRoot"]:
+            bad.append("the evidence set changed after it was time-stamped")
+        sig = "authority signature not checked"
+        if not bad and ossl and os.path.exists(trust):
+            when = calendar.timegm(time.strptime(gen[:14], "%Y%m%d%H%M%S"))
+            r = subprocess.run([ossl, "ts", "-verify", "-in", os.path.join(root, s["file"]), "-digest", s["hash"], "-CAfile", trust, "-attime", str(when)], capture_output=True, text=True)
+            if r.returncode == 0:
+                sig = "authority signature ok"
+            else:
+                bad.append("authority signature check failed: " + (r.stderr.strip().splitlines() or ["openssl error"])[-1][:120])
+        label = s["type"] + " " + s["ref"] + " at " + gen[:14]
+        if bad:
+            fails.append("timestamp " + s["file"] + ": " + "; ".join(bad)); print("   FAIL", label, "-", "; ".join(bad))
+        else:
+            print("   ok  ", label, "(" + sig + ")")
 
 print("\\n" + ("VERIFIED: nothing was altered." if not fails else "NOT VERIFIED: " + "; ".join(fails)))
 sys.exit(1 if fails else 0)

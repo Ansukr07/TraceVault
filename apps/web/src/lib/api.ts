@@ -20,6 +20,7 @@ export type User = {
   officer?: OfficerProfile;
   uiLanguage?: string;
   voiceLanguage?: string;
+  totpEnabled?: boolean;
 };
 export class ApiError extends Error {
   constructor(public status: number, public code: string, message: string) {
@@ -31,7 +32,7 @@ export const setToken = (t: string | null) => { accessToken = t; };
 export const getToken = () => accessToken;
 
 async function refresh(): Promise<boolean> {
-  refreshing ??= fetch('/api/v1/auth/refresh', { method: 'POST', credentials: 'include' })
+  refreshing ??= fetch('/api/v1/auth/refresh', { method: 'POST', credentials: 'include', signal: AbortSignal.timeout(10_000) })
     .then(async (r) => {
       if (!r.ok) return false;
       accessToken = (await r.json()).accessToken;
@@ -45,8 +46,10 @@ async function refresh(): Promise<boolean> {
 export async function api<T = any>(path: string, init: RequestInit = {}, retry = true): Promise<T> {
   const headers = new Headers(init.headers);
   if (accessToken) headers.set('Authorization', `Bearer ${accessToken}`);
-  if (init.body && !(init.body instanceof FormData)) headers.set('Content-Type', 'application/json');
-  const r = await fetch(`/api/v1${path}`, { ...init, headers, credentials: 'include' });
+  if (init.body && !(init.body instanceof FormData) && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
+  // Uploads can legitimately take long; everything else fails fast instead of hanging on "Loading…".
+  const signal = init.signal ?? (init.body instanceof FormData || init.body instanceof Blob ? undefined : AbortSignal.timeout(30_000));
+  const r = await fetch(`/api/v1${path}`, { ...init, headers, signal, credentials: 'include' });
   if (r.status === 401 && retry && !path.startsWith('/auth/') && (await refresh())) return api<T>(path, init, false);
   if (r.status === 204) return undefined as T;
   const data = await r.json().catch(() => null);

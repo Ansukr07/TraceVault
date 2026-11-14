@@ -51,7 +51,10 @@ async def extract_route(
     filename: str = Form(""),
     voiceProvider: Literal["sarvam", "local"] = Form("local"),
     translateMode: Literal["sarvam", "sarvam_redacted", "off"] = Form("off"),
+    ocrProvider: Literal["local", "auto", "google"] = Form("local"),
     referenceTs: str | None = Form(None),
+    diarize: bool = Form(False),
+    numSpeakers: int | None = Form(None),
 ):
     data = await file.read()
     usage = UsageLog()
@@ -60,7 +63,8 @@ async def extract_route(
         if kind == "chat_export":
             out = await asyncio.to_thread(ex.extract_chat, data)
         elif kind == "image":
-            out = await asyncio.to_thread(ex.extract_image, data, name_ts or referenceTs)
+            out = await asyncio.to_thread(ex.extract_image, data, name_ts or referenceTs, ocrProvider)
+            usage.records.extend(out.pop("usage", []))
         elif kind == "pdf":
             out = await asyncio.to_thread(ex.extract_pdf, data)
         elif kind == "email":
@@ -68,7 +72,7 @@ async def extract_route(
         elif kind == "archive":
             out = await asyncio.to_thread(ex.extract_archive, data)
         else:  # audio / statement
-            tr = await transcribe(data, provider=voiceProvider, client=get_client())
+            tr = await transcribe(data, provider=voiceProvider, client=get_client(), diarize=diarize, num_speakers=numSpeakers)
             usage.records.extend(tr.pop("usage"))
             base = name_ts
             chunks = []

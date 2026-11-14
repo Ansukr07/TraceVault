@@ -47,11 +47,10 @@ async def transcribe_route(
         except (ValueError, TypeError):
             raise _bad("BAD_SEGMENTS", "segments must be a JSON list of [startMs, endMs]")
     try:
-        result = await transcribe(data, provider=provider, client=get_client(), segments=only)
+        result = await transcribe(data, provider=provider, client=get_client(), segments=only,
+                                  diarize=diarize, num_speakers=numSpeakers)
     except audio.AudioError as e:
         raise _bad("AUDIO_DECODE_FAILED", str(e), 422)
-    # Diarization needs Sarvam's batch job API (spec §6.2, P1); not wired yet, so say so explicitly.
-    result["diarization"] = {"requested": diarize, "applied": False, "numSpeakers": numSpeakers}
     return result
 
 

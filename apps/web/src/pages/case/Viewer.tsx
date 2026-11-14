@@ -1,10 +1,11 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { api, post } from '../../lib/api';
+import { api, patch, post } from '../../lib/api';
 import { useAuth } from '../../lib/auth';
 import { fmtDate, fmtMs, fmtSize, langName, useCase, useEvidence, useEvidenceBlob, type Chunk, type Evidence } from '../../lib/case';
-import { Annotations, Bilingual, CaseShell, ContentWarning, HashBadge, SeverityTag } from '../../components';
+import { Annotations, Bilingual, CaseShell, ContentWarning, HashBadge, PageLoading, SeverityTag } from '../../components';
+import { AuthenticityPanel, useAuthenticity } from '../../features';
 
 type Extracted = { evidence: Evidence; artifact: { type: string; generator: any; data: any } | null; chunks: Chunk[] };
 
@@ -33,14 +34,16 @@ function MetadataPanel({ e }: { e: Evidence }) {
   );
 }
 
-function ImageOriginal({ e, chunks, artifact, active, onPick }: { e: Evidence; chunks: Chunk[]; artifact: any; active: string | null; onPick: (cid: string) => void }) {
+function ImageOriginal({ e, chunks, artifact, active, onPick, heatOpacity }: { e: Evidence; chunks: Chunk[]; artifact: any; active: string | null; onPick: (cid: string) => void; heatOpacity: number }) {
   const blob = useEvidenceBlob(e.id);
+  const heat = useAuthenticity(e.id).data?.heatmap;
   const [reveal, setReveal] = useState(false);
   const W = artifact?.width ?? 1;
   const H = artifact?.height ?? 1;
   return (
     <div className={`img-wrap${reveal ? '' : ' blurred'}`}>
       {blob.data && <img src={blob.data} alt={`Evidence ${e.filename}`} />}
+      {blob.data && heat && <img className="heat-overlay" src={heat} alt="" aria-hidden style={{ opacity: heatOpacity }} />}
       {blob.isLoading && <p className="muted">Decrypting original…</p>}
       {blob.error && <p className="err">{(blob.error as Error).message}</p>}
       {reveal && chunks.map((c) => c.locator?.bbox && (
@@ -60,8 +63,40 @@ function ImageOriginal({ e, chunks, artifact, active, onPick }: { e: Evidence; c
   );
 }
 
-function AudioOriginal({ e, chunks, active, onPick, seekTo }: { e: Evidence; chunks: Chunk[]; active: string | null; onPick: (cid: string) => void; seekTo: number | null }) {
+type Speaker = { label: string; displayName: string | null };
+
+// Diarization labels (spec 6.2): "SPEAKER_2" can be renamed to a person; the name flows into the timeline actor.
+function SpeakerBar({ e, speakers, canEdit }: { e: Evidence; speakers: Speaker[]; canEdit: boolean }) {
+  const qc = useQueryClient();
+  const [editing, setEditing] = useState<string | null>(null);
+  const [name, setName] = useState('');
+  const save = async (label: string) => {
+    await patch(`/evidence/${e.id}/speakers/${label}`, { displayName: name.trim() || null }).catch(() => {});
+    setEditing(null);
+    qc.invalidateQueries({ queryKey: ['speakers', e.id] });
+    qc.invalidateQueries({ queryKey: ['extracted', e.id] });
+  };
+  if (!speakers.length) return null;
+  return (
+    <div className="row" style={{ justifyContent: 'flex-start', flexWrap: 'wrap', gap: 6 }} aria-label="Speakers">
+      <span className="muted" style={{ fontSize: 12 }}>Speakers</span>
+      {speakers.map((s) => editing === s.label ? (
+        <form key={s.label} className="row" style={{ gap: 4 }} onSubmit={(ev) => { ev.preventDefault(); save(s.label); }}>
+          <input className="input" style={{ height: 28, width: 140 }} autoFocus aria-label={`Name for ${s.label}`} value={name} placeholder={s.label} onChange={(ev) => setName(ev.target.value)} />
+          <button type="submit" className="btn btn-dark btn-sm">Save</button>
+          <button type="button" className="btn btn-ghost btn-sm" onClick={() => setEditing(null)}>Cancel</button>
+        </form>
+      ) : canEdit ? (
+        <button key={s.label} type="button" className="chip" title="Rename speaker" onClick={() => { setEditing(s.label); setName(s.displayName ?? ''); }}>{s.displayName ?? s.label} ✎</button>
+      ) : <span key={s.label} className="chip">{s.displayName ?? s.label}</span>)}
+    </div>
+  );
+}
+
+function AudioOriginal({ e, chunks, active, onPick, seekTo, canEdit }: { e: Evidence; chunks: Chunk[]; active: string | null; onPick: (cid: string) => void; seekTo: number | null; canEdit: boolean }) {
   const blob = useEvidenceBlob(e.id);
+  const speakers = useQuery({ queryKey: ['speakers', e.id], queryFn: () => api<{ speakers: Speaker[] }>(`/evidence/${e.id}/speakers`) }).data?.speakers ?? [];
+  const nameOf = new Map(speakers.map((s) => [s.label, s.displayName ?? s.label]));
   const box = useRef<HTMLDivElement>(null);
   const ws = useRef<any>(null);
   const [t, setT] = useState(0);
@@ -91,10 +126,11 @@ function AudioOriginal({ e, chunks, active, onPick, seekTo }: { e: Evidence; chu
         <span className="mono muted">{fmtMs(t)}{e.durationMs ? ` / ${fmtMs(e.durationMs)}` : ''}</span>
         {e.provider && <span className="chip">{e.provider === 'sarvam' ? 'Transcribed by Sarvam' : e.provider === 'local_whisper' ? 'Local transcription' : e.provider}</span>}
       </div>
+      <SpeakerBar e={e} speakers={speakers} canEdit={canEdit} />
       <div className="transcript" role="list">
         {chunks.map((c) => (
           <button key={c.cid} type="button" role="listitem" className={`seg-row${current?.cid === c.cid || active === c.cid ? ' on' : ''}`} onClick={() => seek(c)}>
-            <span className="t">{fmtMs(c.locator.startMs ?? 0)}{c.speaker ? <><br />{c.speaker}</> : null}</span>
+            <span className="t">{fmtMs(c.locator.startMs ?? 0)}{c.speaker ? <><br />{nameOf.get(c.speaker) ?? c.speaker}</> : null}</span>
             <span>{c.failed ? <span className="muted">[untranscribed]</span> : <Bilingual text={c.text} textEn={c.textEn} lang={c.lang} entities={c.entities} translation={c.translation} />}
               {c.lang && <span className="mono muted" style={{ fontSize: 10.5, marginLeft: 6 }}>{langName(c.lang)}</span>}
             </span>
@@ -139,6 +175,7 @@ export function ViewerPage() {
   const active = sp.get('chunk');
   const setActive = (cid: string) => setSp((p) => { p.set('chunk', cid); return p; }, { replace: true });
   const [busy, setBusy] = useState(false);
+  const [heatOpacity, setHeatOpacity] = useState(0);
   const d = q.data;
   const children = useMemo(() => (all.data ?? []).filter((x) => x.parentEvidenceId === eid), [all.data, eid]);
   const maxSev = Math.max(0, ...(d?.chunks ?? []).map((c) => c.severity?.score ?? 0));
@@ -150,15 +187,15 @@ export function ViewerPage() {
     el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [active, d]);
 
-  async function reprocess(voiceProvider?: string) {
+  async function reprocess(opts: { voiceProvider?: string; diarize?: boolean } = {}) {
     setBusy(true);
-    await post(`/evidence/${eid}/reprocess`, voiceProvider ? { voiceProvider } : {}).catch(() => {});
+    await post(`/evidence/${eid}/reprocess`, opts).catch(() => {});
     setBusy(false);
     qc.invalidateQueries({ queryKey: ['extracted', eid] });
     qc.invalidateQueries({ queryKey: ['evidence', id] });
   }
 
-  if (q.isLoading) return <CaseShell><p className="muted">Loading…</p></CaseShell>;
+  if (q.isLoading) return <CaseShell><PageLoading variant="text" label="Loading evidence" /></CaseShell>;
   if (q.error || !d) return <CaseShell><p className="err">{(q.error as Error)?.message ?? 'Not found'}</p></CaseShell>;
   const e = d.evidence;
   const kind = e.kind;
@@ -174,7 +211,8 @@ export function ViewerPage() {
           {maxSev > 0 && <SeverityTag score={maxSev} />}
           <span className={`badge ${e.status === 'done' ? 'ok' : e.status === 'failed' ? 'bad' : 'signal'}`}>{e.status}</span>
           {role === 'owner' && <button type="button" className="btn btn-ghost btn-sm" disabled={busy} onClick={() => reprocess()}>Reprocess</button>}
-          {role === 'owner' && (kind === 'audio' || kind === 'statement') && <button type="button" className="btn btn-ghost btn-sm" disabled={busy} onClick={() => reprocess(e.provider === 'sarvam' ? 'local' : 'sarvam')}>Re-transcribe with {e.provider === 'sarvam' ? 'local model' : 'Sarvam'}</button>}
+          {role === 'owner' && (kind === 'audio' || kind === 'statement') && <button type="button" className="btn btn-ghost btn-sm" disabled={busy} onClick={() => reprocess({ voiceProvider: e.provider === 'sarvam' ? 'local' : 'sarvam' })}>Re-transcribe with {e.provider === 'sarvam' ? 'local model' : 'Sarvam'}</button>}
+          {role === 'owner' && kind === 'audio' && <button type="button" className="btn btn-ghost btn-sm" disabled={busy} title="Label who spoke when (sends audio to Sarvam)" onClick={() => reprocess({ voiceProvider: 'sarvam', diarize: true })}>Identify speakers</button>}
         </div>
       </div>
       {e.error && <p className="err">{e.error}</p>}
@@ -182,8 +220,8 @@ export function ViewerPage() {
       <div className="split">
         <section className="viewer-orig">
           <ContentWarning show={maxSev >= 3}>
-            {kind === 'image' && <ImageOriginal e={e} chunks={d.chunks} artifact={d.artifact?.data} active={active} onPick={setActive} />}
-            {(kind === 'audio' || kind === 'statement') && <AudioOriginal e={e} chunks={d.chunks} active={active} onPick={setActive} seekTo={activeChunk?.locator.startMs ?? null} />}
+            {kind === 'image' && <ImageOriginal e={e} chunks={d.chunks} artifact={d.artifact?.data} active={active} onPick={setActive} heatOpacity={heatOpacity} />}
+            {(kind === 'audio' || kind === 'statement') && <AudioOriginal e={e} chunks={d.chunks} active={active} onPick={setActive} seekTo={activeChunk?.locator.startMs ?? null} canEdit={role === 'owner' || role === 'collaborator'} />}
             {kind === 'chat_export' && <ChatOriginal artifact={d.artifact?.data} chunks={d.chunks} active={active} children={children} />}
             {kind === 'pdf' && <PdfOriginal e={e} />}
             {kind === 'email' && (
@@ -223,6 +261,7 @@ export function ViewerPage() {
               </div>
             </section>
           )}
+          <AuthenticityPanel evidenceId={e.id} opacity={heatOpacity} setOpacity={setHeatOpacity} />
           <MetadataPanel e={e} />
           <section className="card"><HashBadge evidenceId={e.id} sha256={e.sha256} /></section>
           <Annotations evidenceId={e.id} role={role} />

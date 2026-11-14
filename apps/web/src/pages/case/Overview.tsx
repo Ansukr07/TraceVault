@@ -1,8 +1,9 @@
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../lib/api';
-import { fmtDate, fmtMoney, useEvidence, type TEvent } from '../../lib/case';
-import { CaseShell, Cites, Empty, SeverityTag, Stat } from '../../components';
+import { fmtDate, fmtMoney, useCase, useEvidence, type TEvent } from '../../lib/case';
+import { CaseShell, Cites, Empty, PageLoading, SeverityTag, Stat } from '../../components';
+import { AttentionCard, RiskCard } from '../../features';
 
 type Overview = {
   counts: { evidence: number; processed: number; failed: number; people: number; events: number; inconsistencies: number; duplicates: number };
@@ -38,12 +39,13 @@ export function OverviewPage() {
   const { id = '' } = useParams();
   const ov = useQuery({ queryKey: ['overview', id], queryFn: () => api<Overview>(`/cases/${id}/overview`), refetchInterval: (q) => (q.state.data?.status === 'processing' ? 4000 : false) });
   const ev = useEvidence(id);
+  const role = useCase(id).data?.role;
   const d = ov.data;
   const names = new Map(ev.data?.map((e) => [e.id, e.sourceLabel || e.filename]));
 
   return (
     <CaseShell>
-      {ov.isLoading && <p className="muted">Loading…</p>}
+      {ov.isLoading && <PageLoading variant="cards" label="Loading case overview" />}
       {d && d.counts.evidence === 0 && (
         <Empty title="No evidence yet">
           Add chats, screenshots, voice notes, PDFs or emails. <Link to={`/cases/${id}/upload`}>Add evidence →</Link>
@@ -81,6 +83,9 @@ export function OverviewPage() {
             </section>
           )}
 
+          {d.counts.processed > 0 && <RiskCard caseId={id} role={role} />}
+          {d.counts.processed > 0 && <AttentionCard caseId={id} />}
+
           <section className="card">
             <div className="card-title"><h2 style={{ fontSize: 18 }}>Timeline at a glance</h2><Link to={`/cases/${id}/timeline`} className="btn-text">Open timeline →</Link></div>
             <MiniTimeline items={d.miniTimeline} />
@@ -90,7 +95,7 @@ export function OverviewPage() {
             <section className="card">
               <div className="card-title"><h2 style={{ fontSize: 18 }}>Key moments</h2><span className="eyebrow">by severity × confidence</span></div>
               {d.keyMoments.length === 0 && <p className="muted">No harmful content detected yet.</p>}
-              <ul className="list">
+              <ul className="list no-gt">
                 {d.keyMoments.map((e) => (
                   <li key={e.key}>
                     <div className="row"><strong style={{ fontWeight: 500 }}>{e.title}</strong><SeverityTag score={e.severity} labels={e.labels} /></div>
@@ -106,7 +111,7 @@ export function OverviewPage() {
             </section>
             <section className="card">
               <div className="card-title"><h2 style={{ fontSize: 18 }}>Top people & identifiers</h2><Link to={`/cases/${id}/graph`} className="btn-text">Graph →</Link></div>
-              <ul className="list">
+              <ul className="list no-gt">
                 {d.topEntities.map((e) => (
                   <li key={e.key}>
                     <div className="row"><span>{e.name}</span><span className="mono muted" style={{ fontSize: 12 }}>{e.type.toLowerCase().replace('_', ' ')} · {e.mentionCount} mentions</span></div>

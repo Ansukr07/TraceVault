@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, patch } from '../../lib/api';
 import { fmtDate, fmtMoney, fmtMs, useEvidenceBlob, type TEvent } from '../../lib/case';
-import { CaseShell, Cites, Empty, SeverityTag, Stat } from '../../components';
+import { CaseShell, Cites, Empty, PageLoading, SeverityTag, Stat } from '../../components';
 
 const SEV_COLOR = ['#b9b8b3', '#a86a12', '#e2603d', '#b5412a'];
 const SEV_NAME = ['benign', 'concerning', 'harmful', 'severe'];
@@ -145,6 +145,7 @@ export function TimelinePage() {
 
   return (
     <CaseShell>
+      {q.isLoading && <PageLoading variant="timeline" label="Loading timeline" />}
       {q.data && q.data.events.length === 0 && <Empty title="No events yet">Events appear once evidence is processed.</Empty>}
       {q.data && q.data.events.length > 0 && (
         <>

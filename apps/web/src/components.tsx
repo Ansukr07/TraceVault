@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { Link, NavLink, useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, post } from './lib/api';
-import { fmtDate, langName, SEVERITY, useCase, useCaseSocket, useChunk, type Entity } from './lib/case';
+import { fmtDate, langName, SEVERITY, useCase, useCaseProgress, useChunk, type Entity } from './lib/case';
 import { AppShell } from './ui';
 
 export function Watermark({ email, caseId }: { email?: string; caseId?: string }) {
@@ -147,11 +147,11 @@ export function OfficerRail({ caseId }: { caseId: string }) {
   );
 }
 
-/** Case header + tab bar. Keeps a live socket open while any case page is mounted. */
+/** Case header + tab bar. Keeps progress polling while any case page is mounted. */
 export function CaseShell({ children, wide = false }: { children: ReactNode; wide?: boolean }) {
   const { id } = useParams();
   const c = useCase(id);
-  useCaseSocket(id);
+  useCaseProgress(id);
   const role = c.data?.role ?? 'owner';
   const isOfficerOrLegal = role === 'investigator' || role === 'legal';
 
@@ -170,7 +170,7 @@ export function CaseShell({ children, wide = false }: { children: ReactNode; wid
     : [
         ['', 'Overview'], ['evidence', 'Evidence'], ['timeline', 'Timeline'], ['graph', 'Graph'],
         ['inconsistencies', 'Inconsistencies'], ['summary', 'Summary'], ['insights', 'Insights'],
-        ['statement', 'Statement'], ['audit', 'Integrity'], ['upload', 'Add evidence'], ['share', 'Share'], ['export', 'Export'],
+        ['statement', 'Statement'], ['complaint', 'Complaint'], ['audit', 'Integrity'], ['upload', 'Add evidence'], ['share', 'Share'], ['export', 'Export'],
         ['settings', 'Settings'],
       ];
 
@@ -186,6 +186,7 @@ export function CaseShell({ children, wide = false }: { children: ReactNode; wid
           <h1 className="case-title">{c.data?.title ?? '…'}</h1>
         </div>
         <div className="row" style={{ gap: 8 }}>
+          {c.data?.sealedAt && <span className="chip" title="Evidence set frozen; add new evidence in an addendum">Sealed</span>}
           {isOfficerOrLegal && <span className="chip" style={{ background: 'var(--paper-2)' }}>Scoped Access</span>}
           {c.data && <span className={`badge ${c.data.status === 'ready' ? 'ok' : c.data.status === 'processing' ? 'signal' : ''}`}>{c.data.status}</span>}
         </div>
@@ -338,6 +339,63 @@ export function ContentWarning({ show, children }: { show: boolean; children: Re
     <div className="cw">
       <p><strong>Content warning.</strong> This contains threats or sexual content.</p>
       <button type="button" className="btn btn-ghost btn-sm" onClick={() => setOpen(true)}>Show content</button>
+    </div>
+  );
+}
+
+/** Shimmering placeholder block. Sized by the caller via className/style. */
+export function Skeleton({ w, h = 14, r, className = '' }: { w?: number | string; h?: number | string; r?: number | string; className?: string }) {
+  return <span className={`skel ${className}`} aria-hidden="true" style={{ width: w, height: h, borderRadius: r }} />;
+}
+
+/**
+ * Page-level loading state shaped like the content that is coming, so the layout doesn't jump.
+ * variant: stats+feed (timeline), stats+canvas (graph), stats+cards (overview/insights), text (summary/settings).
+ */
+export function PageLoading({ variant = 'cards', label = 'Loading' }: { variant?: 'timeline' | 'graph' | 'cards' | 'text'; label?: string }) {
+  const stats = (
+    <div className="skel-stats">{[0, 1, 2, 3].map((i) => <div key={i} className="skel-card"><Skeleton w={44} h={30} r={6} /><Skeleton w="60%" h={10} /></div>)}</div>
+  );
+  return (
+    <div className="page-loading" role="status" aria-live="polite" aria-busy="true">
+      <p className="eyebrow loading-label"><span className="loading-dots" aria-hidden="true"><i /><i /><i /></span>{label}…</p>
+      {variant !== 'text' && stats}
+      {variant === 'timeline' && (
+        <>
+          <Skeleton h={44} r={12} />
+          <Skeleton h={190} r={20} />
+          <div className="skel-split">
+            <div className="skel-feed">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="skel-card skel-event">
+                  <Skeleton w="38%" h={10} /><Skeleton w="82%" h={16} /><Skeleton w="54%" h={10} />
+                </div>
+              ))}
+            </div>
+            <div className="skel-card skel-side"><Skeleton w="50%" h={12} /><Skeleton w="85%" h={20} /><Skeleton h={10} /><Skeleton h={10} /><Skeleton w="70%" h={10} /></div>
+          </div>
+        </>
+      )}
+      {variant === 'graph' && (
+        <>
+          <Skeleton h={52} r={12} />
+          <div className="skel-split">
+            <div className="skel-graph"><span className="skel-node n1" /><span className="skel-node n2" /><span className="skel-node n3" /><span className="skel-node n4" /><span className="skel-node n5" /></div>
+            <div className="skel-card skel-side"><Skeleton w="45%" h={14} /><Skeleton h={10} /><Skeleton h={10} /><Skeleton w="75%" h={10} /></div>
+          </div>
+        </>
+      )}
+      {variant === 'cards' && (
+        <div className="skel-split">
+          <div className="skel-card skel-side"><Skeleton w="40%" h={14} /><Skeleton h={10} /><Skeleton h={10} /><Skeleton w="65%" h={10} /></div>
+          <div className="skel-card skel-side"><Skeleton w="40%" h={14} /><Skeleton h={10} /><Skeleton h={10} /><Skeleton w="65%" h={10} /></div>
+        </div>
+      )}
+      {variant === 'text' && (
+        <div className="skel-card skel-side">
+          <Skeleton w="35%" h={18} /><Skeleton h={10} /><Skeleton h={10} /><Skeleton w="80%" h={10} /><Skeleton w="35%" h={18} /><Skeleton h={10} /><Skeleton w="60%" h={10} />
+        </div>
+      )}
     </div>
   );
 }

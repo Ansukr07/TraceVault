@@ -19,6 +19,7 @@ MINHASH_JACCARD = 0.8
 EDIT_SIM = 0.85
 SEMANTIC_SIM = 0.9
 CROSS_MODAL_WINDOW_S = 120
+TZ_SLACK_S = 14 * 3600  # largest UTC offset; day-level gaps inside it can be timezone, not conflict
 _NUM = re.compile(r"\d[\d,]*")
 
 
@@ -119,8 +120,10 @@ def detect(evidence: list[dict], chunks: list[dict]) -> dict:
                 "otherEvidenceId": o["evidenceId"], "semantic": round(sem, 3), "edit": round(edit, 3), "gapS": gap}
         if nums_differ or edit < EDIT_SIM:
             contradictions.append({**pair, "kind": "content", "numbersDiffer": nums_differ})
-        elif gap is not None and gap > 86400:
+        elif gap is not None and gap > 86400 + TZ_SLACK_S:
             contradictions.append({**pair, "kind": "date"})
+        elif gap is not None and gap > 86400:
+            pass  # within a timezone slack of 24 h: not a conflict (spec §4.3)
         elif gap is None or gap <= CROSS_MODAL_WINDOW_S:
             groups.append({"kind": "cross_modal", "score": round(edit, 3), "canonical": o["evidenceId"],
                            "members": [{"evidenceId": o["evidenceId"], "chunkId": o["id"]},

@@ -20,6 +20,14 @@ const user = new Schema(
       rejectedAt: Date,
       rejectReason: String,
     },
+    // TOTP two-factor (spec A5). Secrets are KEK-encrypted; recovery codes are stored as hashes and are single-use.
+    totp: {
+      secret: { ct: String, iv: String, tag: String },
+      pending: { ct: String, iv: String, tag: String },
+      enabledAt: Date,
+      lastStep: Number, // replay protection: a time-step can be used once
+      recovery: [String],
+    },
     disabled: { type: Boolean, default: false },
     uiLanguage: { type: String, default: 'en-IN' },
     voiceLanguage: { type: String, default: 'hi-IN' },
@@ -59,8 +67,26 @@ const caseSchema = new Schema(
       voiceConsentAt: Date,
       voiceConsentBy: Schema.Types.ObjectId,
       translateMode: { type: String, enum: ['sarvam', 'sarvam_redacted', 'off'], default: 'sarvam_redacted' },
+      // 'cloud' lets a cloud OCR (Google Vision) read scripts the local engine cannot, e.g. Kannada. Images leave the server, so opt-in.
+      ocrMode: { type: String, enum: ['local', 'cloud'], default: 'local' },
       uiLanguage: { type: String, default: 'en-IN' },
     },
+    // Regional routing for complaints (regional-states-india-spec.md §7). Free text and flags the user stated; never inferred.
+    regional: {
+      complainantCity: { type: String, maxlength: 80 },
+      incidentCity: { type: String, maxlength: 80 },
+      locality: { type: String, maxlength: 120 },
+      preferredLanguage: { type: String, enum: ['en', 'hi', 'mr', 'bn', 'ta', 'kn', 'te', 'gu', 'ur'], default: 'en' },
+      victimGender: { type: String, enum: ['female', 'male', 'other', 'undisclosed'] },
+      victimIsMinor: { type: Boolean, default: false },
+    },
+    // Seal (spec C6): freezes the evidence set; further uploads go into a linked addendum case.
+    sealedAt: Date,
+    sealedBy: Schema.Types.ObjectId,
+    sealedRoot: String, // Merkle root of evidence hashes at seal time
+    addendumOf: Schema.Types.ObjectId,
+    // OpenTimestamps proofs of the Merkle root (spec V7), newest last. `ots` is the .ots file (pending until Bitcoin-attested).
+    timestamps: [{ _id: false, root: String, calendar: String, at: Date, ots: Buffer }],
     deletedAt: Date,
     evidenceSeq: { type: Number, default: 0 },
     processedAt: Date,
@@ -379,3 +405,44 @@ const annotation = new Schema(
   { timestamps: true },
 );
 export const Annotation = mongoose.model('Annotation', annotation);
+
+// Diarization speaker labels per audio item (spec §6.2): "SPEAKER_2" can be renamed ("Rahul") and linked to an entity.
+const speaker = new Schema(
+  {
+    caseId: { type: oid, required: true, index: true },
+    evidenceId: { type: oid, required: true },
+    label: { type: String, required: true },
+    displayName: String,
+    entityId: oid,
+  },
+  { timestamps: true },
+);
+speaker.index({ evidenceId: 1, label: 1 }, { unique: true });
+export const Speaker = mongoose.model('Speaker', speaker);
+
+// F2: RFC 3161 time-stamp tokens over evidence hashes, audit-chain heads and Merkle roots.
+const timestamp = new Schema(
+  {
+    caseId: { type: oid, required: true },
+    subject: {
+      type: { type: String, enum: ['evidence', 'audit_head', 'merkle_root'], required: true },
+      ref: String, // evidence id, audit seq, or evidence count
+      hash: { type: String, required: true },
+    },
+    protocol: { type: String, default: 'rfc3161' },
+    tsa: { name: String, url: String },
+    token: Buffer, // the full TimeStampResp (.tsr)
+    nonce: String,
+    genTime: Date,
+    serial: String,
+    status: { type: String, enum: ['pending', 'issued', 'verified', 'failed'], default: 'pending' },
+    trust: { type: String, enum: ['trusted', 'untrusted', 'unchecked'], default: 'unchecked' },
+    attempts: { type: Number, default: 0 },
+    lastError: String,
+    verifiedAt: Date,
+  },
+  { timestamps: true },
+);
+timestamp.index({ caseId: 1, 'subject.type': 1, 'subject.hash': 1 }, { unique: true });
+timestamp.index({ status: 1 });
+export const Timestamp = mongoose.model('Timestamp', timestamp);

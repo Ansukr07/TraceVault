@@ -1,7 +1,50 @@
 import { useState } from 'react';
 import { useAuth } from '../lib/auth';
-import { patch } from '../lib/api';
+import { patch, post } from '../lib/api';
 import { AppShell, PageHead } from '../ui';
+
+// Two-factor (spec A5): setup shows the secret and otpauth link (any authenticator app), then confirms with a code.
+function TwoFactor() {
+  const { user } = useAuth();
+  const [on, setOn] = useState(!!user?.totpEnabled);
+  const [setup, setSetup] = useState<{ secret: string; otpauthUri: string } | null>(null);
+  const [code, setCode] = useState('');
+  const [pw, setPw] = useState('');
+  const [recovery, setRecovery] = useState<string[] | null>(null);
+  const [err, setErr] = useState('');
+  const run = async (fn: () => Promise<void>) => { setErr(''); try { await fn(); } catch (x) { setErr((x as Error).message); } };
+  return (
+    <section className="card stack" style={{ gap: 12 }}>
+      <div className="card-title"><h3 style={{ fontSize: 18 }}>Two-factor authentication</h3><span className={`badge ${on ? 'ok' : ''}`}>{on ? 'On' : 'Off'}</span></div>
+      {recovery ? (
+        <>
+          <p style={{ fontSize: 13 }}>Save these recovery codes somewhere safe. Each works once if you lose your phone. They won't be shown again.</p>
+          <pre className="mono" style={{ fontSize: 13 }}>{recovery.join('\n')}</pre>
+          <button type="button" className="btn btn-dark btn-sm" onClick={() => setRecovery(null)}>I saved them</button>
+        </>
+      ) : !on && !setup ? (
+        <>
+          <p className="muted" style={{ fontSize: 13 }}>Ask for a code from an authenticator app each time you sign in.</p>
+          <button type="button" className="btn btn-dark btn-sm" onClick={() => run(async () => setSetup(await post('/me/totp/setup')))}>Set up</button>
+        </>
+      ) : !on && setup ? (
+        <form className="stack" onSubmit={(e) => { e.preventDefault(); run(async () => { const r = await post<{ recoveryCodes: string[] }>('/me/totp/enable', { code }); setRecovery(r.recoveryCodes); setOn(true); setSetup(null); setCode(''); }); }}>
+          <p style={{ fontSize: 13 }}>Add this key to your authenticator app (<a href={setup.otpauthUri}>open in app</a>):</p>
+          <code className="mono" style={{ wordBreak: 'break-all' }}>{setup.secret}</code>
+          <label className="field">6-digit code<input value={code} onChange={(e) => setCode(e.target.value)} inputMode="numeric" maxLength={6} required /></label>
+          <button className="btn btn-dark btn-sm">Turn on</button>
+        </form>
+      ) : (
+        <form className="stack" onSubmit={(e) => { e.preventDefault(); run(async () => { await post('/me/totp/disable', { password: pw, code }); setOn(false); setPw(''); setCode(''); }); }}>
+          <label className="field">Password<input type="password" value={pw} onChange={(e) => setPw(e.target.value)} required /></label>
+          <label className="field">Code or recovery code<input value={code} onChange={(e) => setCode(e.target.value)} required /></label>
+          <button className="btn btn-ghost btn-sm" style={{ color: 'var(--bad)' }}>Turn off</button>
+        </form>
+      )}
+      {err && <p className="err" role="alert">{err}</p>}
+    </section>
+  );
+}
 
 export function AccountPage() {
   const { user, logout } = useAuth();
@@ -99,6 +142,8 @@ export function AccountPage() {
           </form>
         </section>
 
+        <div className="stack" style={{ gap: 16 }}>
+        <TwoFactor />
         <section className="card stack" style={{ gap: 14 }}>
           <div className="card-title">
             <h3 style={{ fontSize: 18 }}>Active sessions & security</h3>
@@ -117,6 +162,7 @@ export function AccountPage() {
             </button>
           </div>
         </section>
+        </div>
       </div>
     </AppShell>
   );

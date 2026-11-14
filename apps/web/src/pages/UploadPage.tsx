@@ -1,12 +1,13 @@
 import { useRef, useState, type ChangeEvent, type DragEvent } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { api, ApiError } from '../lib/api';
+import { useEvidence } from '../lib/case';
 import { hashFile } from '../lib/hashFile';
+import { uploadEvidence } from '../lib/upload';
 import { DotGrid, DotText } from '../ui';
 import { CaseShell } from '../components';
 
-type Evidence = { id: string; filename: string; kind: string; size: number; sha256: string; duplicateOf: string | null };
 type Row = { key: string; name: string; sha?: string; state: 'hashing' | 'uploading' | 'done' | 'duplicate' | 'error'; pct: number; msg?: string };
 
 const LABEL: Record<Row['state'], [string, string]> = {
@@ -27,7 +28,7 @@ export function UploadPage() {
   const input = useRef<HTMLInputElement>(null);
   const [rows, setRows] = useState<Row[]>([]);
   const [over, setOver] = useState(false);
-  const evidence = useQuery({ queryKey: ['evidence', id], queryFn: () => api<{ evidence: Evidence[] }>(`/cases/${id}/evidence`) });
+  const evidence = useEvidence(id);
   const patch = (key: string, p: Partial<Row>) => setRows((rs) => rs.map((r) => (r.key === key ? { ...r, ...p } : r)));
 
   async function handle(file: File) {
@@ -36,10 +37,7 @@ export function UploadPage() {
     try {
       const sha = await hashFile(file, (p) => patch(key, { pct: p }));
       patch(key, { sha, state: 'uploading', pct: 1 });
-      const fd = new FormData();
-      fd.set('clientSha256', sha);
-      fd.set('file', file);
-      const r = await api<{ duplicate: boolean }>(`/cases/${id}/evidence`, { method: 'POST', body: fd });
+      const r = await uploadEvidence(id!, file, sha, { onProgress: (p) => patch(key, { pct: Math.max(0.02, p) }) });
       patch(key, { state: r.duplicate ? 'duplicate' : 'done', msg: r.duplicate ? 'Same file already in this case (kept, grouped as duplicate)' : undefined });
       qc.invalidateQueries({ queryKey: ['evidence', id] });
     } catch (e) {
@@ -49,7 +47,7 @@ export function UploadPage() {
 
   const onPick = (e: ChangeEvent<HTMLInputElement>) => { [...(e.target.files ?? [])].forEach(handle); e.target.value = ''; };
   const onDrop = (e: DragEvent) => { e.preventDefault(); setOver(false); [...e.dataTransfer.files].forEach(handle); };
-  const items = evidence.data?.evidence ?? [];
+  const items = Array.isArray(evidence.data) ? evidence.data : [];
 
   return (
     <CaseShell>
@@ -64,7 +62,7 @@ export function UploadPage() {
         <p className="dot" aria-hidden="true"><DotText>Drop files.</DotText></p>
         <p className="muted" style={{ maxWidth: 440 }}>Each file is fingerprinted with SHA-256 in your browser before it leaves your device.</p>
         <div className="kinds">
-          {['WhatsApp .txt', 'Images', 'Voice notes', 'PDF', '.eml'].map((k) => <span key={k} className="chip">{k}</span>)}
+          {['WhatsApp .txt', 'Telegram / Instagram .json', 'Images', 'Voice notes', 'PDF', '.eml'].map((k) => <span key={k} className="chip">{k}</span>)}
         </div>
         <button type="button" className="btn btn-light" onClick={() => input.current?.click()} style={{ marginTop: 6 }}>
           <span className="tile"><DotGrid /></span>Choose files

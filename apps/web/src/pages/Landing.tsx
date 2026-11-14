@@ -110,7 +110,25 @@ export function Landing() {
           </div>
         </section>
 
-        <section className="wrap intro" id="languages">
+        <section className="band" id="languages" aria-label="Languages">
+          <div>
+            <p className="eyebrow">◆ Languages</p>
+            <p className="dot stat-num">3 scripts</p>
+            <p className="stat-cap">English, Hindi and Kannada, read in their own script</p>
+          </div>
+          <div>
+            <p style={{ fontSize: 15, lineHeight: 1.65, color: 'var(--ink-2)' }}>
+              Threats don't arrive in one language. We read Hinglish and Kannada messages as written, add an English working copy for analysis, and always keep and cite your original text. You can also give your statement by voice and hear the summary read back.
+            </p>
+          </div>
+          <div>
+            <p style={{ fontSize: 15, lineHeight: 1.65, color: 'var(--ink-2)' }}>
+              Originals are never replaced by the translation.
+            </p>
+          </div>
+        </section>
+
+        <section className="wrap intro" id="case-file">
           <div className="copy">
             <h2>
               Introducing the case file<br />
@@ -125,9 +143,28 @@ export function Landing() {
           <FlowerField />
         </section>
 
-        <section className="wrap closing" id="sharing">
+        <section className="band" id="sharing" aria-label="Sharing">
+          <div>
+            <p className="eyebrow">◆ Sharing</p>
+            <p className="dot stat-num">You decide</p>
+            <p className="stat-cap">Who sees it, which evidence, and for how long</p>
+          </div>
+          <div>
+            <p style={{ fontSize: 15, lineHeight: 1.65, color: 'var(--ink-2)' }}>
+              Invite a lawyer or an investigator by email. Pick the whole case or selected evidence, set an expiry, and turn downloads on or off. Every view is logged, and the people you share with cannot reshare it.
+            </p>
+          </div>
+          <div>
+            <p style={{ fontSize: 15, lineHeight: 1.65, color: 'var(--ink-2)' }}>
+              Anyone can verify the exported bundle offline.
+            </p>
+            <div><LightButton to={start}>Start a case</LightButton></div>
+          </div>
+        </section>
+
+        <section className="wrap closing">
           <h2>Trace any claim down to a single message, <span className="muted">and make sure it holds up</span></h2>
-          <p>Share a case with a lawyer or police for a limited time, with every hash attached.</p>
+          <p>Every file carries its hash, from upload to export.</p>
         </section>
       </main>
       <footer className="footer">

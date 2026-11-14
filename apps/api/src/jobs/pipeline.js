@@ -1,6 +1,5 @@
 // Processing DAG (spec §7): extract|transcribe → nlp → (debounced) case_rebuild → summarize.
 // Per-evidence failures never block the case: the evidence is marked failed and the rebuild still runs.
-import { EventEmitter } from 'node:events';
 import {
   Case,
   CaseSnapshot,
@@ -10,6 +9,7 @@ import {
   DuplicateGroup,
   Entity,
   Evidence,
+  Speaker,
   Statement,
   Inconsistency,
   ProviderUsage,
@@ -17,17 +17,18 @@ import {
   TimelineEvent,
   User,
 } from '../models/index.js';
+import { config } from '../config.js';
 import { mlJson, mlMultipart } from '../services/ml-client.js';
 import { readPlain, sealBuffer } from '../services/evidence-store.js';
 import { debounceCaseJob, enqueue, Job } from './runner.js';
 
-export const bus = new EventEmitter();
-bus.setMaxListeners(100);
+import { bus } from './bus.js';
+export { bus };
 
 const EXTRACT_VERSION = 1;
 const isAudio = (kind) => kind === 'audio' || kind === 'statement';
 
-export async function enqueueEvidence(e, { force = false, voiceProvider } = {}) {
+export async function enqueueEvidence(e, { force = false, voiceProvider, diarize, numSpeakers } = {}) {
   const type = isAudio(e.kind) ? 'transcribe' : 'extract';
   return enqueue({
     type,
@@ -35,7 +36,7 @@ export async function enqueueEvidence(e, { force = false, voiceProvider } = {}) 
     evidenceId: e._id,
     step: 'extract',
     version: force ? `${EXTRACT_VERSION}.${Date.now()}` : EXTRACT_VERSION,
-    payload: voiceProvider ? { voiceProvider } : undefined,
+    payload: voiceProvider || diarize ? { voiceProvider, diarize: !!diarize, numSpeakers } : undefined,
   });
 }
 
@@ -43,9 +44,25 @@ async function recordUsage(caseId, usage) {
   if (usage?.length) await ProviderUsage.insertMany(usage.map((u) => ({ ...u, caseId, ts: new Date() })));
 }
 
-function voiceProviderFor(c, override) {
-  if (override) return override;
-  return c.settings?.voiceMode === 'sarvam' && c.settings?.voiceConsentAt ? 'sarvam' : 'local';
+/** Audio seconds sent to Sarvam since local midnight (spec O4 soft cap). */
+export async function sarvamAudioSecondsToday() {
+  const since = new Date();
+  since.setHours(0, 0, 0, 0);
+  const [r] = await ProviderUsage.aggregate([
+    { $match: { ts: { $gte: since }, audioSeconds: { $gt: 0 }, status: { $nin: ['mock'] }, endpoint: { $regex: /speech-to-text/ } } },
+    { $group: { _id: null, s: { $sum: '$audioSeconds' } } },
+  ]);
+  return r?.s ?? 0;
+}
+
+async function voiceProviderFor(c, override) {
+  if (override === 'local') return { provider: 'local' };
+  const allowed = c.settings?.voiceMode === 'sarvam' && c.settings?.voiceConsentAt;
+  // Audio can't be redacted, so Sarvam needs the Owner's recorded consent even for an explicit re-transcribe (spec 5.12).
+  if (!allowed) return { provider: 'local' };
+  const cap = config.SARVAM_DAILY_AUDIO_SEC_CAP;
+  if (cap > 0 && (await sarvamAudioSecondsToday()) >= cap) return { provider: 'local', capped: true };
+  return { provider: 'sarvam' };
 }
 
 function emit(caseId, evt, data) {
@@ -79,7 +96,9 @@ const extractHandler = perEvidence(async (job, ctx, e, c) => {
   await Evidence.updateOne({ _id: e._id }, { $set: { status: 'processing', error: null } });
   emit(c._id, 'processing.progress', { evidenceId: String(e._id), step: isAudio(e.kind) ? 'transcribe' : 'extract', status: 'running', pct: 5 });
   const buf = await readPlain(e);
-  const voiceProvider = voiceProviderFor(c, job.payload?.voiceProvider);
+  const vp = isAudio(e.kind) ? await voiceProviderFor(c, job.payload?.voiceProvider) : { provider: 'local' };
+  const voiceProvider = vp.provider;
+  if (vp.capped) emit(c._id, 'provider.fallback', { evidenceId: String(e._id), reason: 'sarvam_daily_cap' });
   const out = await mlMultipart('/extract', {
     file: buf,
     filename: e.filename,
@@ -87,7 +106,11 @@ const extractHandler = perEvidence(async (job, ctx, e, c) => {
       kind: e.kind,
       filename: e.filename,
       voiceProvider,
+      diarize: job.payload?.diarize ? 'true' : undefined,
+      numSpeakers: job.payload?.numSpeakers,
       translateMode: c.settings?.translateMode ?? 'off',
+      // Local OCR unless the owner allowed cloud OCR; 'auto' only calls Google when the local result is poor.
+      ocrProvider: c.settings?.ocrMode === 'cloud' ? 'auto' : 'local',
       referenceTs: e.createdAt?.toISOString().slice(0, 19),
     },
   });
@@ -124,6 +147,13 @@ const extractHandler = perEvidence(async (job, ctx, e, c) => {
         failed: ch.failed,
       })),
     );
+  }
+  // Speaker labels (spec 6.2). Renames survive re-runs: rows are only created, never overwritten.
+  const labels = [...new Set(out.chunks.map((ch) => ch.speaker).filter(Boolean))];
+  if (labels.length) {
+    await Speaker.bulkWrite(labels.map((label) => ({ updateOne: { filter: { evidenceId: e._id, label }, update: { $setOnInsert: { caseId: c._id, evidenceId: e._id, label } }, upsert: true } })));
+    const named = await Speaker.find({ evidenceId: e._id, displayName: { $ne: null } }).lean();
+    for (const sp of named) await Chunk.updateMany({ evidenceId: e._id, speaker: sp.label }, { $set: { sender: sp.displayName } });
   }
   const langs = out.chunks.map((ch) => ch.lang).filter(Boolean);
   await Evidence.updateOne(
@@ -347,6 +377,6 @@ export const handlers = {
 
 /** Per-evidence progress for the overview page. */
 export async function caseProgress(caseId) {
-  const jobs = await Job.find({ caseId, status: { $in: ['queued', 'running', 'failed'] } }, 'type evidenceId status progress error attempts').lean();
+  const jobs = await Job.find({ caseId, type: { $ne: 'timestamp_issue' }, status: { $in: ['queued', 'running', 'failed'] } }, 'type evidenceId status progress error attempts').lean();
   return jobs.map((j) => ({ type: j.type, evidenceId: j.evidenceId ? String(j.evidenceId) : null, status: j.status, progress: j.progress, error: j.error ?? null }));
 }
