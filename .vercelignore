@@ -1,6 +1,9 @@
-services
-deck
-eval
-keys
-tools
+/services
+/services2
+/deck
+/eval
+/keys
+/tools
+/demo-video
+/report
 *.pdf
