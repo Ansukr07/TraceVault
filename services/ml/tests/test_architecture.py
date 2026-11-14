@@ -26,7 +26,7 @@ def fake_system1(monkeypatch):
     from app.models import system1 as s1
 
     scores = {"harassment": 0.1, "financial_fraud": 0.9, "scams": 0.2, "upi_bank_fraud": 0.8}
-    monkeypatch.setattr(s1.system1, "_answers", lambda text: ("laya", {k: {"noul": v} for k, v in scores.items()}))
+    monkeypatch.setattr(s1.system1, "_answers", lambda text, allow_hosted=True: ("laya", {k: {"noul": v} for k, v in scores.items()}))
     monkeypatch.setenv("LAYA_CALIBRATION_VALIDATED", "true")
     return s1.system1
 
@@ -174,3 +174,14 @@ def test_caller_labels_are_never_overridden(fake_system1):
     assert given["incidentType"] == "harassment" and "incidentLabels" not in given and routed["labels"]
     review = fake_system1.review(given, {})
     assert {f["code"] for f in review["flags"]} >= {"LABELS_NOT_DECLARED", "LABELS_NOT_INDICATED"}
+
+
+def test_system1_local_only_never_calls_hosted(monkeypatch):
+    from app.models.system1 import System1
+
+    monkeypatch.setenv("HF_TOKEN", "hf_x")
+    s = System1()
+    s._load_hf_client = lambda: (_ for _ in ()).throw(AssertionError("hosted client used"))
+    s._error = "not installed"  # local runtime absent → clean 'unavailable', but no hosted call
+    r = s.classify("hello", allow_hosted=False)
+    assert r.provider == "unavailable"
