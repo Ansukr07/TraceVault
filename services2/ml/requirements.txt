@@ -1,0 +1,26 @@
+fastapi>=0.115,<1
+uvicorn[standard]>=0.30,<1
+python-multipart>=0.0.9
+pydantic>=2.8,<3
+httpx>=0.27,<1
+openai>=1.40,<3
+Pillow>=10,<12
+PyMuPDF>=1.24,<2
+langid>=1.1.6,<2
+phonenumbers>=8.13,<10
+dateparser>=1.2,<2
+laya>=0.3.20,<1
+huggingface_hub>=0.27,<2
+langgraph>=0.2,<2
+chromadb>=0.5,<2
+
+# Heavy model runtimes are optional for lightweight development. Install the
+# model groups below when needed; the service reports unavailable models.
+# PaddleOCR 3.x and PaddlePaddle CPU/GPU packages: see the official platform matrix.
+# paddleocr>=2.7
+# paddlepaddle>=2.6
+# faster-whisper>=1.0
+# spacy>=3.7
+# gliner>=0.2
+# Install BGE-M3 support in the target CPU/GPU environment when embeddings are enabled.
+# FlagEmbedding>=1.3
