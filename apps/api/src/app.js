@@ -12,6 +12,7 @@ import { exportRouter } from './routes/export.js';
 import { caseStatementsRouter, statementRouter } from './routes/statements.js';
 import { caseTimestampsRouter, timestampRouter } from './routes/timestamps.js';
 import { advancedRouter } from './routes/advanced.js';
+import { investigationRouter } from './routes/investigation.js';
 import { legalRouter } from './routes/legal.js';
 import { regionalRouter } from './routes/regional.js';
 import { adminRouter, caseSharesRouter, officerRouter, oversightRouter, shareRouter } from './routes/sharing.js';
@@ -45,6 +46,7 @@ export function createApp() {
   app.use('/api/v1/trusted-timestamps', timestampRouter);
   app.use('/api/v1/statements', statementRouter);
   app.use('/api/v1/cases/:id', advancedRouter);
+  app.use('/api/v1/cases/:id', investigationRouter);
   app.use('/api/v1/cases/:id', caseDataRouter);
   app.use('/api/v1/evidence', evidenceRouter);
   app.use((_req, res) => res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Not found' } }));

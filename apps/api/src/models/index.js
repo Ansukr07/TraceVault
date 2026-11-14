@@ -293,6 +293,8 @@ const caseSnapshot = new Schema(
     keyMoments: [String],
     mentions: mixed,
     generator: mixed,
+    // Latest full-case agent investigation (planner + agents + System1 review); scoped viewers get their own, unsaved.
+    investigation: mixed,
     builtAt: Date,
     durationMs: Number,
   },

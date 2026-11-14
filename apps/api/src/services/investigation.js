@@ -1,7 +1,7 @@
 // Agentic investigation over the ML service (System1 + LangGraph agents + case-scoped vector search).
 // Node builds the scope-filtered case snapshot (caseCtx) from Mongo; the ML service never touches the DB.
 // Ids in the snapshot use the citation form the UI already understands: evidence "E3", chunk "E3:12".
-import { mlJson } from './ml-client.js';
+import { mlDelete, mlJson } from './ml-client.js';
 import { Chunk, Entity, Evidence, TimelineEvent } from '../models/index.js';
 import { citationAllowed, evidenceFilter } from './scope.js';
 
@@ -140,4 +140,22 @@ export async function classifyIncident(c, scope) {
   const text = caseCtx.chunks.map((ch) => ch.textEn || ch.text).filter(Boolean).join('\n').slice(0, 12_000);
   if (!text.trim()) return null;
   return mlJson('/incident/classify', { textEn: text, allowHosted: allowHosted(c) }, { timeoutMs: 600_000 });
+}
+
+/** (Re)build the case's semantic index from its current chunks — for cases processed before indexing existed. */
+export async function reindexCase(c) {
+  const evidence = await Evidence.find({ caseId: c._id, duplicateOf: null, status: 'done', 'redacted.at': null }, '_id').lean();
+  const chunks = await Chunk.find({ caseId: c._id, evidenceId: { $in: evidence.map((e) => e._id) }, failed: { $ne: true } }, 'cid text textEn').lean();
+  await mlDelete(`/vectors/case/${c._id}`).catch(() => {});
+  let indexed = 0;
+  for (let i = 0; i < chunks.length; i += 200) {
+    const batch = chunks.slice(i, i + 200).filter((ch) => ch.text);
+    if (!batch.length) continue;
+    const r = await mlJson('/nlp/enrich', {
+      caseId: String(c._id), storeChunks: true, classifyIncident: false,
+      chunks: batch.map((ch) => ({ id: ch.cid, text: ch.text, textEn: ch.textEn ?? undefined })),
+    }, { timeoutMs: 900_000 });
+    indexed += r.indexedChunks ?? 0;
+  }
+  return { chunks: chunks.length, indexed };
 }
