@@ -1,12 +1,11 @@
 {
- "v1":"A fraud victim's evidence is scattered across chats, screenshots and Hindi voice notes. No one can see the full picture.",
- "v2":"TraceVault seals every file first: hashed, encrypted, and logged in a tamper-evident chain. Then our ML pipelines go to work.",
- "v3a":"Two OCR pipelines: on-device for English, Sarvam Vision for Indic scripts. You choose what may leave the machine.",
- "v3b":"Hindi, Hinglish and Kannada become searchable, with the original always cited.",
- "v4":"It resolves one person across every account, and finds the money trail.",
- "v5":"System1 classifies the incident type. Then read-only AI agents investigate: they check evidence quality, trace the money, and list the evidence gaps. Every answer links back to its source.",
- "v6a":"Where sources disagree, like an edited screenshot, it flags it for a human.",
- "v6b":"The sealed report includes a draft Section 63 certificate.",
- "v7a":"And more: authenticity checks, trusted timestamps, a complaint helper, regional legal reports and a safety mode.",
- "v7b":"TraceVault. From scattered screenshots to a case that holds up."
+ "v1": "A fraud victim's evidence is scattered across chats, screenshots and Hindi voice notes. No one can see the full picture.",
+ "v2": "TraceVault seals every file first: hashed, encrypted, and logged in a tamper-evident chain. Then our ML pipelines go to work.",
+ "v3a": "Two OCR pipelines: on-device for English, Sarvam Vision for Indic scripts. You choose what may leave the machine.",
+ "v3b": "Hindi, Hinglish and Kannada become searchable, with the original always cited.",
+ "v4": "It resolves one person across every account, and finds the money trail.",
+ "v5": "System1 classifies the incident type. Then read-only AI agents investigate: they check evidence quality, search the case with citations, trace the money and list the evidence gaps. Every answer links back to its source.",
+ "v6a": "Where sources disagree, like an edited screenshot, it flags it for a human.",
+ "v6b": "The sealed report includes a draft Section 63 certificate.",
+ "v7": "This is the technical architecture of the product and additional features that we implemented."
 }

@@ -9,7 +9,7 @@ await p.fill('input[type=password]','tracevault-demo-password');
 await p.click('button:has-text("Sign in")');
 await p.waitForURL('**/cases**');
 const tidy=()=>{
-  document.querySelectorAll('td,dd,span,p').forEach(h=>{if(h.children.length===0)h.textContent=h.textContent.replace(/\s*\(demo \d{4}[^)]*\)/,'');});
+  document.querySelectorAll('*').forEach(h=>{if(h.children.length===0&&!['SCRIPT','STYLE'].includes(h.tagName))h.textContent=h.textContent.replace(/\s*\(demo \d{4}[^)]*\)/,'');});
   document.querySelectorAll('h1').forEach(h=>{h.textContent=h.textContent.replace(/\s*\(demo[^)]*\)/,'');});
   document.querySelectorAll('*').forEach(e=>{
     const s=getComputedStyle(e); if(s.position!=='fixed'&&s.position!=='sticky') return;
@@ -24,12 +24,8 @@ async function shot(name,url,wait=2500,pre){
   await p.screenshot({path:`public/${name}.png`,fullPage:true});
   console.log(name,await p.evaluate(()=>document.body.scrollHeight));
 }
-await shot('settings',`/cases/${CASE}/settings`);
-const V=`/cases/${CASE}/evidence/6af8e2aa24afc297fb28bba3`;
-await shot('viewer-blur',V,3000);
-await shot('viewer-open',V,3000,async()=>{await p.click('text=Show image');await p.waitForTimeout(1500);await p.click('text=Show English').catch(()=>{});await p.waitForTimeout(1500);});
-await shot('graph',`/cases/${CASE}/graph`,7000);
-await shot('investigate',`/cases/${CASE}/investigation`,3000);
-await shot('inconsistencies',`/cases/${CASE}/inconsistencies`,6500);
-await shot('export',`/cases/${CASE}/export`,3000);
+const only=process.argv.slice(2); const want=(n)=>!only.length||only.includes(n);
+const CASEURL=`/cases/${CASE}`;
+if(want('dashboard')) await shot('dashboard','/cases',3500);
+if(want('settings')) await shot('settings',`${CASEURL}/settings`);
 await b.close();
