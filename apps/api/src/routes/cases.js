@@ -4,6 +4,7 @@ import {
   Inconsistency, Speaker, Statement, Summary, TimelineEvent,
 } from '../models/index.js';
 import { bucket } from '../services/evidence-store.js';
+import { mlDelete } from '../services/ml-client.js';
 import { ah, requireAuth, requireCaseRole, validate, z, httpError } from '../middleware/index.js';
 import { audit } from '../services/audit.js';
 import { merkleRoot } from '../services/merkle.js';
@@ -191,6 +192,8 @@ casesRouter.delete(
     for (const e of items) {
       if (e.storage?.fileId) await bucket().delete(e.storage.fileId).catch(() => {}); // already gone is fine
     }
+    // Semantic index (Chroma, in the ML service) holds chunk text: purge it with the rest of the derived data.
+    await mlDelete(`/vectors/case/${cid}`).catch(() => {});
     await Evidence.updateMany({ caseId: cid }, { $unset: { 'enc.key': '', 'storage.fileId': '', metadata: '', flags: '', hashes: '' }, $set: { status: 'failed', error: 'Shredded' } });
     req.case.deletedAt = new Date();
     await req.case.save();
