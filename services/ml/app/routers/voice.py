@@ -83,12 +83,37 @@ class LangItem(BaseModel):
 
 
 class LangDetectIn(BaseModel):
-    items: list[LangItem] = Field(max_length=2000)
+    items: list[LangItem] = Field(default=[], max_length=2000)
+    text: str | None = Field(default=None, max_length=50_000)  # single-text form → {language, script, confidence, provider}
     useProvider: bool = True
+
+
+class LangTranslateIn(BaseModel):
+    text: str = Field(min_length=1, max_length=50_000)
+    sourceLanguage: str | None = None
+    targetLanguage: str = "en"
+
+
+@router.post("/lang/translate")
+async def lang_translate(body: LangTranslateIn):
+    """Single text → English working copy (Sarvam Translate, else Google). Long text is translated in pieces."""
+    from ..ingestion.language import english_working_text, translate
+
+    try:
+        if body.targetLanguage.lower().split("-")[0] == "en":
+            text, src, warnings = await asyncio.to_thread(english_working_text, body.text, body.sourceLanguage)
+            return {"sourceLanguage": src, "targetLanguage": "en-IN", "translatedText": text, "warnings": warnings}
+        return await asyncio.to_thread(translate, body.text, body.sourceLanguage, body.targetLanguage)
+    except Exception as exc:  # noqa: BLE001
+        raise _bad("TRANSLATE_FAILED", f"Translation failed: {exc}"[:300], 502)
 
 
 @router.post("/lang/detect")
 async def lang_detect(body: LangDetectIn):
+    if body.text is not None and not body.items:
+        from ..ingestion.language import detect
+
+        return detect(body.text)
     client = get_client()
     usage = UsageLog()
     out = []

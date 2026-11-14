@@ -1,0 +1,23 @@
+{
+  "caseId": "ananya-demo",
+  "results": [
+    {
+      "chunkId": "E11:3",
+      "textEn": "On 22nd September, he demanded ₹15000.",
+      "sourceText": "On twenty-second September he demanded fifteen thousand rupees.",
+      "distance": 0.4395090937614441
+    },
+    {
+      "chunkId": "E9:6",
+      "textEn": "27/09/2024 UPI/DR/426912340077/ktk.pay88@ybl/Payment Debit: 10,000.00 Credit: - Balance: 55,780.00",
+      "sourceText": "27/09/2024 UPI/DR/426912340077/ktk.pay88@ybl/Payment Debit: 10,000.00 Credit: - Balance: 55,780.00",
+      "distance": 0.4449615478515625
+    },
+    {
+      "chunkId": "E9:5",
+      "textEn": "23/09/2024 UPI/DR/426612349911/karthik.menon@okicici/Payment Debit: 25,000.00 Credit: - Balance: 65,780.00",
+      "sourceText": "23/09/2024 UPI/DR/426612349911/karthik.menon@okicici/Payment Debit: 25,000.00 Credit: - Balance: 65,780.00",
+      "distance": 0.46582138538360596
+    }
+  ]
+}

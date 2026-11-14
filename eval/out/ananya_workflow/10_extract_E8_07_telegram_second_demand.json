@@ -1,0 +1,472 @@
+{
+  "artifactType": "ocr",
+  "artifact": {
+    "width": 1080,
+    "height": 2340,
+    "inverted": false,
+    "lines": [
+      {
+        "text": "5G",
+        "bbox": [
+          864,
+          14,
+          984,
+          53
+        ],
+        "conf": 0.533
+      },
+      {
+        "text": "7:33",
+        "bbox": [
+          41,
+          19,
+          96,
+          48
+        ],
+        "conf": 0.799
+      },
+      {
+        "text": "172%",
+        "bbox": [
+          975,
+          19,
+          1037,
+          44
+        ],
+        "conf": 0.641
+      },
+      {
+        "text": "ktk",
+        "bbox": [
+          25,
+          78,
+          81,
+          117
+        ],
+        "conf": 0.747
+      },
+      {
+        "text": "last seen recently : +91 70190 55555",
+        "bbox": [
+          27,
+          124,
+          413,
+          149
+        ],
+        "conf": 0.901
+      },
+      {
+        "text": "26 September 2024",
+        "bbox": [
+          436,
+          1746,
+          645,
+          1773
+        ],
+        "conf": 0.895
+      },
+      {
+        "text": "Story is down. You think that's the end?",
+        "bbox": [
+          46,
+          1820,
+          598,
+          1850
+        ],
+        "conf": 0.932
+      },
+      {
+        "text": "7:02 pm",
+        "bbox": [
+          668,
+          1825,
+          751,
+          1853
+        ],
+        "conf": 0.863
+      },
+      {
+        "text": "Rent is due. Send 30000 to ktk.pay88@ybl 7:03 pm",
+        "bbox": [
+          42,
+          1893,
+          740,
+          1938
+        ],
+        "conf": 0.932
+      },
+      {
+        "text": "Ya photos Instagram pe daal dunga, sab followers ke",
+        "bbox": [
+          45,
+          1980,
+          788,
+          2013
+        ],
+        "conf": 0.905
+      },
+      {
+        "text": "7:04 pm",
+        "bbox": [
+          727,
+          2025,
+          812,
+          2059
+        ],
+        "conf": 0.767
+      },
+      {
+        "text": "saamne",
+        "bbox": [
+          42,
+          2027,
+          155,
+          2055
+        ],
+        "conf": 0.799
+      },
+      {
+        "text": "You already took 25,000. Stop. 7:30 pm",
+        "bbox": [
+          511,
+          2098,
+          1040,
+          2139
+        ],
+        "conf": 0.885
+      },
+      {
+        "text": "Rs 25,000? That was just the interest",
+        "bbox": [
+          43,
+          2182,
+          558,
+          2217
+        ],
+        "conf": 0.922
+      },
+      {
+        "text": "7:31 pm",
+        "bbox": [
+          621,
+          2186,
+          709,
+          2219
+        ],
+        "conf": 0.821
+      },
+      {
+        "text": "You have till Sunday. 7:31 pm",
+        "bbox": [
+          44,
+          2261,
+          434,
+          2299
+        ],
+        "conf": 0.909
+      }
+    ],
+    "screenshotChat": {
+      "contact": "ktk",
+      "bubbles": [
+        {
+          "text": "Story is down. You think that's the end?",
+          "bbox": [
+            46,
+            1820,
+            751,
+            1853
+          ],
+          "conf": 0.932,
+          "side": "left",
+          "sender": "ktk",
+          "timeOfDay": "19:02",
+          "date": "2024-09-26",
+          "ts": "2024-09-26T19:02:00"
+        },
+        {
+          "text": "Rent is due. Send 30000 to ktk.pay88@ybl",
+          "bbox": [
+            42,
+            1893,
+            740,
+            1938
+          ],
+          "conf": 0.932,
+          "side": "left",
+          "sender": "ktk",
+          "timeOfDay": "19:03",
+          "date": "2024-09-26",
+          "ts": "2024-09-26T19:03:00"
+        },
+        {
+          "text": "Ya photos Instagram pe daal dunga, sab followers ke",
+          "bbox": [
+            45,
+            1980,
+            812,
+            2059
+          ],
+          "conf": 0.767,
+          "side": "left",
+          "sender": "ktk",
+          "timeOfDay": "19:04",
+          "date": "2024-09-26",
+          "ts": "2024-09-26T19:04:00"
+        },
+        {
+          "text": "saamne",
+          "bbox": [
+            42,
+            2027,
+            155,
+            2055
+          ],
+          "conf": 0.799,
+          "side": "left",
+          "sender": "ktk",
+          "timeOfDay": null,
+          "date": "2024-09-26",
+          "ts": null
+        },
+        {
+          "text": "You already took 25,000. Stop.",
+          "bbox": [
+            511,
+            2098,
+            1040,
+            2139
+          ],
+          "conf": 0.885,
+          "side": "right",
+          "sender": "Me",
+          "timeOfDay": "19:30",
+          "date": "2024-09-26",
+          "ts": "2024-09-26T19:30:00"
+        },
+        {
+          "text": "Rs 25,000? That was just the interest",
+          "bbox": [
+            43,
+            2182,
+            709,
+            2219
+          ],
+          "conf": 0.922,
+          "side": "left",
+          "sender": "ktk",
+          "timeOfDay": "19:31",
+          "date": "2024-09-26",
+          "ts": "2024-09-26T19:31:00"
+        },
+        {
+          "text": "You have till Sunday.",
+          "bbox": [
+            44,
+            2261,
+            434,
+            2299
+          ],
+          "conf": 0.909,
+          "side": "left",
+          "sender": "ktk",
+          "timeOfDay": "19:31",
+          "date": "2024-09-26",
+          "ts": "2024-09-26T19:31:00"
+        }
+      ],
+      "isChat": true
+    },
+    "ocrProvider": "rapidocr"
+  },
+  "chunks": [
+    {
+      "idx": 0,
+      "text": "Story is down. You think that's the end?",
+      "unit": "bubble",
+      "sender": "ktk",
+      "refTs": "2024-09-26T19:02:00",
+      "conf": 0.932,
+      "lowConfidence": false,
+      "timeOfDay": "19:02",
+      "locator": {
+        "bbox": [
+          46,
+          1820,
+          751,
+          1853
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "Story is down. You think that's the end?"
+    },
+    {
+      "idx": 1,
+      "text": "Rent is due. Send 30000 to ktk.pay88@ybl",
+      "unit": "bubble",
+      "sender": "ktk",
+      "refTs": "2024-09-26T19:03:00",
+      "conf": 0.932,
+      "lowConfidence": false,
+      "timeOfDay": "19:03",
+      "locator": {
+        "bbox": [
+          42,
+          1893,
+          740,
+          1938
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "Rent is due. Send 30000 to ktk.pay88@ybl"
+    },
+    {
+      "idx": 2,
+      "text": "Ya photos Instagram pe daal dunga, sab followers ke",
+      "unit": "bubble",
+      "sender": "ktk",
+      "refTs": "2024-09-26T19:04:00",
+      "conf": 0.767,
+      "lowConfidence": false,
+      "timeOfDay": "19:04",
+      "locator": {
+        "bbox": [
+          45,
+          1980,
+          812,
+          2059
+        ],
+        "side": "left"
+      },
+      "lang": "hi-Latn",
+      "langConfidence": 0.94,
+      "textEn": "Or I will post these photos on Instagram, to all my followers.",
+      "translation": {
+        "provider": "sarvam",
+        "model": "mayura:v1",
+        "redacted": false
+      }
+    },
+    {
+      "idx": 3,
+      "text": "saamne",
+      "unit": "bubble",
+      "sender": "ktk",
+      "refTs": "2024-09-26T19:33:18",
+      "conf": 0.799,
+      "lowConfidence": false,
+      "timeOfDay": null,
+      "locator": {
+        "bbox": [
+          42,
+          2027,
+          155,
+          2055
+        ],
+        "side": "left"
+      },
+      "refTsSource": "exif",
+      "lang": "en-IN",
+      "langConfidence": 0.71,
+      "textEn": "saamne"
+    },
+    {
+      "idx": 4,
+      "text": "You already took 25,000. Stop.",
+      "unit": "bubble",
+      "sender": "Me",
+      "refTs": "2024-09-26T19:30:00",
+      "conf": 0.885,
+      "lowConfidence": false,
+      "timeOfDay": "19:30",
+      "locator": {
+        "bbox": [
+          511,
+          2098,
+          1040,
+          2139
+        ],
+        "side": "right"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.74,
+      "textEn": "You already took 25,000. Stop."
+    },
+    {
+      "idx": 5,
+      "text": "Rs 25,000? That was just the interest",
+      "unit": "bubble",
+      "sender": "ktk",
+      "refTs": "2024-09-26T19:31:00",
+      "conf": 0.922,
+      "lowConfidence": false,
+      "timeOfDay": "19:31",
+      "locator": {
+        "bbox": [
+          43,
+          2182,
+          709,
+          2219
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "Rs 25,000? That was just the interest"
+    },
+    {
+      "idx": 6,
+      "text": "You have till Sunday.",
+      "unit": "bubble",
+      "sender": "ktk",
+      "refTs": "2024-09-26T19:31:00",
+      "conf": 0.909,
+      "lowConfidence": false,
+      "timeOfDay": "19:31",
+      "locator": {
+        "bbox": [
+          44,
+          2261,
+          434,
+          2299
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.74,
+      "textEn": "You have till Sunday."
+    }
+  ],
+  "metadata": {
+    "width": 1080,
+    "height": 2340,
+    "format": "PNG",
+    "captureTime": "2024-09-26T19:33:18",
+    "modifyTime": "2024-09-26T19:33:18",
+    "ocrProvider": "rapidocr"
+  },
+  "flags": [],
+  "hashes": {
+    "phash": "d2acd2b2ccd2279a",
+    "dhash": "95020000000888c8"
+  },
+  "children": [],
+  "usage": [
+    {
+      "provider": "sarvam",
+      "endpoint": "/translate",
+      "status": 200,
+      "latencyMs": 1188,
+      "model": "mayura:v1",
+      "chars": 51
+    }
+  ],
+  "generator": {
+    "name": "extract_image",
+    "version": 1
+  }
+}

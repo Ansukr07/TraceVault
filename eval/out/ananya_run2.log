@@ -1,0 +1,51 @@
+== health: {"providers": {"sarvam": {"configured": true, "mock": false, "sttModel": "saaras:v4", "reachable": true, "keyValid": true}, "llm": {"provider": "groq", "model": "qwen/qwen3.8-27b", "configured": true}}, "agents": {"enabled": true}}
+
+== 1. ingestion + OCR
+  [PASS] whatsapp export: 23 messages, participants ['Ananya', 'Karthik Menon'] (2.6s)
+  [PASS] OCR 01_whatsapp_persistent_contact.png: 13 chunks via rapidocr, chat=True, langs=['en-IN', 'hi-Latn'], translated=1, flags=[], 4.2s
+  [PASS] OCR 02_instagram_dm_after_block.png: 5 chunks via rapidocr, chat=True, langs=['en-IN', 'hi-Latn'], translated=1, flags=[], 3.4s
+  [PASS] OCR 03_sms_surveillance.png: 5 chunks via rapidocr, chat=True, langs=['en-IN'], translated=0, flags=[], 1.7s
+  [PASS] OCR 04_whatsapp_threats_second_sim.png: 8 chunks via rapidocr, chat=True, langs=['en-IN', 'hi-Latn'], translated=1, flags=[], 4.0s
+  [PASS] OCR 05_instagram_fake_account.png: 7 chunks via rapidocr, chat=True, langs=['en-IN', 'hi-Latn'], translated=0, flags=[], 3.0s
+  [PASS] OCR 06_whatsapp_demand_EDITED.png: 5 chunks via rapidocr, chat=True, langs=['en-IN', 'hi-Latn'], translated=2, flags=['EDITED_FILE', 'METADATA_MISMATCH'], 3.7s
+  [PASS] OCR 07_telegram_second_demand.png: 7 chunks via rapidocr, chat=True, langs=['en-IN', 'hi-Latn'], translated=1, flags=[], 3.4s
+  [PASS] EDITED_FILE flag on 06: ['EDITED_FILE', 'METADATA_MISMATCH']
+  [PASS] local-language OCR (Kannada): 1 Kannada chunks; sample: ನಿನ್ನ ಅಪ್ಪ-ಅಮ್ಮನಿಗೆ ಎಲ್ಲಾ ಗೊತ್ತಾಗುತ್ತೆ, ನೋಡ್ತಿರು → Your parents will know, you see
+  [PASS] PDF statement: 7 units, ocrPages=[]
+  [PASS] email: 6 chunks, sentAt=2024-09-28T22:41:00+05:30
+
+== 2. STT
+  [PASS] STT en-IN: provider=sarvam, lang=en-IN, 5 segments (2.9s TTS, 2.4s STT): 'My name is Ananya Rao. I work at Nimbus Labs in Bengaluru. Karthik Men' → EN 'My name is Ananya Rao. I work at Nimbus Labs in Bengaluru. Karthik Men'
+  [PASS] STT hi-IN: provider=sarvam, lang=hi-IN, 1 segments (1.1s TTS, 0.7s STT): 'मैंने 25 सितंबर को 25,000 रुपये भेजे क्योंकि मैं बहुत डरी हुई थी। अब व' → EN 'I sent ₹25000 on September 25 because I was very scared. Now he is ask'
+
+== 3. NLP pipeline + embeddings
+  [PASS] NER identifiers: 52 mentions; ground-truth identifiers found 4/7: ['anon.truth.blr@proton.me', 'anu.exposed', 'karthik.menon@okicici', 'ktk.pay88@ybl']
+  [PASS] time normalisation: 21 times
+  [PASS] embeddings + Chroma: indexed 92 chunks (45.1s); warnings=[]
+  [PASS] System1 via /nlp/enrich: provider=laya, scores={'harassment': 0.5144, 'financial_fraud': 0.4342, 'scams': 0.3733, 'upi_bank_fraud': 0.4288}, primary=other
+  [PASS] vector search: Who threatened to send private photos to: top E11:2 d=0.404: 'And my blog, and he used new numbers and an Instagram account. On 18th September'
+  [PASS] vector search: How much money was paid and to which UPI: top E11:3 d=0.440: 'On 22nd September, he demanded ₹15000.'
+  [PASS] vector search: ಹಣ ಕಳುಹಿಸಿ: top E1:22 d=0.286: 'Send the screenshot as proof of payment. By 10 AM'
+
+== 4. System1 (Laya)
+  [PASS] System1 classify: provider=laya (0.0s), top=[('harassment', 0.6104), ('scams', 0.4577)], labels=[], review=True
+
+== 5. case rebuild
+  [PASS] case model: 21 entities, 18 events, 21 duplicate groups (0.2s)
+  [FAIL] inconsistencies vs ground truth: found ['AMOUNT_MISMATCH', 'COVERAGE_GAP', 'EDITED_FILE', 'METADATA_MISMATCH']; expected ['AMOUNT_MISMATCH', 'DATE_CONFLICT', 'EDITED_FILE']
+
+== 6. agents + orchestration
+  [PASS] agent financial_investigation: loss ₹35000.0, matched 2/7 payment events, findings=[]
+  [PASS] agent evidence_gap: 0 checklist rows for []
+  [PASS] agent rag_investigation: 8 snippets, abstained=True
+  [PASS] agent knowledge_graph: 51 nodes, 28 edges, citationsValid=True, central=[{'entityId': 'PERSON:ananya', 'eventDegree': 18}, {'entityId': 'PERSON:91 70190 55555 karthik', 'eventDegree': 5}]
+  [PASS] agent investigation_replay: 14 timed items, first 2024-09-10T08:21:00
+  [PASS] agent report_generation: 18 sections, 12 evidence rows
+  [PASS] agent evidence_quality: 4 findings over 12 items, 5 related
+  [PASS] System1 review of agents: status=reviewed, flags=['GAP_CHECK_WITHOUT_LABELS']
+  [PASS] RAG agent: 8 cited snippets, first E11:2: 'And my blog, and he used new numbers and an Instagram account. On 18th'
+  [PASS] evidence-quality agent (06 EDITED): findings=[], related=3
+  [PASS] orchestration plan: selected ['evidence_quality', 'financial_investigation', 'knowledge_graph', 'evidence_gap', 'rag_investigation', 'investigation_replay', 'report_generation'] labels=[] (15.1s)
+  [PASS] orchestration System1: system1={'provider': 'laya', 'primary': 'other', 'labels': []}, review flags=['GAP_CHECK_WITHOUT_LABELS']
+
+== 35/36 checks passed. Raw outputs: C:\build-beyond-bmsce\eval\out\ananya_workflow

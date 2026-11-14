@@ -1,0 +1,110 @@
+{
+  "artifactType": "email_parsed",
+  "artifact": {
+    "headers": {
+      "From": "Anonymous <anon.truth.blr@proton.me>",
+      "To": "Ananya Rao <ananya.rao.blr@gmail.com>",
+      "Subject": "last chance",
+      "Date": "Sat, 28 Sep 2024 22:41:00 +0530",
+      "Message-ID": "<demo-ananya-1@proton.me>"
+    }
+  },
+  "chunks": [
+    {
+      "idx": 0,
+      "text": "From: Anonymous <anon.truth.blr@proton.me>\nTo: Ananya Rao <ananya.rao.blr@gmail.com>\nSubject: last chance\nDate: Sat, 28 Sep 2024 22:41:00 +0530",
+      "unit": "header",
+      "sender": "Anonymous",
+      "refTs": "2024-09-28T22:41:00+05:30",
+      "locator": {
+        "part": "headers"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "From: Anonymous <anon.truth.blr@proton.me>\nTo: Ananya Rao <ananya.rao.blr@gmail.com>\nSubject: last chance\nDate: Sat, 28 Sep 2024 22:41:00 +0530"
+    },
+    {
+      "idx": 1,
+      "text": "Ananya,",
+      "unit": "paragraph",
+      "sender": "Anonymous",
+      "refTs": "2024-09-28T22:41:00+05:30",
+      "locator": {
+        "part": "body",
+        "paragraphIdx": 0
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.71,
+      "textEn": "Ananya,"
+    },
+    {
+      "idx": 2,
+      "text": "You think moving PG will stop me? 14th Cross is not far from Indiranagar either.",
+      "unit": "paragraph",
+      "sender": "Anonymous",
+      "refTs": "2024-09-28T22:41:00+05:30",
+      "locator": {
+        "part": "body",
+        "paragraphIdx": 1
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "You think moving PG will stop me? 14th Cross is not far from Indiranagar either."
+    },
+    {
+      "idx": 3,
+      "text": "Pay the 30k by Sunday. Otherwise the pics go to hr@nimbuslabs.example and your father's WhatsApp.",
+      "unit": "paragraph",
+      "sender": "Anonymous",
+      "refTs": "2024-09-28T22:41:00+05:30",
+      "locator": {
+        "part": "body",
+        "paragraphIdx": 2
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "Pay the 30k by Sunday. Otherwise the pics go to hr@nimbuslabs.example and your father's WhatsApp."
+    },
+    {
+      "idx": 4,
+      "text": "Don't bother with the police, I use new SIMs every time. Tell Priya from design I said hi too.",
+      "unit": "paragraph",
+      "sender": "Anonymous",
+      "refTs": "2024-09-28T22:41:00+05:30",
+      "locator": {
+        "part": "body",
+        "paragraphIdx": 3
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.9,
+      "textEn": "Don't bother with the police, I use new SIMs every time. Tell Priya from design I said hi too."
+    },
+    {
+      "idx": 5,
+      "text": "- K (anon.truth.blr@proton.me)",
+      "unit": "paragraph",
+      "sender": "Anonymous",
+      "refTs": "2024-09-28T22:41:00+05:30",
+      "locator": {
+        "part": "body",
+        "paragraphIdx": 4
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "- K (anon.truth.blr@proton.me)"
+    }
+  ],
+  "metadata": {
+    "from": "Anonymous <anon.truth.blr@proton.me>",
+    "to": "Ananya Rao <ananya.rao.blr@gmail.com>",
+    "subject": "last chance",
+    "sentAt": "2024-09-28T22:41:00+05:30"
+  },
+  "flags": [],
+  "children": [],
+  "usage": [],
+  "generator": {
+    "name": "extract_email",
+    "version": 1
+  }
+}

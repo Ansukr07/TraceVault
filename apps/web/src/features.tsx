@@ -56,28 +56,32 @@ export function RiskCard({ caseId, role }: { caseId: string; role?: string }) {
   const q = useQuery({ queryKey: ['risk', caseId], queryFn: () => api<{ risk: Risk }>(`/cases/${caseId}/risk`).then((r) => r.risk), enabled: allowed, retry: false });
   if (!allowed || !q.data) return null;
   const r = q.data;
-  const max = Math.max(1, ...r.signals.map((s) => s.weight));
+  const L = LEVEL[r.level];
+  const steps: Level[] = ['low', 'elevated', 'high'];
   return (
-    <section className={`card risk risk-${r.level}`} aria-label="Escalation risk">
+    <section className="card risk" aria-label="Escalation risk">
       <div className="card-title">
         <h2 style={{ fontSize: 18 }}>How serious is this getting?</h2>
         <span className="eyebrow">Private to you</span>
       </div>
       <div className="risk-grid">
-        <Gauge value={r.score} level={r.level} caption="Escalation indicator" />
-        <div className="stack" style={{ gap: 10 }}>
-          {r.signals.length === 0 && <p className="muted">No higher-risk patterns found in the evidence so far.</p>}
-          {r.signals.map((s) => (
-            <div key={s.id} className="signal-row">
-              <div className="row" style={{ gap: 8 }}>
-                <strong style={{ fontWeight: 500, fontSize: 14 }}>{s.label}</strong>
-                <span className="mono muted" style={{ fontSize: 11 }}>+{s.weight}</span>
-              </div>
-              <div className="signal-bar"><i style={{ width: `${(s.weight / max) * 100}%` }} /></div>
-              <p className="muted" style={{ fontSize: 12.5 }}>{s.detail} {s.citations.map((c) => <CitationChip key={c} id={c} caseId={caseId} />)}</p>
-            </div>
-          ))}
+        <div className="risk-level" role="img" aria-label={`Escalation level: ${L.label}`}>
+          <span className="eyebrow">Escalation level</span>
+          <span className={`badge ${r.level === 'high' ? 'bad' : r.level === 'elevated' ? 'warn' : 'ok'}`}><span aria-hidden>{L.icon}</span> {L.label}</span>
+          <ol className="risk-steps" aria-hidden>
+            {steps.map((s) => <li key={s} className={s === r.level ? 'on' : ''}>{LEVEL[s].label}</li>)}
+          </ol>
         </div>
+        <ul className="signal-list">
+          {r.signals.length === 0 && <li className="muted">No higher-risk patterns found in the evidence so far.</li>}
+          {r.signals.map((s) => (
+            <li key={s.id}>
+              <strong style={{ fontWeight: 500, fontSize: 14 }}>{s.label}</strong>
+              <p className="muted" style={{ fontSize: 13 }}>{s.detail}</p>
+              {s.citations.length > 0 && <span className="row" style={{ gap: 4, flexWrap: 'wrap' }}>{s.citations.map((c) => <CitationChip key={c} id={c} caseId={caseId} />)}</span>}
+            </li>
+          ))}
+        </ul>
       </div>
       {r.resources && (
         <div className="help">

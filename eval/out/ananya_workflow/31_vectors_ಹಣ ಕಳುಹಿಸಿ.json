@@ -1,0 +1,23 @@
+{
+  "caseId": "ananya-demo",
+  "results": [
+    {
+      "chunkId": "E1:22",
+      "textEn": "Send the screenshot as proof of payment. By 10 AM",
+      "sourceText": "Screenshot bhej payment ka. 10 baje tak",
+      "distance": 0.28559064865112305
+    },
+    {
+      "chunkId": "E7:4",
+      "textEn": "Send the screenshot as proof of payment. By 10 AM",
+      "sourceText": "Screenshot bhej payment ka. 10 baje tak",
+      "distance": 0.28559064865112305
+    },
+    {
+      "chunkId": "E8:1",
+      "textEn": "Rent is due. Send 30000 to ktk.pay88@ybl",
+      "sourceText": "Rent is due. Send 30000 to ktk.pay88@ybl",
+      "distance": 0.3338848948478699
+    }
+  ]
+}

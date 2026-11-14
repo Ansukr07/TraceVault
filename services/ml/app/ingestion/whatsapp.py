@@ -93,3 +93,30 @@ def parse_whatsapp(text: str) -> ParsedChat:
         )
     out.participants = sorted({m.sender for m in out.messages if m.sender})
     return out
+
+
+def parse(text: str, date_order: str = "auto") -> dict:
+    """Message-list view used by /parse/whatsapp: {format, messages[], dateOrder, warnings}.
+
+    `date_order` = auto | DMY | MDY. Auto pins the order from any day value > 12, else defaults to DMY (India).
+    """
+    chat = parse_whatsapp(text)
+    warnings: list[str] = []
+    order = (date_order or "auto").upper()
+    if order in ("DMY", "MDY") and order != chat.date_order:
+        lines = text.lstrip("﻿").splitlines()
+        for msg in chat.messages:
+            m = _LINE.match(lines[msg.line_no - 1])
+            msg.ts = _to_dt(m, order) if m else msg.ts
+        chat.date_order = order
+    elif order == "AUTO":
+        heads = [m for m in (_LINE.match(ln) for ln in text.splitlines()) if m]
+        if not any(int(m["a"]) > 12 or int(m["b"]) > 12 for m in heads):
+            warnings.append("Date order is ambiguous for this export; DMY default selected. Pass date_order=MDY or DMY to override.")
+    messages = []
+    for m in chat.messages:
+        end = chat.messages[m.idx + 1].line_no - 1 if m.idx + 1 < len(chat.messages) else m.line_no + m.text.count("\n")
+        messages.append({"index": m.idx, "timestamp": m.ts.isoformat() if m.ts else None, "timestampIso": m.ts.isoformat() if m.ts else None,
+                         "sender": m.sender, "text": m.text, "media": [m.media] if m.media else [], "system": m.is_system,
+                         "locator": {"lineStart": m.line_no, "lineEnd": max(m.line_no, end), "messageIdx": m.idx}})
+    return {"format": "whatsapp_export", "messages": messages, "dateOrder": chat.date_order, "participants": chat.participants, "warnings": warnings}

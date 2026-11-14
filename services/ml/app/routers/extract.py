@@ -1,4 +1,4 @@
-"""POST /extract (per-evidence extraction) and POST /nlp/enrich (spec §7)."""
+"""POST /extract — per-evidence extraction (spec §7). /nlp/enrich lives in routers/nlp.py."""
 from __future__ import annotations
 
 import asyncio
@@ -6,11 +6,9 @@ import re
 from typing import Literal
 
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
-from pydantic import BaseModel, Field
 
 from ..lang.translate import annotate_chunks
-from ..nlp import ner, severity
-from ..parsers import extract as ex
+from ..ingestion import extract as ex
 from ..voice import audio
 from ..voice.sarvam_client import UsageLog, get_client
 from ..voice.transcribe import transcribe
@@ -51,7 +49,7 @@ async def extract_route(
     filename: str = Form(""),
     voiceProvider: Literal["sarvam", "local"] = Form("local"),
     translateMode: Literal["sarvam", "sarvam_redacted", "off"] = Form("off"),
-    ocrProvider: Literal["local", "auto", "google"] = Form("local"),
+    ocrProvider: Literal["local", "auto", "google", "sarvam"] = Form("local"),
     referenceTs: str | None = Form(None),
     diarize: bool = Form(False),
     numSpeakers: int | None = Form(None),
@@ -66,7 +64,7 @@ async def extract_route(
             out = await asyncio.to_thread(ex.extract_image, data, name_ts or referenceTs, ocrProvider)
             usage.records.extend(out.pop("usage", []))
         elif kind == "pdf":
-            out = await asyncio.to_thread(ex.extract_pdf, data)
+            out = await asyncio.to_thread(ex.extract_pdf, data, ocrProvider)
         elif kind == "email":
             out = await asyncio.to_thread(ex.extract_email, data)
         elif kind == "archive":
@@ -107,34 +105,3 @@ async def extract_route(
     out["usage"] = usage.records
     out["generator"] = {"name": f"extract_{kind}", "version": ex.GENERATOR_VERSION}
     return out
-
-
-class EnrichChunk(BaseModel):
-    id: str
-    text: str
-    textEn: str | None = None
-    refTs: str | None = None
-    sender: str | None = None
-
-
-class EnrichIn(BaseModel):
-    chunks: list[EnrichChunk] = Field(max_length=20_000)
-    knownNames: list[str] = []
-
-
-@router.post("/nlp/enrich")
-async def enrich(body: EnrichIn):
-    names = set(body.knownNames) | {c.sender for c in body.chunks if c.sender}
-
-    def work():
-        out = []
-        for c in body.chunks:
-            ents = ner.extract(c.text, known_names=names, ref_ts=c.refTs, text_en=c.textEn)
-            sev = severity.classify(c.text, c.textEn)
-            times = [{"text": e["text"], "start": e["start"], "end": e["end"], "ts": e["norm"], "precision": e.get("precision", "day")}
-                     for e in ents if e["type"] in ("DATE", "TIME")]
-            out.append({"id": c.id, "entities": ents, "times": times, "severity": sev})
-        return out
-
-    return {"items": await asyncio.to_thread(work), "generator": {"name": "nlp_rules", "version": 1,
-                                                                   "spacy": ner.spacy_available()}}

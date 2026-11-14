@@ -1,0 +1,232 @@
+{
+  "artifactType": "transcript",
+  "artifact": {
+    "lang": "en-IN",
+    "provider": "sarvam",
+    "model": "saaras:v4",
+    "durationMs": 27306,
+    "segments": [
+      {
+        "startMs": 0,
+        "endMs": 8550,
+        "text": "My name is Ananya Rao. I work at Nimbus Labs in Bengaluru. Karthik Menon is a former colleague. Since early September, he has been messaging and calling me repeatedly.",
+        "lang": "en-IN",
+        "langConfidence": 1.0,
+        "textEn": "My name is Ananya Rao. I work at Nimbus Labs in Bengaluru. Karthik Menon is a former colleague. Since early September, he has been messaging and calling me repeatedly."
+      },
+      {
+        "startMs": 8700,
+        "endMs": 12030,
+        "text": "Even after I told him to stop, he followed me, knew where I live.",
+        "lang": "en-IN",
+        "langConfidence": 1.0,
+        "textEn": "Even after I told him to stop, he followed me, knew where I live."
+      },
+      {
+        "startMs": 12360,
+        "endMs": 19470,
+        "text": "And my blog, and he used new numbers and an Instagram account. On 18th September, he threatened to send private photos to my office and my parents.",
+        "lang": "en-IN",
+        "langConfidence": 1.0,
+        "textEn": "And my blog, and he used new numbers and an Instagram account. On 18th September, he threatened to send private photos to my office and my parents."
+      },
+      {
+        "startMs": 19650,
+        "endMs": 22890,
+        "text": "On twenty-second September he demanded fifteen thousand rupees.",
+        "lang": "en-IN",
+        "langConfidence": 0.999,
+        "textEn": "On 22nd September, he demanded ₹15000."
+      },
+      {
+        "startMs": 23040,
+        "endMs": 27306,
+        "text": "To take down a fake story about me, I paid 25000 rupees on 25.",
+        "lang": "en-IN",
+        "langConfidence": 1.0,
+        "textEn": "To take down a fake story about me, I paid ₹25,000 on 25."
+      }
+    ],
+    "fallback": null,
+    "diarization": {
+      "requested": false,
+      "applied": false,
+      "numSpeakers": null
+    }
+  },
+  "chunks": [
+    {
+      "idx": 0,
+      "text": "My name is Ananya Rao. I work at Nimbus Labs in Bengaluru. Karthik Menon is a former colleague. Since early September, he has been messaging and calling me repeatedly.",
+      "textEn": "My name is Ananya Rao. I work at Nimbus Labs in Bengaluru. Karthik Menon is a former colleague. Since early September, he has been messaging and calling me repeatedly.",
+      "lang": "en-IN",
+      "langConfidence": 1.0,
+      "unit": "segment",
+      "speaker": null,
+      "refTs": null,
+      "failed": false,
+      "locator": {
+        "startMs": 0,
+        "endMs": 8550
+      },
+      "refTsSource": "none"
+    },
+    {
+      "idx": 1,
+      "text": "Even after I told him to stop, he followed me, knew where I live.",
+      "textEn": "Even after I told him to stop, he followed me, knew where I live.",
+      "lang": "en-IN",
+      "langConfidence": 1.0,
+      "unit": "segment",
+      "speaker": null,
+      "refTs": null,
+      "failed": false,
+      "locator": {
+        "startMs": 8700,
+        "endMs": 12030
+      },
+      "refTsSource": "none"
+    },
+    {
+      "idx": 2,
+      "text": "And my blog, and he used new numbers and an Instagram account. On 18th September, he threatened to send private photos to my office and my parents.",
+      "textEn": "And my blog, and he used new numbers and an Instagram account. On 18th September, he threatened to send private photos to my office and my parents.",
+      "lang": "en-IN",
+      "langConfidence": 1.0,
+      "unit": "segment",
+      "speaker": null,
+      "refTs": null,
+      "failed": false,
+      "locator": {
+        "startMs": 12360,
+        "endMs": 19470
+      },
+      "refTsSource": "none"
+    },
+    {
+      "idx": 3,
+      "text": "On twenty-second September he demanded fifteen thousand rupees.",
+      "textEn": "On 22nd September, he demanded ₹15000.",
+      "lang": "en-IN",
+      "langConfidence": 0.999,
+      "unit": "segment",
+      "speaker": null,
+      "refTs": null,
+      "failed": false,
+      "locator": {
+        "startMs": 19650,
+        "endMs": 22890
+      },
+      "refTsSource": "none"
+    },
+    {
+      "idx": 4,
+      "text": "To take down a fake story about me, I paid 25000 rupees on 25.",
+      "textEn": "To take down a fake story about me, I paid ₹25,000 on 25.",
+      "lang": "en-IN",
+      "langConfidence": 1.0,
+      "unit": "segment",
+      "speaker": null,
+      "refTs": null,
+      "failed": false,
+      "locator": {
+        "startMs": 23040,
+        "endMs": 27306
+      },
+      "refTsSource": "none"
+    }
+  ],
+  "metadata": {
+    "durationMs": 27306,
+    "lang": "en-IN",
+    "provider": "sarvam"
+  },
+  "flags": [],
+  "children": [],
+  "usage": [
+    {
+      "provider": "sarvam",
+      "endpoint": "/speech-to-text",
+      "status": 200,
+      "latencyMs": 1412,
+      "model": "saaras:v4",
+      "audioSeconds": 7.11
+    },
+    {
+      "provider": "sarvam",
+      "endpoint": "/speech-to-text",
+      "status": 200,
+      "latencyMs": 1416,
+      "model": "saaras:v4",
+      "audioSeconds": 8.55
+    },
+    {
+      "provider": "sarvam",
+      "endpoint": "/speech-to-text",
+      "status": 200,
+      "latencyMs": 1450,
+      "model": "saaras:v4",
+      "audioSeconds": 3.33
+    },
+    {
+      "provider": "sarvam",
+      "endpoint": "/speech-to-text",
+      "status": 200,
+      "latencyMs": 1468,
+      "model": "saaras:v4",
+      "audioSeconds": 3.33
+    },
+    {
+      "provider": "sarvam",
+      "endpoint": "/speech-to-text",
+      "status": 200,
+      "latencyMs": 1488,
+      "model": "saaras:v4",
+      "audioSeconds": 8.55
+    },
+    {
+      "provider": "sarvam",
+      "endpoint": "/speech-to-text",
+      "status": 200,
+      "latencyMs": 1574,
+      "model": "saaras:v4",
+      "audioSeconds": 7.11
+    },
+    {
+      "provider": "sarvam",
+      "endpoint": "/speech-to-text",
+      "status": 200,
+      "latencyMs": 487,
+      "model": "saaras:v4",
+      "audioSeconds": 3.24
+    },
+    {
+      "provider": "sarvam",
+      "endpoint": "/speech-to-text",
+      "status": 200,
+      "latencyMs": 492,
+      "model": "saaras:v4",
+      "audioSeconds": 3.24
+    },
+    {
+      "provider": "sarvam",
+      "endpoint": "/speech-to-text",
+      "status": 200,
+      "latencyMs": 822,
+      "model": "saaras:v4",
+      "audioSeconds": 4.27
+    },
+    {
+      "provider": "sarvam",
+      "endpoint": "/speech-to-text",
+      "status": 200,
+      "latencyMs": 827,
+      "model": "saaras:v4",
+      "audioSeconds": 4.27
+    }
+  ],
+  "generator": {
+    "name": "extract_statement",
+    "version": 1
+  }
+}

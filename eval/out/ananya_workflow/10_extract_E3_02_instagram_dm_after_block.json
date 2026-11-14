@@ -1,0 +1,407 @@
+{
+  "artifactType": "ocr",
+  "artifact": {
+    "width": 1080,
+    "height": 2340,
+    "inverted": false,
+    "lines": [
+      {
+        "text": "64%",
+        "bbox": [
+          983,
+          18,
+          1037,
+          44
+        ],
+        "conf": 0.749
+      },
+      {
+        "text": "8:34",
+        "bbox": [
+          41,
+          19,
+          99,
+          47
+        ],
+        "conf": 0.78
+      },
+      {
+        "text": "5G",
+        "bbox": [
+          867,
+          19,
+          903,
+          43
+        ],
+        "conf": 0.578
+      },
+      {
+        "text": "karthik.clicks",
+        "bbox": [
+          121,
+          85,
+          297,
+          112
+        ],
+        "conf": 0.907
+      },
+      {
+        "text": "Instagram : Active 2m ago",
+        "bbox": [
+          118,
+          121,
+          395,
+          151
+        ],
+        "conf": 0.852
+      },
+      {
+        "text": "10 Sep 2024",
+        "bbox": [
+          473,
+          1785,
+          608,
+          1814
+        ],
+        "conf": 0.812
+      },
+      {
+        "text": "blocking me on whatsapp won't help",
+        "bbox": [
+          45,
+          1859,
+          565,
+          1890
+        ],
+        "conf": 0.909
+      },
+      {
+        "text": "8:15 am",
+        "bbox": [
+          635,
+          1866,
+          718,
+          1890
+        ],
+        "conf": 0.874
+      },
+      {
+        "text": "this is my new insta btw. you can't block everything",
+        "bbox": [
+          43,
+          1937,
+          766,
+          1973
+        ],
+        "conf": 0.943
+      },
+      {
+        "text": "8:16 am",
+        "bbox": [
+          728,
+          1986,
+          812,
+          2014
+        ],
+        "conf": 0.849
+      },
+      {
+        "text": "I know you take the 8:20 bus from Indiranagar. Blue",
+        "bbox": [
+          43,
+          2061,
+          770,
+          2091
+        ],
+        "conf": 0.926
+      },
+      {
+        "text": "kurta today, nice",
+        "bbox": [
+          44,
+          2103,
+          281,
+          2136
+        ],
+        "conf": 0.925
+      },
+      {
+        "text": "8:21 am",
+        "bbox": [
+          729,
+          2108,
+          813,
+          2135
+        ],
+        "conf": 0.873
+      },
+      {
+        "text": "I will report this account.",
+        "bbox": [
+          593,
+          2183,
+          943,
+          2215
+        ],
+        "conf": 0.942
+      },
+      {
+        "text": "8:30 am",
+        "bbox": [
+          955,
+          2187,
+          1039,
+          2216
+        ],
+        "conf": 0.871
+      },
+      {
+        "text": "report karo. Mujhe fark nahi padta",
+        "bbox": [
+          43,
+          2262,
+          532,
+          2297
+        ],
+        "conf": 0.929
+      },
+      {
+        "text": "8:31 am",
+        "bbox": [
+          544,
+          2269,
+          628,
+          2295
+        ],
+        "conf": 0.806
+      }
+    ],
+    "screenshotChat": {
+      "contact": "Instagram : Active 2m ago",
+      "bubbles": [
+        {
+          "text": "blocking me on whatsapp won't help",
+          "bbox": [
+            45,
+            1859,
+            718,
+            1890
+          ],
+          "conf": 0.909,
+          "side": "left",
+          "sender": "Instagram : Active 2m ago",
+          "timeOfDay": "08:15",
+          "date": "2024-09-10",
+          "ts": "2024-09-10T08:15:00"
+        },
+        {
+          "text": "this is my new insta btw. you can't block everything",
+          "bbox": [
+            43,
+            1937,
+            812,
+            2014
+          ],
+          "conf": 0.849,
+          "side": "left",
+          "sender": "Instagram : Active 2m ago",
+          "timeOfDay": "08:16",
+          "date": "2024-09-10",
+          "ts": "2024-09-10T08:16:00"
+        },
+        {
+          "text": "I know you take the 8:20 bus from Indiranagar. Blue\nkurta today, nice",
+          "bbox": [
+            43,
+            2061,
+            813,
+            2135
+          ],
+          "conf": 0.925,
+          "side": "left",
+          "sender": "Instagram : Active 2m ago",
+          "timeOfDay": "08:21",
+          "date": "2024-09-10",
+          "ts": "2024-09-10T08:21:00"
+        },
+        {
+          "text": "I will report this account.",
+          "bbox": [
+            593,
+            2183,
+            1039,
+            2216
+          ],
+          "conf": 0.942,
+          "side": "right",
+          "sender": "Me",
+          "timeOfDay": "08:30",
+          "date": "2024-09-10",
+          "ts": "2024-09-10T08:30:00"
+        },
+        {
+          "text": "report karo. Mujhe fark nahi padta",
+          "bbox": [
+            43,
+            2262,
+            628,
+            2295
+          ],
+          "conf": 0.929,
+          "side": "left",
+          "sender": "Instagram : Active 2m ago",
+          "timeOfDay": "08:31",
+          "date": "2024-09-10",
+          "ts": "2024-09-10T08:31:00"
+        }
+      ],
+      "isChat": true
+    },
+    "ocrProvider": "rapidocr"
+  },
+  "chunks": [
+    {
+      "idx": 0,
+      "text": "blocking me on whatsapp won't help",
+      "unit": "bubble",
+      "sender": "Instagram : Active 2m ago",
+      "refTs": "2024-09-10T08:15:00",
+      "conf": 0.909,
+      "lowConfidence": false,
+      "timeOfDay": "08:15",
+      "locator": {
+        "bbox": [
+          45,
+          1859,
+          718,
+          1890
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "blocking me on whatsapp won't help"
+    },
+    {
+      "idx": 1,
+      "text": "this is my new insta btw. you can't block everything",
+      "unit": "bubble",
+      "sender": "Instagram : Active 2m ago",
+      "refTs": "2024-09-10T08:16:00",
+      "conf": 0.849,
+      "lowConfidence": false,
+      "timeOfDay": "08:16",
+      "locator": {
+        "bbox": [
+          43,
+          1937,
+          812,
+          2014
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.81,
+      "textEn": "this is my new insta btw. you can't block everything"
+    },
+    {
+      "idx": 2,
+      "text": "I know you take the 8:20 bus from Indiranagar. Blue\nkurta today, nice",
+      "unit": "bubble",
+      "sender": "Instagram : Active 2m ago",
+      "refTs": "2024-09-10T08:21:00",
+      "conf": 0.925,
+      "lowConfidence": false,
+      "timeOfDay": "08:21",
+      "locator": {
+        "bbox": [
+          43,
+          2061,
+          813,
+          2135
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "I know you take the 8:20 bus from Indiranagar. Blue\nkurta today, nice"
+    },
+    {
+      "idx": 3,
+      "text": "I will report this account.",
+      "unit": "bubble",
+      "sender": "Me",
+      "refTs": "2024-09-10T08:30:00",
+      "conf": 0.942,
+      "lowConfidence": false,
+      "timeOfDay": "08:30",
+      "locator": {
+        "bbox": [
+          593,
+          2183,
+          1039,
+          2216
+        ],
+        "side": "right"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.75,
+      "textEn": "I will report this account."
+    },
+    {
+      "idx": 4,
+      "text": "report karo. Mujhe fark nahi padta",
+      "unit": "bubble",
+      "sender": "Instagram : Active 2m ago",
+      "refTs": "2024-09-10T08:31:00",
+      "conf": 0.929,
+      "lowConfidence": false,
+      "timeOfDay": "08:31",
+      "locator": {
+        "bbox": [
+          43,
+          2262,
+          628,
+          2295
+        ],
+        "side": "left"
+      },
+      "lang": "hi-Latn",
+      "langConfidence": 0.95,
+      "textEn": "Report it. I don't care.",
+      "translation": {
+        "provider": "sarvam",
+        "model": "mayura:v1",
+        "redacted": false
+      }
+    }
+  ],
+  "metadata": {
+    "width": 1080,
+    "height": 2340,
+    "format": "PNG",
+    "captureTime": "2024-09-10T08:34:12",
+    "modifyTime": "2024-09-10T08:34:12",
+    "ocrProvider": "rapidocr"
+  },
+  "flags": [],
+  "hashes": {
+    "phash": "d12dd16db5c825d2",
+    "dhash": "0200000008009098"
+  },
+  "children": [],
+  "usage": [
+    {
+      "provider": "sarvam",
+      "endpoint": "/translate",
+      "status": 200,
+      "latencyMs": 1116,
+      "model": "mayura:v1",
+      "chars": 34
+    }
+  ],
+  "generator": {
+    "name": "extract_image",
+    "version": 1
+  }
+}

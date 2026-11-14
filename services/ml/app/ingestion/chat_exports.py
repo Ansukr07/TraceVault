@@ -82,3 +82,21 @@ def parse_json_chat(data: bytes) -> ParsedChat | None:
         return None
     chat.participants = people
     return chat
+
+
+def parse_json_text(text: str, source: str) -> dict[str, Any]:
+    """Message-list view used by /parse/telegram|instagram|takeout: {format, messages[], dateOrder, warnings}."""
+    if source not in {"telegram", "instagram", "takeout"}:
+        raise ValueError("source must be telegram, instagram, or takeout")
+    try:
+        json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"Invalid JSON export: {exc}") from exc
+    chat = parse_json_chat(text.encode("utf-8"))
+    if chat is None:
+        raise ValueError(f"Not a recognised {source} chat export")
+    messages = [{"index": m.idx, "timestamp": m.ts.isoformat() if m.ts else None, "sender": m.sender, "text": m.text,
+                 "media": [m.media] if m.media else [], "locator": {"messageIdx": m.idx, "lineNo": m.line_no}}
+                for m in chat.messages if not m.is_system]
+    fmt = "telegram_json" if source == "telegram" else "instagram_or_takeout_json"
+    return {"format": fmt, "messages": messages, "dateOrder": None, "warnings": []}

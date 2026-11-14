@@ -1,0 +1,365 @@
+{
+  "artifactType": "ocr",
+  "artifact": {
+    "width": 1080,
+    "height": 2340,
+    "inverted": false,
+    "lines": [
+      {
+        "text": "4G",
+        "bbox": [
+          869,
+          17,
+          909,
+          44
+        ],
+        "conf": 0.58
+      },
+      {
+        "text": "6:20",
+        "bbox": [
+          42,
+          18,
+          98,
+          47
+        ],
+        "conf": 0.758
+      },
+      {
+        "text": "41%",
+        "bbox": [
+          986,
+          18,
+          1038,
+          44
+        ],
+        "conf": 0.725
+      },
+      {
+        "text": "+9170190 55555",
+        "bbox": [
+          32,
+          85,
+          300,
+          112
+        ],
+        "conf": 0.823
+      },
+      {
+        "text": "Unknown sender · SMS",
+        "bbox": [
+          26,
+          124,
+          273,
+          151
+        ],
+        "conf": 0.823
+      },
+      {
+        "text": "Not in your contacts",
+        "bbox": [
+          431,
+          1824,
+          649,
+          1850
+        ],
+        "conf": 0.877
+      },
+      {
+        "text": "Sat, 14 Sep",
+        "bbox": [
+          478,
+          1902,
+          601,
+          1932
+        ],
+        "conf": 0.907
+      },
+      {
+        "text": "looks good on you.",
+        "bbox": [
+          43,
+          2018,
+          318,
+          2055
+        ],
+        "conf": 0.871
+      },
+      {
+        "text": "6:12 pm",
+        "bbox": [
+          727,
+          2023,
+          812,
+          2055
+        ],
+        "conf": 0.823
+      },
+      {
+        "text": "Your PG is on 12th Main, the green gate. I know.",
+        "bbox": [
+          44,
+          2098,
+          723,
+          2132
+        ],
+        "conf": 0.928
+      },
+      {
+        "text": "6:14 pm",
+        "bbox": [
+          727,
+          2146,
+          812,
+          2178
+        ],
+        "conf": 0.779
+      },
+      {
+        "text": "Don't get any ideas about police. Nobody will believe",
+        "bbox": [
+          46,
+          2221,
+          797,
+          2251
+        ],
+        "conf": 0.922
+      },
+      {
+        "text": "you.",
+        "bbox": [
+          37,
+          2263,
+          108,
+          2301
+        ],
+        "conf": 0.774
+      },
+      {
+        "text": "6:15 pm",
+        "bbox": [
+          729,
+          2270,
+          812,
+          2297
+        ],
+        "conf": 0.793
+      }
+    ],
+    "screenshotChat": {
+      "contact": "+9170190 55555",
+      "bubbles": [
+        {
+          "text": "Not in your contacts",
+          "bbox": [
+            431,
+            1824,
+            649,
+            1850
+          ],
+          "conf": 0.877,
+          "side": "center",
+          "sender": null,
+          "timeOfDay": null,
+          "date": "2024-09-14",
+          "ts": null
+        },
+        {
+          "text": "Sat, 14 Sep",
+          "bbox": [
+            478,
+            1902,
+            601,
+            1932
+          ],
+          "conf": 0.907,
+          "side": "center",
+          "sender": null,
+          "timeOfDay": null,
+          "date": "2024-09-14",
+          "ts": null
+        },
+        {
+          "text": "looks good on you.",
+          "bbox": [
+            43,
+            2018,
+            812,
+            2055
+          ],
+          "conf": 0.871,
+          "side": "left",
+          "sender": "+9170190 55555",
+          "timeOfDay": "18:12",
+          "date": "2024-09-14",
+          "ts": "2024-09-14T18:12:00"
+        },
+        {
+          "text": "Your PG is on 12th Main, the green gate. I know.",
+          "bbox": [
+            44,
+            2098,
+            812,
+            2178
+          ],
+          "conf": 0.928,
+          "side": "left",
+          "sender": "+9170190 55555",
+          "timeOfDay": "18:14",
+          "date": "2024-09-14",
+          "ts": "2024-09-14T18:14:00"
+        },
+        {
+          "text": "Don't get any ideas about police. Nobody will believe\nyou.",
+          "bbox": [
+            37,
+            2221,
+            812,
+            2297
+          ],
+          "conf": 0.774,
+          "side": "left",
+          "sender": "+9170190 55555",
+          "timeOfDay": "18:15",
+          "date": "2024-09-14",
+          "ts": "2024-09-14T18:15:00"
+        }
+      ],
+      "isChat": true
+    },
+    "ocrProvider": "rapidocr"
+  },
+  "chunks": [
+    {
+      "idx": 0,
+      "text": "Not in your contacts",
+      "unit": "bubble",
+      "sender": null,
+      "refTs": "2024-09-14T18:20:45",
+      "conf": 0.877,
+      "lowConfidence": false,
+      "timeOfDay": null,
+      "locator": {
+        "bbox": [
+          431,
+          1824,
+          649,
+          1850
+        ],
+        "side": "center"
+      },
+      "refTsSource": "exif",
+      "lang": "en-IN",
+      "langConfidence": 0.74,
+      "textEn": "Not in your contacts"
+    },
+    {
+      "idx": 1,
+      "text": "Sat, 14 Sep",
+      "unit": "bubble",
+      "sender": null,
+      "refTs": "2024-09-14T18:20:45",
+      "conf": 0.907,
+      "lowConfidence": false,
+      "timeOfDay": null,
+      "locator": {
+        "bbox": [
+          478,
+          1902,
+          601,
+          1932
+        ],
+        "side": "center"
+      },
+      "refTsSource": "exif",
+      "lang": "en-IN",
+      "langConfidence": 0.72,
+      "textEn": "Sat, 14 Sep"
+    },
+    {
+      "idx": 2,
+      "text": "looks good on you.",
+      "unit": "bubble",
+      "sender": "+9170190 55555",
+      "refTs": "2024-09-14T18:12:00",
+      "conf": 0.871,
+      "lowConfidence": false,
+      "timeOfDay": "18:12",
+      "locator": {
+        "bbox": [
+          43,
+          2018,
+          812,
+          2055
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.74,
+      "textEn": "looks good on you."
+    },
+    {
+      "idx": 3,
+      "text": "Your PG is on 12th Main, the green gate. I know.",
+      "unit": "bubble",
+      "sender": "+9170190 55555",
+      "refTs": "2024-09-14T18:14:00",
+      "conf": 0.928,
+      "lowConfidence": false,
+      "timeOfDay": "18:14",
+      "locator": {
+        "bbox": [
+          44,
+          2098,
+          812,
+          2178
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "Your PG is on 12th Main, the green gate. I know."
+    },
+    {
+      "idx": 4,
+      "text": "Don't get any ideas about police. Nobody will believe\nyou.",
+      "unit": "bubble",
+      "sender": "+9170190 55555",
+      "refTs": "2024-09-14T18:15:00",
+      "conf": 0.774,
+      "lowConfidence": false,
+      "timeOfDay": "18:15",
+      "locator": {
+        "bbox": [
+          37,
+          2221,
+          812,
+          2297
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.81,
+      "textEn": "Don't get any ideas about police. Nobody will believe\nyou."
+    }
+  ],
+  "metadata": {
+    "width": 1080,
+    "height": 2340,
+    "format": "PNG",
+    "captureTime": "2024-09-14T18:20:45",
+    "modifyTime": "2024-09-14T18:20:45",
+    "ocrProvider": "rapidocr"
+  },
+  "flags": [],
+  "hashes": {
+    "phash": "afd22fd20f16481e",
+    "dhash": "6500000040006e66"
+  },
+  "children": [],
+  "usage": [],
+  "generator": {
+    "name": "extract_image",
+    "version": 1
+  }
+}

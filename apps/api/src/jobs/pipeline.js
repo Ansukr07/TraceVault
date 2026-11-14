@@ -110,7 +110,7 @@ const extractHandler = perEvidence(async (job, ctx, e, c) => {
       numSpeakers: job.payload?.numSpeakers,
       translateMode: c.settings?.translateMode ?? 'off',
       // Local OCR unless the owner allowed cloud OCR; 'auto' only calls Google when the local result is poor.
-      ocrProvider: c.settings?.ocrMode === 'cloud' ? 'auto' : 'local',
+      ocrProvider: ocrProviderFor(c),
       referenceTs: e.createdAt?.toISOString().slice(0, 19),
     },
   });
@@ -195,6 +195,12 @@ const extractHandler = perEvidence(async (job, ctx, e, c) => {
   return { chunks: out.chunks.length, children: out.children?.length ?? 0 };
 });
 
+/** Case OCR setting → ML provider. 'cloud' = local first, then Google Vision / Sarvam Vision for unreadable or Indic text. */
+export function ocrProviderFor(c) {
+  const m = c.settings?.ocrMode ?? 'local';
+  return m === 'cloud' ? 'auto' : m === 'sarvam' ? 'sarvam' : m === 'google' ? 'google' : 'local';
+}
+
 function mode(arr) {
   const m = new Map();
   for (const a of arr) m.set(a, (m.get(a) ?? 0) + 1);
@@ -205,7 +211,12 @@ const nlpHandler = perEvidence(async (job, _ctx, e, c) => {
   emit(c._id, 'processing.progress', { evidenceId: String(e._id), step: 'nlp', status: 'running', pct: 80 });
   const chunks = await Chunk.find({ evidenceId: e._id }).sort({ idx: 1 }).lean();
   const known = await Chunk.distinct('sender', { caseId: c._id, sender: { $ne: null } });
+  // caseId → the ML service embeds the chunks (BGE-M3, on this server) into the case-scoped Chroma index used by
+  // semantic search and the agents. System1 runs once per investigation instead of per file, to keep uploads fast.
   const r = await mlJson('/nlp/enrich', {
+    caseId: String(c._id),
+    storeChunks: true,
+    classifyIncident: false,
     chunks: chunks.map((ch) => ({ id: ch.cid, text: ch.text ?? '', textEn: ch.textEn, refTs: ch.refTs, sender: ch.sender })),
     knownNames: known.filter(Boolean),
   });

@@ -1,3 +1,4 @@
+import logging
 import os
 import shutil
 import time
@@ -16,17 +17,28 @@ if _env.exists():
             k, v = line.split("=", 1)
             os.environ.setdefault(k.strip(), v.split(" #")[0].strip())
 
-from .parsers import ocr  # noqa: E402
-from .routers import authenticity, case, extract, report, voice  # noqa: E402  (env must be loaded first)
+from .models.system1 import system1  # noqa: E402
+from .nlp import ner  # noqa: E402
+from .nlp.embeddings import embedder  # noqa: E402
+from .ocr import english as ocr_english, indic as ocr_indic  # noqa: E402
+from .routers import authenticity, case, extract, incident, nlp, ocr, parse, report, vectors, voice  # noqa: E402  (env must be loaded first)
 from .voice import local_whisper  # noqa: E402
 from .voice.sarvam_client import get_client  # noqa: E402
 
+log = logging.getLogger("tracevault.ml")
 app = FastAPI(title="TraceVault ML", docs_url=None, redoc_url=None)
-app.include_router(voice.router)
-app.include_router(extract.router)
-app.include_router(case.router)
-app.include_router(report.router)
-app.include_router(authenticity.router)
+# Ingestion → OCR / STT → language → NLP (NER, embeddings, Chroma) → System1 → agents → case / report
+for r in (extract, parse, ocr, voice, nlp, vectors, incident, case, report, authenticity):
+    app.include_router(r.router)
+
+try:  # LangGraph is required for the agents; the rest of the service runs without it.
+    from .routers import agents  # noqa: E402
+
+    app.include_router(agents.router)
+    AGENTS_ERROR = None
+except ImportError as e:  # pragma: no cover - depends on the install
+    AGENTS_ERROR = str(e)
+    log.warning("Investigation agents disabled: %s", e)
 
 
 @app.middleware("http")
@@ -68,8 +80,14 @@ async def health():
         "providers": {
             "sarvam": {"configured": bool(client.cfg.api_key), "mock": client.cfg.mock,
                        "sttModel": client.cfg.stt_model, **_sarvam_health["value"]},
-            "claude": {"configured": bool(os.environ.get("ANTHROPIC_API_KEY"))},
+            "llm": {"provider": os.environ.get("LLM_PROVIDER", "groq"), "model": os.environ.get("LLM_MODEL", "qwen/qwen3.8-27b"),
+                    "configured": bool(os.environ.get("LLM_API_KEY") or os.environ.get("GROQ_API_KEY"))},
         },
         "models": {"localWhisper": {"installed": local_whisper.available(), "loaded": local_whisper.loaded()},
-                   "ocr": {"installed": ocr.available(), "loaded": ocr.loaded(), "engine": "rapidocr"}},
+                   "ocr": {"installed": ocr_english.available(), "loaded": ocr_english.loaded(), "engine": "rapidocr"},
+                   "ocrLocalLanguage": {"google": ocr_indic.google_available(), "sarvam": ocr_indic.sarvam_available()},
+                   "spacy": ner.spacy_available(),
+                   "embeddings": {"model": os.environ.get("EMBEDDING_MODEL", "BAAI/bge-m3"), "loaded": embedder.model is not None},
+                   "system1": {"model": system1.model_name, "loaded": system1.loaded, "hosted": bool(os.environ.get("HF_TOKEN"))}},
+        "agents": {"enabled": AGENTS_ERROR is None, **({"error": AGENTS_ERROR} if AGENTS_ERROR else {})},
     }

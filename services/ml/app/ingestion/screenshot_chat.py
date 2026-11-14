@@ -112,3 +112,38 @@ def _dt(iso: str):
     from datetime import datetime
 
     return datetime.fromisoformat(iso)
+
+
+def structure_ocr(ocr: dict[str, Any], reference_date: str | None = None, use_llm: bool = False) -> dict[str, Any]:
+    """Chat view used by /parse/screenshot-chat: {header, messages[], isChat, warnings}.
+
+    Geometry heuristics first. With `use_llm`, an LLM may only re-label sender/time per bubble; the
+    OCR text is always kept as `rawText`, and unreadable text is never invented.
+    """
+    chat = parse_screenshot(ocr, reference_date)
+    messages = [{"messageIdx": i, "sender": b["sender"], "side": b["side"], "text": b["text"], "rawText": b["text"],
+                 "time": b["timeOfDay"], "ts": b["ts"], "bbox": b["bbox"], "confidence": b["conf"]}
+                for i, b in enumerate(chat["bubbles"])]
+    header = {"contact": chat["contact"]}
+    warnings: list[str] = []
+    if use_llm and messages:
+        try:
+            from ..llm.client import chat_json
+
+            shaped = chat_json(
+                "Parse OCR bubbles from a chat screenshot. Return JSON {header:{contact}, messages:[{bubbleIdx,sender,time}]}. "
+                "Never invent unreadable text; set uncertain fields null.",
+                {"contact": chat["contact"], "bubbles": [{"bubbleIdx": m["messageIdx"], "text": m["rawText"], "side": m["side"]} for m in messages]},
+            )
+            if shaped:
+                header = {**header, **{k: v for k, v in (shaped.get("header") or {}).items() if v}}
+                by_idx = {int(p["bubbleIdx"]): p for p in shaped.get("messages", []) if isinstance(p, dict) and "bubbleIdx" in p}
+                for m in messages:
+                    p = by_idx.get(m["messageIdx"], {})
+                    m["sender"] = p.get("sender") or m["sender"]
+                    m["time"] = p.get("time") or m["time"]
+            else:
+                warnings.append("Screenshot chat LLM structuring unavailable; heuristic result returned.")
+        except Exception as exc:  # noqa: BLE001
+            warnings.append(f"Screenshot chat LLM structuring failed: {exc}")
+    return {"header": header, "messages": messages, "isChat": chat["isChat"], "warnings": warnings}

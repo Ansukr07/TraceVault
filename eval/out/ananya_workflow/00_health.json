@@ -1,0 +1,49 @@
+{
+  "status": "ok",
+  "tools": {
+    "ffmpeg": false,
+    "tesseract": false
+  },
+  "providers": {
+    "sarvam": {
+      "configured": true,
+      "mock": false,
+      "sttModel": "saaras:v4",
+      "reachable": true,
+      "keyValid": true
+    },
+    "llm": {
+      "provider": "groq",
+      "model": "qwen/qwen3.8-27b",
+      "configured": true
+    }
+  },
+  "models": {
+    "localWhisper": {
+      "installed": false,
+      "loaded": false
+    },
+    "ocr": {
+      "installed": true,
+      "loaded": true,
+      "engine": "rapidocr"
+    },
+    "ocrLocalLanguage": {
+      "google": false,
+      "sarvam": true
+    },
+    "spacy": false,
+    "embeddings": {
+      "model": "BAAI/bge-m3",
+      "loaded": true
+    },
+    "system1": {
+      "model": "convaiinnovations/laya",
+      "loaded": true,
+      "hosted": true
+    }
+  },
+  "agents": {
+    "enabled": true
+  }
+}

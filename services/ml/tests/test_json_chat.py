@@ -1,7 +1,7 @@
 import json
 
-from app.parsers import extract as ex
-from app.parsers.json_chat import parse_json_chat
+from app.ingestion import extract as ex
+from app.ingestion.chat_exports import parse_json_chat
 
 
 def test_telegram_export():

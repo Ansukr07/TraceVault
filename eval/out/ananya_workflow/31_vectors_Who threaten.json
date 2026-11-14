@@ -1,0 +1,23 @@
+{
+  "caseId": "ananya-demo",
+  "results": [
+    {
+      "chunkId": "E11:2",
+      "textEn": "And my blog, and he used new numbers and an Instagram account. On 18th September, he threatened to send private photos to my office and my parents.",
+      "sourceText": "And my blog, and he used new numbers and an Instagram account. On 18th September, he threatened to send private photos to my office and my parents.",
+      "distance": 0.40354347229003906
+    },
+    {
+      "chunkId": "E5:7",
+      "textEn": "Go ahead and report it. I will end your career.",
+      "sourceText": "Report karke dekh. Teri career khatam kar dunga",
+      "distance": 0.4977729320526123
+    },
+    {
+      "chunkId": "E1:17",
+      "textEn": "Report it and see. I will end your career.",
+      "sourceText": "Report karke dekh. Teri career khatam kar dunga",
+      "distance": 0.5076380968093872
+    }
+  ]
+}

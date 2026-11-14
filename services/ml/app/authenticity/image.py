@@ -12,7 +12,7 @@ from typing import Any
 import numpy as np
 from PIL import Image
 
-from ..parsers.metadata import image_metadata
+from ..ingestion.metadata import image_metadata
 
 DISCLAIMER = "Indicators only. This is not a forensic conclusion and does not prove an image is genuine or altered."
 BLOCK = 16

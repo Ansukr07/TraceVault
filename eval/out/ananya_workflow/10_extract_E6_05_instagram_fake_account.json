@@ -1,0 +1,451 @@
+{
+  "artifactType": "ocr",
+  "artifact": {
+    "width": 1080,
+    "height": 2340,
+    "inverted": false,
+    "lines": [
+      {
+        "text": "9:12",
+        "bbox": [
+          39,
+          16,
+          94,
+          49
+        ],
+        "conf": 0.752
+      },
+      {
+        "text": "55%",
+        "bbox": [
+          981,
+          17,
+          1039,
+          45
+        ],
+        "conf": 0.749
+      },
+      {
+        "text": "5G",
+        "bbox": [
+          867,
+          18,
+          907,
+          44
+        ],
+        "conf": 0.625
+      },
+      {
+        "text": "anu.exposed : 21 Sep, 9:05 pm",
+        "bbox": [
+          118,
+          162,
+          502,
+          191
+        ],
+        "conf": 0.886
+      },
+      {
+        "text": "Ananya Rao (Nimbus Labs) is NOT",
+        "bbox": [
+          44,
+          329,
+          920,
+          378
+        ],
+        "conf": 0.883
+      },
+      {
+        "text": "who you think she is. Full story",
+        "bbox": [
+          41,
+          383,
+          840,
+          454
+        ],
+        "conf": 0.857
+      },
+      {
+        "text": "coming. Ask me for the pics 0o",
+        "bbox": [
+          43,
+          453,
+          835,
+          511
+        ],
+        "conf": 0.898
+      },
+      {
+        "text": "O 412 views",
+        "bbox": [
+          50,
+          1051,
+          202,
+          1079
+        ],
+        "conf": 0.763
+      },
+      {
+        "text": "Replies & comments",
+        "bbox": [
+          33,
+          1148,
+          274,
+          1174
+        ],
+        "conf": 0.892
+      },
+      {
+        "text": "priyam.r_ wait is this the Nimbus designer??",
+        "bbox": [
+          31,
+          1201,
+          587,
+          1233
+        ],
+        "conf": 0.897
+      },
+      {
+        "text": "blr_techgossip dm me the pics pls",
+        "bbox": [
+          32,
+          1264,
+          467,
+          1293
+        ],
+        "conf": 0.867
+      },
+      {
+        "text": "anu.exposed Rest goes live tomorrow, watch this space",
+        "bbox": [
+          31,
+          1325,
+          727,
+          1354
+        ],
+        "conf": 0.929
+      }
+    ],
+    "screenshotChat": {
+      "contact": "anu.exposed : 21 Sep, 9:05 pm",
+      "bubbles": [
+        {
+          "text": "Ananya Rao (Nimbus Labs) is NOT\nwho you think she is. Full story",
+          "bbox": [
+            41,
+            329,
+            920,
+            454
+          ],
+          "conf": 0.857,
+          "side": "left",
+          "sender": "anu.exposed : 21 Sep, 9:05 pm",
+          "timeOfDay": null,
+          "date": "2024-09-21",
+          "ts": null
+        },
+        {
+          "text": "coming. Ask me for the pics 0o",
+          "bbox": [
+            43,
+            453,
+            835,
+            511
+          ],
+          "conf": 0.898,
+          "side": "left",
+          "sender": "anu.exposed : 21 Sep, 9:05 pm",
+          "timeOfDay": null,
+          "date": "2024-09-21",
+          "ts": null
+        },
+        {
+          "text": "O 412 views",
+          "bbox": [
+            50,
+            1051,
+            202,
+            1079
+          ],
+          "conf": 0.763,
+          "side": "left",
+          "sender": "anu.exposed : 21 Sep, 9:05 pm",
+          "timeOfDay": null,
+          "date": "2024-09-21",
+          "ts": null
+        },
+        {
+          "text": "Replies & comments",
+          "bbox": [
+            33,
+            1148,
+            274,
+            1174
+          ],
+          "conf": 0.892,
+          "side": "left",
+          "sender": "anu.exposed : 21 Sep, 9:05 pm",
+          "timeOfDay": null,
+          "date": "2024-09-21",
+          "ts": null
+        },
+        {
+          "text": "priyam.r_ wait is this the Nimbus designer??",
+          "bbox": [
+            31,
+            1201,
+            587,
+            1233
+          ],
+          "conf": 0.897,
+          "side": "left",
+          "sender": "anu.exposed : 21 Sep, 9:05 pm",
+          "timeOfDay": null,
+          "date": "2024-09-21",
+          "ts": null
+        },
+        {
+          "text": "blr_techgossip dm me the pics pls",
+          "bbox": [
+            32,
+            1264,
+            467,
+            1293
+          ],
+          "conf": 0.867,
+          "side": "left",
+          "sender": "anu.exposed : 21 Sep, 9:05 pm",
+          "timeOfDay": null,
+          "date": "2024-09-21",
+          "ts": null
+        },
+        {
+          "text": "anu.exposed Rest goes live tomorrow, watch this space",
+          "bbox": [
+            31,
+            1325,
+            727,
+            1354
+          ],
+          "conf": 0.929,
+          "side": "left",
+          "sender": "anu.exposed : 21 Sep, 9:05 pm",
+          "timeOfDay": null,
+          "date": "2024-09-21",
+          "ts": null
+        }
+      ],
+      "isChat": true
+    },
+    "ocrProvider": "rapidocr"
+  },
+  "chunks": [
+    {
+      "idx": 0,
+      "text": "Ananya Rao (Nimbus Labs) is NOT\nwho you think she is. Full story",
+      "unit": "bubble",
+      "sender": "anu.exposed : 21 Sep, 9:05 pm",
+      "refTs": "2024-09-21T21:12:09",
+      "conf": 0.857,
+      "lowConfidence": false,
+      "timeOfDay": null,
+      "locator": {
+        "bbox": [
+          41,
+          329,
+          920,
+          454
+        ],
+        "side": "left"
+      },
+      "refTsSource": "exif",
+      "lang": "en-IN",
+      "langConfidence": 0.83,
+      "textEn": "Ananya Rao (Nimbus Labs) is NOT\nwho you think she is. Full story"
+    },
+    {
+      "idx": 1,
+      "text": "coming. Ask me for the pics 0o",
+      "unit": "bubble",
+      "sender": "anu.exposed : 21 Sep, 9:05 pm",
+      "refTs": "2024-09-21T21:12:09",
+      "conf": 0.898,
+      "lowConfidence": false,
+      "timeOfDay": null,
+      "locator": {
+        "bbox": [
+          43,
+          453,
+          835,
+          511
+        ],
+        "side": "left"
+      },
+      "refTsSource": "exif",
+      "lang": "hi-Latn",
+      "langConfidence": 0.79,
+      "textEn": "coming. Ask me for the pics 0o",
+      "translation": {
+        "provider": "sarvam",
+        "model": "mayura:v1",
+        "redacted": false
+      }
+    },
+    {
+      "idx": 2,
+      "text": "O 412 views",
+      "unit": "bubble",
+      "sender": "anu.exposed : 21 Sep, 9:05 pm",
+      "refTs": "2024-09-21T21:12:09",
+      "conf": 0.763,
+      "lowConfidence": false,
+      "timeOfDay": null,
+      "locator": {
+        "bbox": [
+          50,
+          1051,
+          202,
+          1079
+        ],
+        "side": "left"
+      },
+      "refTsSource": "exif",
+      "lang": "en-IN",
+      "langConfidence": 0.72,
+      "textEn": "O 412 views"
+    },
+    {
+      "idx": 3,
+      "text": "Replies & comments",
+      "unit": "bubble",
+      "sender": "anu.exposed : 21 Sep, 9:05 pm",
+      "refTs": "2024-09-21T21:12:09",
+      "conf": 0.892,
+      "lowConfidence": false,
+      "timeOfDay": null,
+      "locator": {
+        "bbox": [
+          33,
+          1148,
+          274,
+          1174
+        ],
+        "side": "left"
+      },
+      "refTsSource": "exif",
+      "lang": "en-IN",
+      "langConfidence": 0.72,
+      "textEn": "Replies & comments"
+    },
+    {
+      "idx": 4,
+      "text": "priyam.r_ wait is this the Nimbus designer??",
+      "unit": "bubble",
+      "sender": "anu.exposed : 21 Sep, 9:05 pm",
+      "refTs": "2024-09-21T21:12:09",
+      "conf": 0.897,
+      "lowConfidence": false,
+      "timeOfDay": null,
+      "locator": {
+        "bbox": [
+          31,
+          1201,
+          587,
+          1233
+        ],
+        "side": "left"
+      },
+      "refTsSource": "exif",
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "priyam.r_ wait is this the Nimbus designer??"
+    },
+    {
+      "idx": 5,
+      "text": "blr_techgossip dm me the pics pls",
+      "unit": "bubble",
+      "sender": "anu.exposed : 21 Sep, 9:05 pm",
+      "refTs": "2024-09-21T21:12:09",
+      "conf": 0.867,
+      "lowConfidence": false,
+      "timeOfDay": null,
+      "locator": {
+        "bbox": [
+          32,
+          1264,
+          467,
+          1293
+        ],
+        "side": "left"
+      },
+      "refTsSource": "exif",
+      "lang": "hi-Latn",
+      "langConfidence": 0.79,
+      "textEn": "blr_techgossip dm me the pics pls",
+      "translation": {
+        "provider": "sarvam",
+        "model": "mayura:v1",
+        "redacted": false
+      }
+    },
+    {
+      "idx": 6,
+      "text": "anu.exposed Rest goes live tomorrow, watch this space",
+      "unit": "bubble",
+      "sender": "anu.exposed : 21 Sep, 9:05 pm",
+      "refTs": "2024-09-21T21:12:09",
+      "conf": 0.929,
+      "lowConfidence": false,
+      "timeOfDay": null,
+      "locator": {
+        "bbox": [
+          31,
+          1325,
+          727,
+          1354
+        ],
+        "side": "left"
+      },
+      "refTsSource": "exif",
+      "lang": "en-IN",
+      "langConfidence": 0.79,
+      "textEn": "anu.exposed Rest goes live tomorrow, watch this space"
+    }
+  ],
+  "metadata": {
+    "width": 1080,
+    "height": 2340,
+    "format": "PNG",
+    "captureTime": "2024-09-21T21:12:09",
+    "modifyTime": "2024-09-21T21:12:09",
+    "ocrProvider": "rapidocr"
+  },
+  "flags": [],
+  "hashes": {
+    "phash": "a080575d6d2d2f6d",
+    "dhash": "26a8ffbf80180000"
+  },
+  "children": [],
+  "usage": [
+    {
+      "provider": "sarvam",
+      "endpoint": "/translate",
+      "status": 200,
+      "latencyMs": 659,
+      "model": "mayura:v1",
+      "chars": 30
+    },
+    {
+      "provider": "sarvam",
+      "endpoint": "/translate",
+      "status": 200,
+      "latencyMs": 793,
+      "model": "mayura:v1",
+      "chars": 33
+    }
+  ],
+  "generator": {
+    "name": "extract_image",
+    "version": 1
+  }
+}

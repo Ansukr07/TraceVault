@@ -1,0 +1,72 @@
+{
+  "artifactType": "transcript",
+  "artifact": {
+    "lang": "hi-IN",
+    "provider": "sarvam",
+    "model": "saaras:v4",
+    "durationMs": 5802,
+    "segments": [
+      {
+        "startMs": 30,
+        "endMs": 5802,
+        "text": "मैंने 25 सितंबर को 25,000 रुपये भेजे क्योंकि मैं बहुत डरी हुई थी। अब वह 30,000 और मांग रहा है।",
+        "lang": "hi-IN",
+        "langConfidence": 1.0,
+        "textEn": "I sent ₹25000 on September 25 because I was very scared. Now he is asking for ₹30000 more."
+      }
+    ],
+    "fallback": null,
+    "diarization": {
+      "requested": false,
+      "applied": false,
+      "numSpeakers": null
+    }
+  },
+  "chunks": [
+    {
+      "idx": 0,
+      "text": "मैंने 25 सितंबर को 25,000 रुपये भेजे क्योंकि मैं बहुत डरी हुई थी। अब वह 30,000 और मांग रहा है।",
+      "textEn": "I sent ₹25000 on September 25 because I was very scared. Now he is asking for ₹30000 more.",
+      "lang": "hi-IN",
+      "langConfidence": 1.0,
+      "unit": "segment",
+      "speaker": null,
+      "refTs": null,
+      "failed": false,
+      "locator": {
+        "startMs": 30,
+        "endMs": 5802
+      },
+      "refTsSource": "none"
+    }
+  ],
+  "metadata": {
+    "durationMs": 5802,
+    "lang": "hi-IN",
+    "provider": "sarvam"
+  },
+  "flags": [],
+  "children": [],
+  "usage": [
+    {
+      "provider": "sarvam",
+      "endpoint": "/speech-to-text",
+      "status": 200,
+      "latencyMs": 591,
+      "model": "saaras:v4",
+      "audioSeconds": 5.77
+    },
+    {
+      "provider": "sarvam",
+      "endpoint": "/speech-to-text",
+      "status": 200,
+      "latencyMs": 687,
+      "model": "saaras:v4",
+      "audioSeconds": 5.77
+    }
+  ],
+  "generator": {
+    "name": "extract_audio",
+    "version": 1
+  }
+}

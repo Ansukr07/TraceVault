@@ -1,0 +1,17 @@
+{
+  "labels": [],
+  "scores": {
+    "harassment": 0.6104,
+    "financial_fraud": 0.4077,
+    "scams": 0.4577,
+    "upi_bank_fraud": 0.2184
+  },
+  "primary": "other",
+  "confidence": 0.6104,
+  "needsOwnerReview": true,
+  "provider": "laya",
+  "warnings": [
+    "Hugging Face Laya inference failed (HTTP 402: no Inference Provider credits); used local Laya.",
+    "Laya confidence is uncalibrated; fallback to other and Owner review is enabled."
+  ]
+}

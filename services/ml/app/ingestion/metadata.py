@@ -109,3 +109,38 @@ def image_hashes(data: bytes) -> dict[str, str]:
 
     img = Image.open(io.BytesIO(data)).convert("RGB")
     return {"phash": str(imagehash.phash(img)), "dhash": str(imagehash.dhash(img))}
+
+
+def extract_metadata(data: bytes, filename: str, mime: str | None = None, uploaded_at: str | None = None,
+                     file_times: dict[str, str] | None = None) -> dict[str, Any]:
+    """Format-agnostic metadata used by /metadata (spec I7): size, MIME, upload time, EXIF/GPS, PDF info, EML headers, edit flags."""
+    from datetime import timezone
+
+    name, kind = filename.lower(), (mime or "").lower()
+    result: dict[str, Any] = {"filename": filename, "mime": mime, "size": len(data),
+                              "uploadTime": uploaded_at or datetime.now(timezone.utc).isoformat(),
+                              "fileTimes": file_times or {}, "flags": [], "warnings": []}
+    if kind.startswith("image/") or name.endswith((".jpg", ".jpeg", ".png", ".heic", ".webp", ".tif", ".tiff")):
+        try:
+            meta, flags = image_metadata(data)
+            result["image"], result["flags"] = meta, result["flags"] + flags
+        except Exception as exc:  # noqa: BLE001
+            result["warnings"].append(f"Image metadata unavailable: {exc}")
+    if kind == "application/pdf" or name.endswith(".pdf"):
+        try:
+            import pymupdf
+
+            meta, flags = pdf_metadata(pymupdf.open(stream=data, filetype="pdf"))
+            result["pdf"], result["flags"] = meta, result["flags"] + flags
+        except Exception as exc:  # noqa: BLE001
+            result["warnings"].append(f"PDF metadata unavailable: {exc}")
+    if kind == "message/rfc822" or name.endswith(".eml"):
+        try:
+            from email import policy
+            from email.parser import BytesParser
+
+            message = BytesParser(policy=policy.default).parsebytes(data)
+            result["email"] = {k.lower(): str(message.get(k)) for k in ("From", "To", "Date", "Subject", "Message-ID") if message.get(k)}
+        except Exception as exc:  # noqa: BLE001
+            result["warnings"].append(f"Email headers unavailable: {exc}")
+    return result

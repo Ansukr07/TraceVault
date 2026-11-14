@@ -1,0 +1,182 @@
+[
+  {
+    "stage": "whatsapp export",
+    "ok": true,
+    "detail": "23 messages, participants ['Ananya', 'Karthik Menon'] (2.6s)"
+  },
+  {
+    "stage": "OCR 01_whatsapp_persistent_contact.png",
+    "ok": true,
+    "detail": "13 chunks via rapidocr, chat=True, langs=['en-IN', 'hi-Latn'], translated=1, flags=[], 4.2s"
+  },
+  {
+    "stage": "OCR 02_instagram_dm_after_block.png",
+    "ok": true,
+    "detail": "5 chunks via rapidocr, chat=True, langs=['en-IN', 'hi-Latn'], translated=1, flags=[], 3.4s"
+  },
+  {
+    "stage": "OCR 03_sms_surveillance.png",
+    "ok": true,
+    "detail": "5 chunks via rapidocr, chat=True, langs=['en-IN'], translated=0, flags=[], 1.7s"
+  },
+  {
+    "stage": "OCR 04_whatsapp_threats_second_sim.png",
+    "ok": true,
+    "detail": "8 chunks via rapidocr, chat=True, langs=['en-IN', 'hi-Latn'], translated=1, flags=[], 4.0s"
+  },
+  {
+    "stage": "OCR 05_instagram_fake_account.png",
+    "ok": true,
+    "detail": "7 chunks via rapidocr, chat=True, langs=['en-IN', 'hi-Latn'], translated=0, flags=[], 3.0s"
+  },
+  {
+    "stage": "OCR 06_whatsapp_demand_EDITED.png",
+    "ok": true,
+    "detail": "5 chunks via rapidocr, chat=True, langs=['en-IN', 'hi-Latn'], translated=2, flags=['EDITED_FILE', 'METADATA_MISMATCH'], 3.7s"
+  },
+  {
+    "stage": "OCR 07_telegram_second_demand.png",
+    "ok": true,
+    "detail": "7 chunks via rapidocr, chat=True, langs=['en-IN', 'hi-Latn'], translated=1, flags=[], 3.4s"
+  },
+  {
+    "stage": "EDITED_FILE flag on 06",
+    "ok": true,
+    "detail": "['EDITED_FILE', 'METADATA_MISMATCH']"
+  },
+  {
+    "stage": "local-language OCR (Kannada)",
+    "ok": true,
+    "detail": "1 Kannada chunks; sample: ನಿನ್ನ ಅಪ್ಪ-ಅಮ್ಮನಿಗೆ ಎಲ್ಲಾ ಗೊತ್ತಾಗುತ್ತೆ, ನೋಡ್ತಿರು → Your parents will know, you see"
+  },
+  {
+    "stage": "PDF statement",
+    "ok": true,
+    "detail": "7 units, ocrPages=[]"
+  },
+  {
+    "stage": "email",
+    "ok": true,
+    "detail": "6 chunks, sentAt=2024-09-28T22:41:00+05:30"
+  },
+  {
+    "stage": "STT en-IN",
+    "ok": true,
+    "detail": "provider=sarvam, lang=en-IN, 5 segments (2.9s TTS, 2.4s STT): 'My name is Ananya Rao. I work at Nimbus Labs in Bengaluru. Karthik Men' → EN 'My name is Ananya Rao. I work at Nimbus Labs in Bengaluru. Karthik Men'"
+  },
+  {
+    "stage": "STT hi-IN",
+    "ok": true,
+    "detail": "provider=sarvam, lang=hi-IN, 1 segments (1.1s TTS, 0.7s STT): 'मैंने 25 सितंबर को 25,000 रुपये भेजे क्योंकि मैं बहुत डरी हुई थी। अब व' → EN 'I sent ₹25000 on September 25 because I was very scared. Now he is ask'"
+  },
+  {
+    "stage": "NER identifiers",
+    "ok": true,
+    "detail": "52 mentions; ground-truth identifiers found 4/7: ['anon.truth.blr@proton.me', 'anu.exposed', 'karthik.menon@okicici', 'ktk.pay88@ybl']"
+  },
+  {
+    "stage": "time normalisation",
+    "ok": true,
+    "detail": "21 times"
+  },
+  {
+    "stage": "embeddings + Chroma",
+    "ok": true,
+    "detail": "indexed 92 chunks (45.1s); warnings=[]"
+  },
+  {
+    "stage": "System1 via /nlp/enrich",
+    "ok": true,
+    "detail": "provider=laya, scores={'harassment': 0.5144, 'financial_fraud': 0.4342, 'scams': 0.3733, 'upi_bank_fraud': 0.4288}, primary=other"
+  },
+  {
+    "stage": "vector search: Who threatened to send private photos to",
+    "ok": true,
+    "detail": "top E11:2 d=0.404: 'And my blog, and he used new numbers and an Instagram account. On 18th September'"
+  },
+  {
+    "stage": "vector search: How much money was paid and to which UPI",
+    "ok": true,
+    "detail": "top E11:3 d=0.440: 'On 22nd September, he demanded ₹15000.'"
+  },
+  {
+    "stage": "vector search: ಹಣ ಕಳುಹಿಸಿ",
+    "ok": true,
+    "detail": "top E1:22 d=0.286: 'Send the screenshot as proof of payment. By 10 AM'"
+  },
+  {
+    "stage": "System1 classify",
+    "ok": true,
+    "detail": "provider=laya (0.0s), top=[('harassment', 0.6104), ('scams', 0.4577)], labels=[], review=True"
+  },
+  {
+    "stage": "case model",
+    "ok": true,
+    "detail": "21 entities, 18 events, 21 duplicate groups (0.2s)"
+  },
+  {
+    "stage": "inconsistencies vs ground truth",
+    "ok": false,
+    "detail": "found ['AMOUNT_MISMATCH', 'COVERAGE_GAP', 'EDITED_FILE', 'METADATA_MISMATCH']; expected ['AMOUNT_MISMATCH', 'DATE_CONFLICT', 'EDITED_FILE']"
+  },
+  {
+    "stage": "agent financial_investigation",
+    "ok": true,
+    "detail": "loss ₹35000.0, matched 2/7 payment events, findings=[]"
+  },
+  {
+    "stage": "agent evidence_gap",
+    "ok": true,
+    "detail": "0 checklist rows for []"
+  },
+  {
+    "stage": "agent rag_investigation",
+    "ok": true,
+    "detail": "8 snippets, abstained=True"
+  },
+  {
+    "stage": "agent knowledge_graph",
+    "ok": true,
+    "detail": "51 nodes, 28 edges, citationsValid=True, central=[{'entityId': 'PERSON:ananya', 'eventDegree': 18}, {'entityId': 'PERSON:91 70190 55555 karthik', 'eventDegree': 5}]"
+  },
+  {
+    "stage": "agent investigation_replay",
+    "ok": true,
+    "detail": "14 timed items, first 2024-09-10T08:21:00"
+  },
+  {
+    "stage": "agent report_generation",
+    "ok": true,
+    "detail": "18 sections, 12 evidence rows"
+  },
+  {
+    "stage": "agent evidence_quality",
+    "ok": true,
+    "detail": "4 findings over 12 items, 5 related"
+  },
+  {
+    "stage": "System1 review of agents",
+    "ok": true,
+    "detail": "status=reviewed, flags=['GAP_CHECK_WITHOUT_LABELS']"
+  },
+  {
+    "stage": "RAG agent",
+    "ok": true,
+    "detail": "8 cited snippets, first E11:2: 'And my blog, and he used new numbers and an Instagram account. On 18th'"
+  },
+  {
+    "stage": "evidence-quality agent (06 EDITED)",
+    "ok": true,
+    "detail": "findings=[], related=3"
+  },
+  {
+    "stage": "orchestration plan",
+    "ok": true,
+    "detail": "selected ['evidence_quality', 'financial_investigation', 'knowledge_graph', 'evidence_gap', 'rag_investigation', 'investigation_replay', 'report_generation'] labels=[] (15.1s)"
+  },
+  {
+    "stage": "orchestration System1",
+    "ok": true,
+    "detail": "system1={'provider': 'laya', 'primary': 'other', 'labels': []}, review flags=['GAP_CHECK_WITHOUT_LABELS']"
+  }
+]

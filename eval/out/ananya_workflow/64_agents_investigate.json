@@ -1,0 +1,2400 @@
+{
+  "caseId": "ananya-demo",
+  "plan": {
+    "objective": "Investigate the harassment and extortion: who did what, when, and what payments were made?",
+    "plan": [
+      {
+        "step": 1,
+        "agent": "evidence_quality",
+        "purpose": "Review evidence readability, context, and metadata; retrieve related case evidence.",
+        "dependsOn": []
+      },
+      {
+        "step": 2,
+        "agent": "financial_investigation",
+        "purpose": "Reconcile payments against bank and UPI records.",
+        "dependsOn": []
+      },
+      {
+        "step": 3,
+        "agent": "knowledge_graph",
+        "purpose": "Connect people, accounts, evidence, events, and locations.",
+        "dependsOn": []
+      },
+      {
+        "step": 4,
+        "agent": "evidence_gap",
+        "purpose": "Evaluate the evidence checklist for the incident types.",
+        "dependsOn": []
+      },
+      {
+        "step": 5,
+        "agent": "rag_investigation",
+        "purpose": "Retrieve cited context relevant to an investigation question.",
+        "dependsOn": []
+      },
+      {
+        "step": 6,
+        "agent": "investigation_replay",
+        "purpose": "Build a cited chronological account of timed events.",
+        "dependsOn": []
+      },
+      {
+        "step": 7,
+        "agent": "report_generation",
+        "purpose": "Prepare a cited report draft and evidence index.",
+        "dependsOn": []
+      }
+    ],
+    "selectedAgents": [
+      "evidence_quality",
+      "financial_investigation",
+      "knowledge_graph",
+      "evidence_gap",
+      "rag_investigation",
+      "investigation_replay",
+      "report_generation"
+    ],
+    "evidenceKinds": [
+      "audio",
+      "chat_export",
+      "email",
+      "image",
+      "pdf",
+      "statement"
+    ],
+    "incidentLabels": [],
+    "mode": "read_only_case_snapshot"
+  },
+  "results": {
+    "evidence_quality": {
+      "caseId": "ananya-demo",
+      "status": "reviewed",
+      "reviewedEvidenceIds": [
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "E5",
+        "E6",
+        "E7",
+        "E8",
+        "E9",
+        "E10",
+        "E11",
+        "E12"
+      ],
+      "findings": [
+        {
+          "evidenceId": "E1",
+          "code": "TIMESTAMP_MISSING",
+          "priority": "low",
+          "observation": "No capture or creation time is present in the supplied evidence metadata.",
+          "suggestedNextStep": "Preserve the original file and note when and how it was obtained.",
+          "confidence": "high",
+          "citations": [
+            "E1",
+            "E1:0",
+            "E1:1",
+            "E1:2",
+            "E1:3",
+            "E1:4",
+            "E1:5",
+            "E1:6",
+            "E1:7",
+            "E1:8",
+            "E1:9",
+            "E1:10",
+            "E1:11",
+            "E1:12",
+            "E1:13",
+            "E1:14",
+            "E1:15",
+            "E1:16",
+            "E1:17",
+            "E1:18",
+            "E1:19",
+            "E1:20",
+            "E1:21",
+            "E1:22"
+          ]
+        },
+        {
+          "evidenceId": "E5",
+          "code": "LOW_OCR_CONFIDENCE",
+          "priority": "medium",
+          "observation": "OCR confidence is 0.52; extracted text may contain recognition errors.",
+          "suggestedNextStep": "Check the text against the original visual before relying on it.",
+          "confidence": "high",
+          "citations": [
+            "E5",
+            "E5:0",
+            "E5:1",
+            "E5:2",
+            "E5:3",
+            "E5:4",
+            "E5:5",
+            "E5:6",
+            "E5:7"
+          ]
+        },
+        {
+          "evidenceId": "E11",
+          "code": "TIMESTAMP_MISSING",
+          "priority": "low",
+          "observation": "No capture or creation time is present in the supplied evidence metadata.",
+          "suggestedNextStep": "Preserve the original file and note when and how it was obtained.",
+          "confidence": "high",
+          "citations": [
+            "E11",
+            "E11:0",
+            "E11:1",
+            "E11:2",
+            "E11:3",
+            "E11:4"
+          ]
+        },
+        {
+          "evidenceId": "E12",
+          "code": "TIMESTAMP_MISSING",
+          "priority": "low",
+          "observation": "No capture or creation time is present in the supplied evidence metadata.",
+          "suggestedNextStep": "Preserve the original file and note when and how it was obtained.",
+          "confidence": "high",
+          "citations": [
+            "E12",
+            "E12:0"
+          ]
+        }
+      ],
+      "relatedEvidence": [
+        {
+          "chunkId": "E11:0",
+          "text": "My name is Ananya Rao. I work at Nimbus Labs in Bengaluru. Karthik Menon is a former colleague. Since early September, he has been messaging and calling me repeatedly.",
+          "evidenceId": "E11",
+          "distance": 0.3973885774612427,
+          "reason": "semantically related within this case"
+        },
+        {
+          "chunkId": "E7:1",
+          "text": "Send 15000 to karthik.menon@okicici and I take it\ndown. Tonight.",
+          "evidenceId": "E7",
+          "distance": 0.3712824583053589,
+          "reason": "semantically related within this case"
+        },
+        {
+          "chunkId": "E2:0",
+          "text": "Hi Ananya! Saw the Nimbus launch post. Proud of you",
+          "evidenceId": "E2",
+          "distance": 0.366733193397522,
+          "reason": "semantically related within this case"
+        },
+        {
+          "chunkId": "E1:7",
+          "text": "Karthik, I am not interested. Please stop messaging and calling me. This is making me very uncomfortable.",
+          "evidenceId": "E1",
+          "distance": 0.27343881130218506,
+          "reason": "semantically related within this case"
+        },
+        {
+          "chunkId": "E1:0",
+          "text": "Hi Ananya! Saw the Nimbus launch post. Proud of you 🎉",
+          "evidenceId": "E1",
+          "distance": 0.3494631052017212,
+          "reason": "semantically related within this case"
+        },
+        {
+          "chunkId": "E2:12",
+          "text": "I am blocking this number.",
+          "evidenceId": "E2",
+          "distance": 0.3925665020942688,
+          "reason": "semantically related within this case"
+        },
+        {
+          "chunkId": "E10:2",
+          "text": "You think moving PG will stop me? 14th Cross is not far from Indiranagar either.",
+          "evidenceId": "E10",
+          "distance": 0.4223083257675171,
+          "reason": "semantically related within this case"
+        },
+        {
+          "chunkId": "E1:9",
+          "text": "You changed your number? Lol. Found you anyway.",
+          "evidenceId": "E1",
+          "distance": 0.433490514755249,
+          "reason": "semantically related within this case"
+        },
+        {
+          "chunkId": "E1:13",
+          "text": "Delete? Haha. Pehle mujhse baat kar, phir sochunga",
+          "evidenceId": "E1",
+          "distance": 0.31522953510284424,
+          "reason": "semantically related within this case"
+        },
+        {
+          "chunkId": "E1:10",
+          "text": "I still have the photos from the Goa team trip. The private ones.",
+          "evidenceId": "E1",
+          "distance": 0.3338662385940552,
+          "reason": "semantically related within this case"
+        },
+        {
+          "chunkId": "E1:12",
+          "text": "Delete them. That was a private moment and you know it.",
+          "evidenceId": "E1",
+          "distance": 0.3626149296760559,
+          "reason": "semantically related within this case"
+        },
+        {
+          "chunkId": "E1:19",
+          "text": "Send 15000 to karthik.menon@okicici and I take it down. Tonight.",
+          "evidenceId": "E1",
+          "distance": 0.3712824583053589,
+          "reason": "semantically related within this case"
+        },
+        {
+          "chunkId": "E1:22",
+          "text": "Send the screenshot as proof of payment. By 10 AM",
+          "evidenceId": "E1",
+          "distance": 0.4120877981185913,
+          "reason": "semantically related within this case"
+        },
+        {
+          "chunkId": "E1:21",
+          "text": "Please don't do this. I will pay, just delete everything.",
+          "evidenceId": "E1",
+          "distance": 0.33561044931411743,
+          "reason": "semantically related within this case"
+        },
+        {
+          "chunkId": "E7:4",
+          "text": "Send the screenshot as proof of payment. By 10 AM",
+          "evidenceId": "E7",
+          "distance": 0.3906763195991516,
+          "reason": "semantically related within this case"
+        },
+        {
+          "chunkId": "E6:1",
+          "text": "coming. Ask me for the pics 0o",
+          "evidenceId": "E6",
+          "distance": 0.39681476354599,
+          "reason": "semantically related within this case"
+        },
+        {
+          "chunkId": "E12:0",
+          "text": "I sent ₹25000 on September 25 because I was very scared. Now he is asking for ₹30000 more.",
+          "evidenceId": "E12",
+          "distance": 0.3405136466026306,
+          "reason": "semantically related within this case"
+        },
+        {
+          "chunkId": "E11:3",
+          "text": "On 22nd September, he demanded ₹15000.",
+          "evidenceId": "E11",
+          "distance": 0.24419665336608887,
+          "reason": "semantically related within this case"
+        },
+        {
+          "chunkId": "E11:4",
+          "text": "To take down a fake story about me, I paid ₹25,000 on 25.",
+          "evidenceId": "E11",
+          "distance": 0.31156033277511597,
+          "reason": "semantically related within this case"
+        }
+      ],
+      "citations": [
+        "E1",
+        "E1:0",
+        "E1:1",
+        "E1:2",
+        "E1:3",
+        "E1:4",
+        "E1:5",
+        "E1:6",
+        "E1:7",
+        "E1:8",
+        "E1:9",
+        "E1:10",
+        "E1:11",
+        "E1:12",
+        "E1:13",
+        "E1:14",
+        "E1:15",
+        "E1:16",
+        "E1:17",
+        "E1:18",
+        "E1:19",
+        "E1:20",
+        "E1:21",
+        "E1:22",
+        "E2",
+        "E2:0",
+        "E2:1",
+        "E2:2",
+        "E2:3",
+        "E2:4",
+        "E2:5",
+        "E2:6",
+        "E2:7",
+        "E2:8",
+        "E2:9",
+        "E2:10",
+        "E2:11",
+        "E2:12",
+        "E3",
+        "E3:0",
+        "E3:1",
+        "E3:2",
+        "E3:3",
+        "E3:4",
+        "E4",
+        "E4:0",
+        "E4:1",
+        "E4:2",
+        "E4:3",
+        "E4:4",
+        "E5",
+        "E5:0",
+        "E5:1",
+        "E5:2",
+        "E5:3",
+        "E5:4",
+        "E5:5",
+        "E5:6",
+        "E5:7",
+        "E6",
+        "E6:0",
+        "E6:1",
+        "E6:2",
+        "E6:3",
+        "E6:4",
+        "E6:5",
+        "E6:6",
+        "E7",
+        "E7:0",
+        "E7:1",
+        "E7:2",
+        "E7:3",
+        "E7:4",
+        "E8",
+        "E8:0",
+        "E8:1",
+        "E8:2",
+        "E8:3",
+        "E8:4",
+        "E8:5",
+        "E8:6",
+        "E9",
+        "E9:0",
+        "E9:1",
+        "E9:2",
+        "E9:3",
+        "E9:4",
+        "E9:5",
+        "E9:6",
+        "E10",
+        "E10:0",
+        "E10:1",
+        "E10:2",
+        "E10:3",
+        "E10:4",
+        "E10:5",
+        "E11",
+        "E11:0",
+        "E11:1",
+        "E11:2",
+        "E11:3",
+        "E11:4",
+        "E12",
+        "E12:0"
+      ],
+      "method": "metadata_and_extraction_signals_plus_case_scoped_vector_retrieval",
+      "limitations": [
+        "Visual appearance and authenticity are not independently verified; review the original file."
+      ]
+    },
+    "financial_investigation": {
+      "ledger": [
+        {
+          "eventId": "c411d05e3e20ae2c",
+          "amount": 640,
+          "matched": false,
+          "citations": [
+            "E9:4"
+          ]
+        },
+        {
+          "eventId": "ac503c5067ff8801",
+          "amount": 15000,
+          "matched": false,
+          "citations": [
+            "E1:19",
+            "E7:1"
+          ]
+        },
+        {
+          "eventId": "9cbeba881b5f78b6",
+          "transaction": {
+            "amount": "25000.00",
+            "upiId": "karthik.menon@okicici",
+            "direction": "debit",
+            "text": "23/09/2024 UPI/DR/426612349911/karthik.menon@okicici/Payment Debit: 25,000.00 Credit: - Balance: 65,780.00",
+            "citations": [
+              "E9:5"
+            ]
+          },
+          "matched": true,
+          "citations": [
+            "E9:5",
+            "E9:5"
+          ]
+        },
+        {
+          "eventId": "d745b3bacdc5c775",
+          "amount": 30000,
+          "matched": false,
+          "citations": [
+            "E8:1"
+          ]
+        },
+        {
+          "eventId": "0f02b5abeba18c6d",
+          "amount": 25000,
+          "matched": false,
+          "citations": [
+            "E8:5"
+          ]
+        },
+        {
+          "eventId": "21f046e01178ec2f",
+          "transaction": {
+            "amount": "10000.00",
+            "upiId": "ktk.pay88@ybl",
+            "direction": "debit",
+            "text": "27/09/2024 UPI/DR/426912340077/ktk.pay88@ybl/Payment Debit: 10,000.00 Credit: - Balance: 55,780.00",
+            "citations": [
+              "E9:6"
+            ]
+          },
+          "matched": true,
+          "citations": [
+            "E9:6",
+            "E9:6"
+          ]
+        },
+        {
+          "eventId": "edb4c6ede62bf680",
+          "amount": 25000,
+          "matched": false,
+          "citations": [
+            "E11:4"
+          ]
+        }
+      ],
+      "findings": [],
+      "lossTotal": 35000.0,
+      "currency": "INR",
+      "muleCandidates": [],
+      "unmatchedPaymentEventIds": [
+        "c411d05e3e20ae2c",
+        "ac503c5067ff8801",
+        "d745b3bacdc5c775",
+        "0f02b5abeba18c6d",
+        "edb4c6ede62bf680"
+      ]
+    },
+    "knowledge_graph": {
+      "schemaVersion": "1",
+      "nodes": [
+        {
+          "id": "PERSON:91 70190 55555 karthik",
+          "type": "Person",
+          "label": "Karthik Menon",
+          "citations": [
+            "E11:0",
+            "E1:0",
+            "E1:1",
+            "E1:10",
+            "E1:11"
+          ]
+        },
+        {
+          "id": "PERSON:ananya",
+          "type": "Person",
+          "label": "Ananya Rao",
+          "citations": [
+            "E10:0",
+            "E10:1",
+            "E11:0",
+            "E1:0",
+            "E1:12"
+          ]
+        },
+        {
+          "id": "PERSON:anu exposed 21 sep 9 05 pm",
+          "type": "Person",
+          "label": "anu.exposed : 21 Sep, 9:05 pm",
+          "citations": [
+            "E6:0",
+            "E6:1",
+            "E6:2",
+            "E6:3",
+            "E6:4"
+          ]
+        },
+        {
+          "id": "PERSON:anonymous",
+          "type": "Person",
+          "label": "Anonymous",
+          "citations": [
+            "E10:0",
+            "E10:1",
+            "E10:2",
+            "E10:3",
+            "E10:4"
+          ]
+        },
+        {
+          "id": "PERSON:instagram active 2m ago",
+          "type": "Person",
+          "label": "Instagram : Active 2m ago",
+          "citations": [
+            "E11:2",
+            "E3:0",
+            "E3:1",
+            "E3:2",
+            "E3:4"
+          ]
+        },
+        {
+          "id": "PERSON:ktk",
+          "type": "Person",
+          "label": "ktk",
+          "citations": [
+            "E8:0",
+            "E8:1",
+            "E8:2",
+            "E8:3",
+            "E8:5"
+          ]
+        },
+        {
+          "id": "LOCATION:Indiranagar",
+          "type": "Account",
+          "label": "Indiranagar",
+          "citations": [
+            "E10:2",
+            "E3:2",
+            "E9:1"
+          ]
+        },
+        {
+          "id": "PERSON:9170190 55555",
+          "type": "Person",
+          "label": "+9170190 55555",
+          "citations": [
+            "E4:2",
+            "E4:3",
+            "E4:4"
+          ]
+        },
+        {
+          "id": "UPI_ID:karthik.menon@okicici",
+          "type": "Account",
+          "label": "karthik.menon@okicici",
+          "citations": [
+            "E1:19",
+            "E7:1",
+            "E9:5"
+          ]
+        },
+        {
+          "id": "EMAIL:anon.truth.blr@proton.me",
+          "type": "Account",
+          "label": "anon.truth.blr@proton.me",
+          "citations": [
+            "E10:0",
+            "E10:5"
+          ]
+        },
+        {
+          "id": "LOCATION:Bengaluru",
+          "type": "Account",
+          "label": "Bengaluru",
+          "citations": [
+            "E11:0",
+            "E9:1"
+          ]
+        },
+        {
+          "id": "LOCATION:Mysuru",
+          "type": "Account",
+          "label": "Mysuru",
+          "citations": [
+            "E1:11",
+            "E5:2"
+          ]
+        },
+        {
+          "id": "LOCATION:Nimbus",
+          "type": "Account",
+          "label": "Nimbus",
+          "citations": [
+            "E1:11",
+            "E5:2"
+          ]
+        },
+        {
+          "id": "ORG:Police",
+          "type": "Account",
+          "label": "police",
+          "citations": [
+            "E10:4",
+            "E4:4"
+          ]
+        },
+        {
+          "id": "ORG:WhatsApp",
+          "type": "Account",
+          "label": "whatsapp",
+          "citations": [
+            "E10:3",
+            "E3:0"
+          ]
+        },
+        {
+          "id": "UPI_ID:ktk.pay88@ybl",
+          "type": "Account",
+          "label": "ktk.pay88@ybl",
+          "citations": [
+            "E8:1",
+            "E9:6"
+          ]
+        },
+        {
+          "id": "BANK_ACCT:XXXXXXX9035",
+          "type": "Account",
+          "label": "XXXXXXX9035",
+          "citations": [
+            "E9:1"
+          ]
+        },
+        {
+          "id": "EMAIL:ananya.rao.blr@gmail.com",
+          "type": "Account",
+          "label": "ananya.rao.blr@gmail.com",
+          "citations": [
+            "E10:0"
+          ]
+        },
+        {
+          "id": "EMAIL:hr@nimbuslabs.example",
+          "type": "Account",
+          "label": "hr@nimbuslabs.example",
+          "citations": [
+            "E10:3"
+          ]
+        },
+        {
+          "id": "LOCATION:Nimbus Labs",
+          "type": "Account",
+          "label": "Nimbus Labs",
+          "citations": [
+            "E11:0"
+          ]
+        },
+        {
+          "id": "ORG:HDFC",
+          "type": "Account",
+          "label": "HDFC",
+          "citations": [
+            "E9:0"
+          ]
+        },
+        {
+          "id": "E1",
+          "type": "Evidence",
+          "label": "WhatsApp Chat with Karthik Menon.txt",
+          "citations": [
+            "E1"
+          ]
+        },
+        {
+          "id": "E2",
+          "type": "Evidence",
+          "label": "01_whatsapp_persistent_contact.png",
+          "citations": [
+            "E2"
+          ]
+        },
+        {
+          "id": "E3",
+          "type": "Evidence",
+          "label": "02_instagram_dm_after_block.png",
+          "citations": [
+            "E3"
+          ]
+        },
+        {
+          "id": "E4",
+          "type": "Evidence",
+          "label": "03_sms_surveillance.png",
+          "citations": [
+            "E4"
+          ]
+        },
+        {
+          "id": "E5",
+          "type": "Evidence",
+          "label": "04_whatsapp_threats_second_sim.png",
+          "citations": [
+            "E5"
+          ]
+        },
+        {
+          "id": "E6",
+          "type": "Evidence",
+          "label": "05_instagram_fake_account.png",
+          "citations": [
+            "E6"
+          ]
+        },
+        {
+          "id": "E7",
+          "type": "Evidence",
+          "label": "06_whatsapp_demand_EDITED.png",
+          "citations": [
+            "E7"
+          ]
+        },
+        {
+          "id": "E8",
+          "type": "Evidence",
+          "label": "07_telegram_second_demand.png",
+          "citations": [
+            "E8"
+          ]
+        },
+        {
+          "id": "E9",
+          "type": "Evidence",
+          "label": "hdfc_statement_sep2024.pdf",
+          "citations": [
+            "E9"
+          ]
+        },
+        {
+          "id": "E10",
+          "type": "Evidence",
+          "label": "email_from_anon.eml",
+          "citations": [
+            "E10"
+          ]
+        },
+        {
+          "id": "E11",
+          "type": "Evidence",
+          "label": "voice_statement_en.wav",
+          "citations": [
+            "E11"
+          ]
+        },
+        {
+          "id": "E12",
+          "type": "Evidence",
+          "label": "voice_note_hi.wav",
+          "citations": [
+            "E12"
+          ]
+        },
+        {
+          "id": "245a48d6957c755e",
+          "type": "Event",
+          "label": "Instagram : Active 2m ago named a place: Indiranagar",
+          "citations": [
+            "E3:2"
+          ]
+        },
+        {
+          "id": "c411d05e3e20ae2c",
+          "type": "Event",
+          "label": "Payment of ₹640",
+          "citations": [
+            "E9:4"
+          ]
+        },
+        {
+          "id": "d0f27beabae25741",
+          "type": "Event",
+          "label": "Karthik Menon named a place: Nimbus",
+          "citations": [
+            "E1:11",
+            "E5:2"
+          ]
+        },
+        {
+          "id": "ac503c5067ff8801",
+          "type": "Event",
+          "label": "Karthik Menon asked for ₹15,000 via karthik.menon@okicici",
+          "citations": [
+            "E1:19",
+            "E7:1"
+          ]
+        },
+        {
+          "id": "1c6594b10cff76cc",
+          "type": "Event",
+          "label": "Karthik Menon: extortion demand",
+          "citations": [
+            "E1:20",
+            "E7:2"
+          ]
+        },
+        {
+          "id": "a116ed13b68c7f7d",
+          "type": "Event",
+          "label": "Ananya Rao replied about payment",
+          "citations": [
+            "E1:21",
+            "E7:3"
+          ]
+        },
+        {
+          "id": "1abb34bbaea6b950",
+          "type": "Event",
+          "label": "Karthik Menon asked for money",
+          "citations": [
+            "E1:22",
+            "E7:4"
+          ]
+        },
+        {
+          "id": "9cbeba881b5f78b6",
+          "type": "Event",
+          "label": "Payment of ₹25,000 to karthik.menon@okicici",
+          "citations": [
+            "E9:5"
+          ]
+        },
+        {
+          "id": "d745b3bacdc5c775",
+          "type": "Event",
+          "label": "ktk asked for ₹30,000 via ktk.pay88@ybl",
+          "citations": [
+            "E8:1"
+          ]
+        },
+        {
+          "id": "0f02b5abeba18c6d",
+          "type": "Event",
+          "label": "ktk asked for ₹25,000",
+          "citations": [
+            "E8:5"
+          ]
+        },
+        {
+          "id": "21f046e01178ec2f",
+          "type": "Event",
+          "label": "Payment of ₹10,000 to ktk.pay88@ybl",
+          "citations": [
+            "E9:6"
+          ]
+        },
+        {
+          "id": "8497389f414ef90c",
+          "type": "Event",
+          "label": "Anonymous: extortion demand",
+          "citations": [
+            "E10:3"
+          ]
+        },
+        {
+          "id": "133957453d11737a",
+          "type": "Event",
+          "label": "Anonymous named a place: Indiranagar",
+          "citations": [
+            "E10:2"
+          ]
+        },
+        {
+          "id": "0e4b90e951392d67",
+          "type": "Event",
+          "label": "Complainant's account: Unknown: sexual harassment",
+          "citations": [
+            "E11:2"
+          ]
+        },
+        {
+          "id": "73b3c4009824236f",
+          "type": "Event",
+          "label": "Complainant's account: Unknown asked for money",
+          "citations": [
+            "E11:3"
+          ]
+        },
+        {
+          "id": "8a8f7b07e4ca9010",
+          "type": "Event",
+          "label": "Unknown asked for money",
+          "citations": [
+            "E12:0"
+          ]
+        },
+        {
+          "id": "edb4c6ede62bf680",
+          "type": "Event",
+          "label": "Complainant's account: Unknown asked for ₹25,000",
+          "citations": [
+            "E11:4"
+          ]
+        },
+        {
+          "id": "f00d6134edbec3cb",
+          "type": "Event",
+          "label": "Complainant's account: Unknown named a place: Nimbus Labs",
+          "citations": [
+            "E11:0"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": "PERSON:instagram active 2m ago",
+          "target": "245a48d6957c755e",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E3:2"
+          ]
+        },
+        {
+          "source": "PERSON:ananya",
+          "target": "245a48d6957c755e",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E3:2"
+          ]
+        },
+        {
+          "source": "PERSON:ananya",
+          "target": "c411d05e3e20ae2c",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E9:4"
+          ]
+        },
+        {
+          "source": "PERSON:91 70190 55555 karthik",
+          "target": "d0f27beabae25741",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E1:11",
+            "E5:2"
+          ]
+        },
+        {
+          "source": "PERSON:ananya",
+          "target": "d0f27beabae25741",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E1:11",
+            "E5:2"
+          ]
+        },
+        {
+          "source": "PERSON:91 70190 55555 karthik",
+          "target": "ac503c5067ff8801",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E1:19",
+            "E7:1"
+          ]
+        },
+        {
+          "source": "PERSON:ananya",
+          "target": "ac503c5067ff8801",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E1:19",
+            "E7:1"
+          ]
+        },
+        {
+          "source": "PERSON:91 70190 55555 karthik",
+          "target": "1c6594b10cff76cc",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E1:20",
+            "E7:2"
+          ]
+        },
+        {
+          "source": "PERSON:ananya",
+          "target": "1c6594b10cff76cc",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E1:20",
+            "E7:2"
+          ]
+        },
+        {
+          "source": "PERSON:ananya",
+          "target": "a116ed13b68c7f7d",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E1:21",
+            "E7:3"
+          ]
+        },
+        {
+          "source": "PERSON:91 70190 55555 karthik",
+          "target": "a116ed13b68c7f7d",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E1:21",
+            "E7:3"
+          ]
+        },
+        {
+          "source": "PERSON:91 70190 55555 karthik",
+          "target": "1abb34bbaea6b950",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E1:22",
+            "E7:4"
+          ]
+        },
+        {
+          "source": "PERSON:ananya",
+          "target": "1abb34bbaea6b950",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E1:22",
+            "E7:4"
+          ]
+        },
+        {
+          "source": "PERSON:ananya",
+          "target": "9cbeba881b5f78b6",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E9:5"
+          ]
+        },
+        {
+          "source": "PERSON:ktk",
+          "target": "d745b3bacdc5c775",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E8:1"
+          ]
+        },
+        {
+          "source": "PERSON:ananya",
+          "target": "d745b3bacdc5c775",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E8:1"
+          ]
+        },
+        {
+          "source": "PERSON:ktk",
+          "target": "0f02b5abeba18c6d",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E8:5"
+          ]
+        },
+        {
+          "source": "PERSON:ananya",
+          "target": "0f02b5abeba18c6d",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E8:5"
+          ]
+        },
+        {
+          "source": "PERSON:ananya",
+          "target": "21f046e01178ec2f",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E9:6"
+          ]
+        },
+        {
+          "source": "PERSON:anonymous",
+          "target": "8497389f414ef90c",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E10:3"
+          ]
+        },
+        {
+          "source": "PERSON:ananya",
+          "target": "8497389f414ef90c",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E10:3"
+          ]
+        },
+        {
+          "source": "PERSON:anonymous",
+          "target": "133957453d11737a",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E10:2"
+          ]
+        },
+        {
+          "source": "PERSON:ananya",
+          "target": "133957453d11737a",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E10:2"
+          ]
+        },
+        {
+          "source": "PERSON:ananya",
+          "target": "0e4b90e951392d67",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E11:2"
+          ]
+        },
+        {
+          "source": "PERSON:ananya",
+          "target": "73b3c4009824236f",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E11:3"
+          ]
+        },
+        {
+          "source": "PERSON:ananya",
+          "target": "8a8f7b07e4ca9010",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E12:0"
+          ]
+        },
+        {
+          "source": "PERSON:ananya",
+          "target": "edb4c6ede62bf680",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E11:4"
+          ]
+        },
+        {
+          "source": "PERSON:ananya",
+          "target": "f00d6134edbec3cb",
+          "type": "PARTICIPATES_IN",
+          "citations": [
+            "E11:0"
+          ]
+        }
+      ],
+      "unplacedEntityIds": [],
+      "unplacedEventIds": [],
+      "citationsValid": true,
+      "crossModalMatchCount": 0,
+      "samePersonCandidates": [
+        {
+          "entityIds": [
+            "PERSON:91 70190 55555 karthik",
+            "PERSON:ananya"
+          ],
+          "sharedChunkIds": [
+            "E11:0",
+            "E1:0",
+            "E1:2",
+            "E1:6",
+            "E1:7",
+            "E2:0",
+            "E2:10",
+            "E2:2",
+            "E2:9"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:91 70190 55555 karthik",
+            "UPI_ID:karthik.menon@okicici"
+          ],
+          "sharedChunkIds": [
+            "E1:19",
+            "E7:1"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:91 70190 55555 karthik",
+            "LOCATION:Bengaluru"
+          ],
+          "sharedChunkIds": [
+            "E11:0"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:91 70190 55555 karthik",
+            "LOCATION:Mysuru"
+          ],
+          "sharedChunkIds": [
+            "E1:11",
+            "E5:2"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:91 70190 55555 karthik",
+            "LOCATION:Nimbus"
+          ],
+          "sharedChunkIds": [
+            "E1:11",
+            "E5:2"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:91 70190 55555 karthik",
+            "LOCATION:Nimbus Labs"
+          ],
+          "sharedChunkIds": [
+            "E11:0"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:ananya",
+            "PERSON:anu exposed 21 sep 9 05 pm"
+          ],
+          "sharedChunkIds": [
+            "E6:0"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:ananya",
+            "PERSON:anonymous"
+          ],
+          "sharedChunkIds": [
+            "E10:0",
+            "E10:1"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:ananya",
+            "LOCATION:Indiranagar"
+          ],
+          "sharedChunkIds": [
+            "E9:1"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:ananya",
+            "EMAIL:anon.truth.blr@proton.me"
+          ],
+          "sharedChunkIds": [
+            "E10:0"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:ananya",
+            "LOCATION:Bengaluru"
+          ],
+          "sharedChunkIds": [
+            "E11:0",
+            "E9:1"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:ananya",
+            "BANK_ACCT:XXXXXXX9035"
+          ],
+          "sharedChunkIds": [
+            "E9:1"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:ananya",
+            "EMAIL:ananya.rao.blr@gmail.com"
+          ],
+          "sharedChunkIds": [
+            "E10:0"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:ananya",
+            "LOCATION:Nimbus Labs"
+          ],
+          "sharedChunkIds": [
+            "E11:0"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:anonymous",
+            "LOCATION:Indiranagar"
+          ],
+          "sharedChunkIds": [
+            "E10:2"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:anonymous",
+            "EMAIL:anon.truth.blr@proton.me"
+          ],
+          "sharedChunkIds": [
+            "E10:0",
+            "E10:5"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:anonymous",
+            "ORG:Police"
+          ],
+          "sharedChunkIds": [
+            "E10:4"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:anonymous",
+            "ORG:WhatsApp"
+          ],
+          "sharedChunkIds": [
+            "E10:3"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:anonymous",
+            "EMAIL:ananya.rao.blr@gmail.com"
+          ],
+          "sharedChunkIds": [
+            "E10:0"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:anonymous",
+            "EMAIL:hr@nimbuslabs.example"
+          ],
+          "sharedChunkIds": [
+            "E10:3"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:instagram active 2m ago",
+            "PERSON:ktk"
+          ],
+          "sharedChunkIds": [
+            "E8:2"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:instagram active 2m ago",
+            "LOCATION:Indiranagar"
+          ],
+          "sharedChunkIds": [
+            "E3:2"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:instagram active 2m ago",
+            "ORG:WhatsApp"
+          ],
+          "sharedChunkIds": [
+            "E3:0"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:ktk",
+            "UPI_ID:ktk.pay88@ybl"
+          ],
+          "sharedChunkIds": [
+            "E8:1"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "LOCATION:Indiranagar",
+            "LOCATION:Bengaluru"
+          ],
+          "sharedChunkIds": [
+            "E9:1"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "LOCATION:Indiranagar",
+            "BANK_ACCT:XXXXXXX9035"
+          ],
+          "sharedChunkIds": [
+            "E9:1"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "PERSON:9170190 55555",
+            "ORG:Police"
+          ],
+          "sharedChunkIds": [
+            "E4:4"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "EMAIL:anon.truth.blr@proton.me",
+            "EMAIL:ananya.rao.blr@gmail.com"
+          ],
+          "sharedChunkIds": [
+            "E10:0"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "LOCATION:Bengaluru",
+            "BANK_ACCT:XXXXXXX9035"
+          ],
+          "sharedChunkIds": [
+            "E9:1"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "LOCATION:Bengaluru",
+            "LOCATION:Nimbus Labs"
+          ],
+          "sharedChunkIds": [
+            "E11:0"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "LOCATION:Mysuru",
+            "LOCATION:Nimbus"
+          ],
+          "sharedChunkIds": [
+            "E1:11",
+            "E5:2"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        },
+        {
+          "entityIds": [
+            "ORG:WhatsApp",
+            "EMAIL:hr@nimbuslabs.example"
+          ],
+          "sharedChunkIds": [
+            "E10:3"
+          ],
+          "status": "candidate",
+          "confidence": 0.5
+        }
+      ],
+      "centralFigures": [
+        {
+          "entityId": "PERSON:ananya",
+          "eventDegree": 18
+        },
+        {
+          "entityId": "PERSON:91 70190 55555 karthik",
+          "eventDegree": 5
+        },
+        {
+          "entityId": "PERSON:anonymous",
+          "eventDegree": 2
+        },
+        {
+          "entityId": "PERSON:ktk",
+          "eventDegree": 2
+        },
+        {
+          "entityId": "PERSON:instagram active 2m ago",
+          "eventDegree": 1
+        },
+        {
+          "entityId": "PERSON:anu exposed 21 sep 9 05 pm",
+          "eventDegree": 0
+        },
+        {
+          "entityId": "LOCATION:Indiranagar",
+          "eventDegree": 0
+        },
+        {
+          "entityId": "PERSON:9170190 55555",
+          "eventDegree": 0
+        },
+        {
+          "entityId": "UPI_ID:karthik.menon@okicici",
+          "eventDegree": 0
+        },
+        {
+          "entityId": "EMAIL:anon.truth.blr@proton.me",
+          "eventDegree": 0
+        },
+        {
+          "entityId": "LOCATION:Bengaluru",
+          "eventDegree": 0
+        },
+        {
+          "entityId": "LOCATION:Mysuru",
+          "eventDegree": 0
+        },
+        {
+          "entityId": "LOCATION:Nimbus",
+          "eventDegree": 0
+        },
+        {
+          "entityId": "ORG:Police",
+          "eventDegree": 0
+        },
+        {
+          "entityId": "ORG:WhatsApp",
+          "eventDegree": 0
+        },
+        {
+          "entityId": "UPI_ID:ktk.pay88@ybl",
+          "eventDegree": 0
+        },
+        {
+          "entityId": "BANK_ACCT:XXXXXXX9035",
+          "eventDegree": 0
+        },
+        {
+          "entityId": "EMAIL:ananya.rao.blr@gmail.com",
+          "eventDegree": 0
+        },
+        {
+          "entityId": "EMAIL:hr@nimbuslabs.example",
+          "eventDegree": 0
+        },
+        {
+          "entityId": "LOCATION:Nimbus Labs",
+          "eventDegree": 0
+        },
+        {
+          "entityId": "ORG:HDFC",
+          "eventDegree": 0
+        }
+      ],
+      "firstContact": {
+        "id": "245a48d6957c755e",
+        "title": "Instagram : Active 2m ago named a place: Indiranagar",
+        "description": "I know you take the 8:20 bus from Indiranagar. Blue kurta today, nice",
+        "timestamp": "2024-09-10T08:21:00",
+        "category": "meeting",
+        "amount": null,
+        "entityIds": [
+          "PERSON:instagram active 2m ago",
+          "PERSON:ananya"
+        ],
+        "evidenceChunkIds": [
+          "E3:2"
+        ],
+        "severity": 0,
+        "confidence": 0.9
+      },
+      "communities": [],
+      "adjudicatedCandidateCount": 32
+    },
+    "evidence_gap": {
+      "gaps": [],
+      "evaluatedIncidentTypes": [],
+      "checklistComplete": true
+    },
+    "rag_investigation": {
+      "answer": null,
+      "abstained": true,
+      "citations": [],
+      "reason": "Question is required."
+    },
+    "investigation_replay": {
+      "caseId": "ananya-demo",
+      "items": [
+        {
+          "id": "245a48d6957c755e",
+          "timestamp": "2024-09-10T08:21:00",
+          "rangeEnd": null,
+          "title": "Instagram : Active 2m ago named a place: Indiranagar",
+          "description": "I know you take the 8:20 bus from Indiranagar. Blue kurta today, nice",
+          "actors": [
+            "PERSON:instagram active 2m ago",
+            "PERSON:ananya"
+          ],
+          "sourceIds": [
+            "E3:2"
+          ],
+          "modalities": [],
+          "supportingSources": [],
+          "contradictingSources": [],
+          "supportScore": null,
+          "contradictionScore": null,
+          "severity": 0,
+          "confidence": 0.9
+        },
+        {
+          "id": "c411d05e3e20ae2c",
+          "timestamp": "2024-09-12T00:00:00",
+          "rangeEnd": null,
+          "title": "Payment of ₹640",
+          "description": "12/09/2024 UPI/DR/425512340011/Swiggy/Food Debit: 640.00 Credit: - Balance: 90,780.00",
+          "actors": [
+            "PERSON:ananya"
+          ],
+          "sourceIds": [
+            "E9:4"
+          ],
+          "modalities": [],
+          "supportingSources": [],
+          "contradictingSources": [],
+          "supportScore": null,
+          "contradictionScore": null,
+          "severity": 1,
+          "confidence": 0.7
+        },
+        {
+          "id": "d0f27beabae25741",
+          "timestamp": "2024-09-18T21:32:00",
+          "rangeEnd": null,
+          "title": "Karthik Menon named a place: Nimbus",
+          "description": "Imagine if HR at Nimbus and your parents in Mysuru got them",
+          "actors": [
+            "PERSON:91 70190 55555 karthik",
+            "PERSON:ananya"
+          ],
+          "sourceIds": [
+            "E1:11",
+            "E5:2"
+          ],
+          "modalities": [],
+          "supportingSources": [],
+          "contradictingSources": [],
+          "supportScore": null,
+          "contradictionScore": null,
+          "severity": 0,
+          "confidence": 0.9
+        },
+        {
+          "id": "ac503c5067ff8801",
+          "timestamp": "2024-09-22T20:31:00",
+          "rangeEnd": null,
+          "title": "Karthik Menon asked for ₹15,000 via karthik.menon@okicici",
+          "description": "Send 15000 to karthik.menon@okicici and I take it down. Tonight.",
+          "actors": [
+            "PERSON:91 70190 55555 karthik",
+            "PERSON:ananya"
+          ],
+          "sourceIds": [
+            "E1:19",
+            "E7:1"
+          ],
+          "modalities": [],
+          "supportingSources": [],
+          "contradictingSources": [],
+          "supportScore": null,
+          "contradictionScore": null,
+          "severity": 1,
+          "confidence": 0.9
+        },
+        {
+          "id": "1c6594b10cff76cc",
+          "timestamp": "2024-09-22T20:32:00",
+          "rangeEnd": null,
+          "title": "Karthik Menon: extortion demand",
+          "description": "Otherwise, everything will leak tomorrow morning. Your choice.",
+          "actors": [
+            "PERSON:91 70190 55555 karthik",
+            "PERSON:ananya"
+          ],
+          "sourceIds": [
+            "E1:20",
+            "E7:2"
+          ],
+          "modalities": [],
+          "supportingSources": [],
+          "contradictingSources": [],
+          "supportScore": null,
+          "contradictionScore": null,
+          "severity": 2,
+          "confidence": 0.9
+        },
+        {
+          "id": "a116ed13b68c7f7d",
+          "timestamp": "2024-09-22T20:55:00",
+          "rangeEnd": null,
+          "title": "Ananya Rao replied about payment",
+          "description": "Please don't do this. I will pay, just delete everything.",
+          "actors": [
+            "PERSON:ananya",
+            "PERSON:91 70190 55555 karthik"
+          ],
+          "sourceIds": [
+            "E1:21",
+            "E7:3"
+          ],
+          "modalities": [],
+          "supportingSources": [],
+          "contradictingSources": [],
+          "supportScore": null,
+          "contradictionScore": null,
+          "severity": 1,
+          "confidence": 0.9
+        },
+        {
+          "id": "1abb34bbaea6b950",
+          "timestamp": "2024-09-22T20:56:00",
+          "rangeEnd": null,
+          "title": "Karthik Menon asked for money",
+          "description": "Send the screenshot as proof of payment. By 10 AM",
+          "actors": [
+            "PERSON:91 70190 55555 karthik",
+            "PERSON:ananya"
+          ],
+          "sourceIds": [
+            "E1:22",
+            "E7:4"
+          ],
+          "modalities": [],
+          "supportingSources": [],
+          "contradictingSources": [],
+          "supportScore": null,
+          "contradictionScore": null,
+          "severity": 1,
+          "confidence": 0.9
+        },
+        {
+          "id": "9cbeba881b5f78b6",
+          "timestamp": "2024-09-23T00:00:00",
+          "rangeEnd": null,
+          "title": "Payment of ₹25,000 to karthik.menon@okicici",
+          "description": "23/09/2024 UPI/DR/426612349911/karthik.menon@okicici/Payment Debit: 25,000.00 Credit: - Balance: 65,780.00",
+          "actors": [
+            "PERSON:ananya"
+          ],
+          "sourceIds": [
+            "E9:5"
+          ],
+          "modalities": [],
+          "supportingSources": [],
+          "contradictingSources": [],
+          "supportScore": null,
+          "contradictionScore": null,
+          "severity": 1,
+          "confidence": 0.7
+        },
+        {
+          "id": "d745b3bacdc5c775",
+          "timestamp": "2024-09-26T19:03:00",
+          "rangeEnd": null,
+          "title": "ktk asked for ₹30,000 via ktk.pay88@ybl",
+          "description": "Rent is due. Send 30000 to ktk.pay88@ybl",
+          "actors": [
+            "PERSON:ktk",
+            "PERSON:ananya"
+          ],
+          "sourceIds": [
+            "E8:1"
+          ],
+          "modalities": [],
+          "supportingSources": [],
+          "contradictingSources": [],
+          "supportScore": null,
+          "contradictionScore": null,
+          "severity": 1,
+          "confidence": 0.9
+        },
+        {
+          "id": "0f02b5abeba18c6d",
+          "timestamp": "2024-09-26T19:31:00",
+          "rangeEnd": null,
+          "title": "ktk asked for ₹25,000",
+          "description": "Rs 25,000? That was just the interest",
+          "actors": [
+            "PERSON:ktk",
+            "PERSON:ananya"
+          ],
+          "sourceIds": [
+            "E8:5"
+          ],
+          "modalities": [],
+          "supportingSources": [],
+          "contradictingSources": [],
+          "supportScore": null,
+          "contradictionScore": null,
+          "severity": 1,
+          "confidence": 0.9
+        },
+        {
+          "id": "21f046e01178ec2f",
+          "timestamp": "2024-09-27T00:00:00",
+          "rangeEnd": null,
+          "title": "Payment of ₹10,000 to ktk.pay88@ybl",
+          "description": "27/09/2024 UPI/DR/426912340077/ktk.pay88@ybl/Payment Debit: 10,000.00 Credit: - Balance: 55,780.00",
+          "actors": [
+            "PERSON:ananya"
+          ],
+          "sourceIds": [
+            "E9:6"
+          ],
+          "modalities": [],
+          "supportingSources": [],
+          "contradictingSources": [],
+          "supportScore": null,
+          "contradictionScore": null,
+          "severity": 1,
+          "confidence": 0.7
+        },
+        {
+          "id": "133957453d11737a",
+          "timestamp": "2024-09-28T22:41:00+05:30",
+          "rangeEnd": null,
+          "title": "Anonymous named a place: Indiranagar",
+          "description": "You think moving PG will stop me? 14th Cross is not far from Indiranagar either.",
+          "actors": [
+            "PERSON:anonymous",
+            "PERSON:ananya"
+          ],
+          "sourceIds": [
+            "E10:2"
+          ],
+          "modalities": [],
+          "supportingSources": [],
+          "contradictingSources": [],
+          "supportScore": null,
+          "contradictionScore": null,
+          "severity": 0,
+          "confidence": 0.9
+        },
+        {
+          "id": "8497389f414ef90c",
+          "timestamp": "2024-09-28T22:41:00+05:30",
+          "rangeEnd": null,
+          "title": "Anonymous: extortion demand",
+          "description": "Pay the 30k by Sunday. Otherwise the pics go to hr@nimbuslabs.example and your father's WhatsApp.",
+          "actors": [
+            "PERSON:anonymous",
+            "PERSON:ananya"
+          ],
+          "sourceIds": [
+            "E10:3"
+          ],
+          "modalities": [],
+          "supportingSources": [],
+          "contradictingSources": [],
+          "supportScore": null,
+          "contradictionScore": null,
+          "severity": 3,
+          "confidence": 0.9
+        },
+        {
+          "id": "0e4b90e951392d67",
+          "timestamp": "2026-09-18T00:00:00",
+          "rangeEnd": null,
+          "title": "Complainant's account: Unknown: sexual harassment",
+          "description": "And my blog, and he used new numbers and an Instagram account. On 18th September, he threatened to send private photos to my office and my parents.",
+          "actors": [
+            "PERSON:ananya"
+          ],
+          "sourceIds": [
+            "E11:2"
+          ],
+          "modalities": [],
+          "supportingSources": [],
+          "contradictingSources": [],
+          "supportScore": null,
+          "contradictionScore": null,
+          "severity": 2,
+          "confidence": 0.7
+        }
+      ],
+      "untimedEventIds": [
+        "73b3c4009824236f",
+        "8a8f7b07e4ca9010",
+        "edb4c6ede62bf680",
+        "f00d6134edbec3cb"
+      ]
+    },
+    "report_generation": {
+      "sections": [
+        {
+          "heading": "Instagram : Active 2m ago named a place: Indiranagar",
+          "sentences": [
+            {
+              "text": "I know you take the 8:20 bus from Indiranagar. Blue kurta today, nice",
+              "citations": [
+                "E3:2"
+              ],
+              "supported": false,
+              "supportScore": null,
+              "contradictionScore": null,
+              "flag": "support_not_validated"
+            }
+          ]
+        },
+        {
+          "heading": "Payment of ₹640",
+          "sentences": [
+            {
+              "text": "12/09/2024 UPI/DR/425512340011/Swiggy/Food Debit: 640.00 Credit: - Balance: 90,780.00",
+              "citations": [
+                "E9:4"
+              ],
+              "supported": false,
+              "supportScore": null,
+              "contradictionScore": null,
+              "flag": "support_not_validated"
+            }
+          ]
+        },
+        {
+          "heading": "Karthik Menon named a place: Nimbus",
+          "sentences": [
+            {
+              "text": "Imagine if HR at Nimbus and your parents in Mysuru got them",
+              "citations": [
+                "E1:11",
+                "E5:2"
+              ],
+              "supported": false,
+              "supportScore": null,
+              "contradictionScore": null,
+              "flag": "support_not_validated"
+            }
+          ]
+        },
+        {
+          "heading": "Karthik Menon asked for ₹15,000 via karthik.menon@okicici",
+          "sentences": [
+            {
+              "text": "Send 15000 to karthik.menon@okicici and I take it down. Tonight.",
+              "citations": [
+                "E1:19",
+                "E7:1"
+              ],
+              "supported": false,
+              "supportScore": null,
+              "contradictionScore": null,
+              "flag": "support_not_validated"
+            }
+          ]
+        },
+        {
+          "heading": "Karthik Menon: extortion demand",
+          "sentences": [
+            {
+              "text": "Otherwise, everything will leak tomorrow morning. Your choice.",
+              "citations": [
+                "E1:20",
+                "E7:2"
+              ],
+              "supported": false,
+              "supportScore": null,
+              "contradictionScore": null,
+              "flag": "support_not_validated"
+            }
+          ]
+        },
+        {
+          "heading": "Ananya Rao replied about payment",
+          "sentences": [
+            {
+              "text": "Please don't do this. I will pay, just delete everything.",
+              "citations": [
+                "E1:21",
+                "E7:3"
+              ],
+              "supported": false,
+              "supportScore": null,
+              "contradictionScore": null,
+              "flag": "support_not_validated"
+            }
+          ]
+        },
+        {
+          "heading": "Karthik Menon asked for money",
+          "sentences": [
+            {
+              "text": "Send the screenshot as proof of payment. By 10 AM",
+              "citations": [
+                "E1:22",
+                "E7:4"
+              ],
+              "supported": false,
+              "supportScore": null,
+              "contradictionScore": null,
+              "flag": "support_not_validated"
+            }
+          ]
+        },
+        {
+          "heading": "Payment of ₹25,000 to karthik.menon@okicici",
+          "sentences": [
+            {
+              "text": "23/09/2024 UPI/DR/426612349911/karthik.menon@okicici/Payment Debit: 25,000.00 Credit: - Balance: 65,780.00",
+              "citations": [
+                "E9:5"
+              ],
+              "supported": false,
+              "supportScore": null,
+              "contradictionScore": null,
+              "flag": "support_not_validated"
+            }
+          ]
+        },
+        {
+          "heading": "ktk asked for ₹30,000 via ktk.pay88@ybl",
+          "sentences": [
+            {
+              "text": "Rent is due. Send 30000 to ktk.pay88@ybl",
+              "citations": [
+                "E8:1"
+              ],
+              "supported": false,
+              "supportScore": null,
+              "contradictionScore": null,
+              "flag": "support_not_validated"
+            }
+          ]
+        },
+        {
+          "heading": "ktk asked for ₹25,000",
+          "sentences": [
+            {
+              "text": "Rs 25,000? That was just the interest",
+              "citations": [
+                "E8:5"
+              ],
+              "supported": false,
+              "supportScore": null,
+              "contradictionScore": null,
+              "flag": "support_not_validated"
+            }
+          ]
+        },
+        {
+          "heading": "Payment of ₹10,000 to ktk.pay88@ybl",
+          "sentences": [
+            {
+              "text": "27/09/2024 UPI/DR/426912340077/ktk.pay88@ybl/Payment Debit: 10,000.00 Credit: - Balance: 55,780.00",
+              "citations": [
+                "E9:6"
+              ],
+              "supported": false,
+              "supportScore": null,
+              "contradictionScore": null,
+              "flag": "support_not_validated"
+            }
+          ]
+        },
+        {
+          "heading": "Anonymous: extortion demand",
+          "sentences": [
+            {
+              "text": "Pay the 30k by Sunday. Otherwise the pics go to hr@nimbuslabs.example and your father's WhatsApp.",
+              "citations": [
+                "E10:3"
+              ],
+              "supported": false,
+              "supportScore": null,
+              "contradictionScore": null,
+              "flag": "support_not_validated"
+            }
+          ]
+        },
+        {
+          "heading": "Anonymous named a place: Indiranagar",
+          "sentences": [
+            {
+              "text": "You think moving PG will stop me? 14th Cross is not far from Indiranagar either.",
+              "citations": [
+                "E10:2"
+              ],
+              "supported": false,
+              "supportScore": null,
+              "contradictionScore": null,
+              "flag": "support_not_validated"
+            }
+          ]
+        },
+        {
+          "heading": "Complainant's account: Unknown: sexual harassment",
+          "sentences": [
+            {
+              "text": "And my blog, and he used new numbers and an Instagram account. On 18th September, he threatened to send private photos to my office and my parents.",
+              "citations": [
+                "E11:2"
+              ],
+              "supported": false,
+              "supportScore": null,
+              "contradictionScore": null,
+              "flag": "support_not_validated"
+            }
+          ]
+        },
+        {
+          "heading": "Complainant's account: Unknown asked for money",
+          "sentences": [
+            {
+              "text": "On 22nd September, he demanded ₹15000.",
+              "citations": [
+                "E11:3"
+              ],
+              "supported": false,
+              "supportScore": null,
+              "contradictionScore": null,
+              "flag": "support_not_validated"
+            }
+          ]
+        },
+        {
+          "heading": "Unknown asked for money",
+          "sentences": [
+            {
+              "text": "I sent ₹25000 on September 25 because I was very scared. Now he is asking for ₹30000 more.",
+              "citations": [
+                "E12:0"
+              ],
+              "supported": false,
+              "supportScore": null,
+              "contradictionScore": null,
+              "flag": "support_not_validated"
+            }
+          ]
+        },
+        {
+          "heading": "Complainant's account: Unknown asked for ₹25,000",
+          "sentences": [
+            {
+              "text": "To take down a fake story about me, I paid ₹25,000 on 25.",
+              "citations": [
+                "E11:4"
+              ],
+              "supported": false,
+              "supportScore": null,
+              "contradictionScore": null,
+              "flag": "support_not_validated"
+            }
+          ]
+        },
+        {
+          "heading": "Complainant's account: Unknown named a place: Nimbus Labs",
+          "sentences": [
+            {
+              "text": "My name is Ananya Rao. I work at Nimbus Labs in Bengaluru. Karthik Menon is a former colleague. Since early September, he has been messaging and calling me repeatedly.",
+              "citations": [
+                "E11:0"
+              ],
+              "supported": false,
+              "supportScore": null,
+              "contradictionScore": null,
+              "flag": "support_not_validated"
+            }
+          ]
+        }
+      ],
+      "evidenceIndex": [
+        {
+          "id": "E1",
+          "sha256": "50289efeb58961522e6e1065befe056e7e53e7e1df670d9343051a3317c1c984",
+          "mime": null,
+          "size": null
+        },
+        {
+          "id": "E2",
+          "sha256": "a31dd3dc3c4b0f21408ce4d37050e5fefa9d087d5d4f5a267e3e9242c519da0c",
+          "mime": null,
+          "size": null
+        },
+        {
+          "id": "E3",
+          "sha256": "c7b9dfe03d7205fa370bc682ca97c30d7024bce2a0806d814744545725b34132",
+          "mime": null,
+          "size": null
+        },
+        {
+          "id": "E4",
+          "sha256": "dbab9156cfe60e930f822d22efd584c0001c82dc2be994e04499d5c5fb1c676e",
+          "mime": null,
+          "size": null
+        },
+        {
+          "id": "E5",
+          "sha256": "8f34c8839f19f868cc48438bf416a2d0d868c32680d40ad9b77baaea75ba77e6",
+          "mime": null,
+          "size": null
+        },
+        {
+          "id": "E6",
+          "sha256": "bc0d004ac0a02f277cc2fac2f98aaea71ef3524cae68962ece58d4c17d4ee184",
+          "mime": null,
+          "size": null
+        },
+        {
+          "id": "E7",
+          "sha256": "545a0433c67f5550e98eebdfe0e23efc9b30056c62545f2ad01594498df979d1",
+          "mime": null,
+          "size": null
+        },
+        {
+          "id": "E8",
+          "sha256": "8b0551b1cb17912fcd2b0c62d236cc012402e5d5a5cf299e81475e74850a975f",
+          "mime": null,
+          "size": null
+        },
+        {
+          "id": "E9",
+          "sha256": "6574c0e4f01dbe7da39e691c940ca3caf0ff13a6f5fadb39002a49f6f63caa30",
+          "mime": null,
+          "size": null
+        },
+        {
+          "id": "E10",
+          "sha256": "8baef763d3e2b417cb4cb15e22423d1c4589b5c711b57fe3e61ec6185a13d2ac",
+          "mime": null,
+          "size": null
+        },
+        {
+          "id": "E11",
+          "sha256": "ea7c92156570a82aeb401e921d2bf115d4769cf1ef7908d9c9157ed4b3be4da6",
+          "mime": null,
+          "size": null
+        },
+        {
+          "id": "E12",
+          "sha256": "76aab80a29305b682b9e053610b15bad613d20b1772868eedec526cc40b2a32a",
+          "mime": null,
+          "size": null
+        }
+      ],
+      "certificateDraft": {
+        "status": "draft",
+        "notice": "Draft to assist; complete and verify with the responsible person."
+      },
+      "allSentencesValidatedOrFlagged": true,
+      "regenerations": 0
+    }
+  },
+  "system1": {
+    "labels": [],
+    "scores": {
+      "harassment": 0.5144,
+      "financial_fraud": 0.4342,
+      "scams": 0.3733,
+      "upi_bank_fraud": 0.4288
+    },
+    "primary": "other",
+    "confidence": 0.5144,
+    "provider": "laya",
+    "warnings": [
+      "Hugging Face Laya inference failed (HTTP 402: no Inference Provider credits); used local Laya.",
+      "Laya confidence is uncalibrated; fallback to other and Owner review is enabled."
+    ],
+    "needsOwnerReview": true
+  },
+  "system1Review": {
+    "status": "reviewed",
+    "incident": {
+      "labels": [],
+      "scores": {
+        "harassment": 0.5144,
+        "financial_fraud": 0.4342,
+        "scams": 0.3733,
+        "upi_bank_fraud": 0.4288
+      },
+      "primary": "other",
+      "confidence": 0.5144,
+      "provider": "laya",
+      "warnings": [
+        "Hugging Face Laya inference failed (HTTP 402: no Inference Provider credits); used local Laya.",
+        "Laya confidence is uncalibrated; fallback to other and Owner review is enabled."
+      ],
+      "needsOwnerReview": true
+    },
+    "declaredLabels": [],
+    "flags": [
+      {
+        "code": "GAP_CHECK_WITHOUT_LABELS",
+        "agent": "evidence_gap",
+        "message": "Evidence-gap agent ran with no incident type; use System1 labels once calibrated."
+      }
+    ],
+    "advisory": true,
+    "model": "convaiinnovations/laya"
+  },
+  "persistence": "caller_persists_json"
+}

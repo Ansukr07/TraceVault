@@ -1,0 +1,656 @@
+{
+  "artifactType": "parsed_chat",
+  "artifact": {
+    "dateOrder": "DMY",
+    "participants": [
+      "Ananya",
+      "Karthik Menon"
+    ],
+    "messages": [
+      {
+        "idx": 0,
+        "lineNo": 1,
+        "ts": "2024-09-02T10:12:00",
+        "sender": null,
+        "text": "Messages and calls are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them.",
+        "media": null,
+        "system": true
+      },
+      {
+        "idx": 1,
+        "lineNo": 2,
+        "ts": "2024-09-02T10:12:00",
+        "sender": "Karthik Menon",
+        "text": "Hi Ananya! Saw the Nimbus launch post. Proud of you 🎉",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 2,
+        "lineNo": 3,
+        "ts": "2024-09-02T10:13:00",
+        "sender": "Karthik Menon",
+        "text": "Coffee this weekend? Just us, like old times",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 3,
+        "lineNo": 4,
+        "ts": "2024-09-02T11:40:00",
+        "sender": "Ananya",
+        "text": "Thanks Karthik! Busy with the release this weekend, sorry",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 4,
+        "lineNo": 5,
+        "ts": "2024-09-04T23:05:00",
+        "sender": "Karthik Menon",
+        "text": "You replied to everyone's stories except mine",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 5,
+        "lineNo": 6,
+        "ts": "2024-09-04T23:06:00",
+        "sender": "Karthik Menon",
+        "text": "Why are you ignoring me?",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 6,
+        "lineNo": 7,
+        "ts": "2024-09-07T19:48:00",
+        "sender": "Karthik Menon",
+        "text": "I waited near your office today. You left early?",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 7,
+        "lineNo": 8,
+        "ts": "2024-09-07T19:49:00",
+        "sender": "Karthik Menon",
+        "text": "Reply. Ananya. REPLY.",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 8,
+        "lineNo": 9,
+        "ts": "2024-09-09T09:02:00",
+        "sender": "Ananya",
+        "text": "Karthik, I am not interested. Please stop messaging and calling me. This is making me very uncomfortable.",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 9,
+        "lineNo": 10,
+        "ts": "2024-09-09T09:05:00",
+        "sender": "Karthik Menon",
+        "text": "Haan toh? Main kuch galat nahi kar raha, tu overreact kar rahi hai",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 10,
+        "lineNo": 11,
+        "ts": "2024-09-18T21:30:00",
+        "sender": "Karthik Menon",
+        "text": "You changed your number? Lol. Found you anyway.",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 11,
+        "lineNo": 12,
+        "ts": "2024-09-18T21:31:00",
+        "sender": "Karthik Menon",
+        "text": "I still have the photos from the Goa team trip. The private ones.",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 12,
+        "lineNo": 13,
+        "ts": "2024-09-18T21:32:00",
+        "sender": "Karthik Menon",
+        "text": "Imagine if HR at Nimbus and your parents in Mysuru got them",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 13,
+        "lineNo": 14,
+        "ts": "2024-09-18T21:40:00",
+        "sender": "Ananya",
+        "text": "Delete them. That was a private moment and you know it.",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 14,
+        "lineNo": 15,
+        "ts": "2024-09-18T21:41:00",
+        "sender": "Karthik Menon",
+        "text": "Delete? Haha. Pehle mujhse baat kar, phir sochunga",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 15,
+        "lineNo": 16,
+        "ts": "2024-09-18T21:43:00",
+        "sender": "Karthik Menon",
+        "text": "ನಿನ್ನ ಅಪ್ಪ-ಅಮ್ಮನಿಗೆ ಎಲ್ಲಾ ಗೊತ್ತಾಗುತ್ತೆ, ನೋಡ್ತಿರು",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 16,
+        "lineNo": 17,
+        "ts": "2024-09-18T21:44:00",
+        "sender": "Karthik Menon",
+        "text": "I will tell everyone you slept your way into the promotion",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 17,
+        "lineNo": 18,
+        "ts": "2024-09-18T21:50:00",
+        "sender": "Ananya",
+        "text": "That is a lie. I will report you.",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 18,
+        "lineNo": 19,
+        "ts": "2024-09-18T21:51:00",
+        "sender": "Karthik Menon",
+        "text": "Report karke dekh. Teri career khatam kar dunga",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 19,
+        "lineNo": 20,
+        "ts": "2024-09-22T20:30:00",
+        "sender": "Karthik Menon",
+        "text": "Story is live. 400 views already 🙂",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 20,
+        "lineNo": 21,
+        "ts": "2024-09-22T20:31:00",
+        "sender": "Karthik Menon",
+        "text": "Send 15000 to karthik.menon@okicici and I take it down. Tonight.",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 21,
+        "lineNo": 22,
+        "ts": "2024-09-22T20:32:00",
+        "sender": "Karthik Menon",
+        "text": "Warna kal subah sab leak. Tera choice.",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 22,
+        "lineNo": 23,
+        "ts": "2024-09-22T20:55:00",
+        "sender": "Ananya",
+        "text": "Please don't do this. I will pay, just delete everything.",
+        "media": null,
+        "system": false
+      },
+      {
+        "idx": 23,
+        "lineNo": 24,
+        "ts": "2024-09-22T20:56:00",
+        "sender": "Karthik Menon",
+        "text": "Screenshot bhej payment ka. 10 baje tak",
+        "media": null,
+        "system": false
+      }
+    ]
+  },
+  "chunks": [
+    {
+      "idx": 0,
+      "text": "Hi Ananya! Saw the Nimbus launch post. Proud of you 🎉",
+      "unit": "message",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-02T10:12:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 1,
+        "lineNo": 2
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "Hi Ananya! Saw the Nimbus launch post. Proud of you 🎉"
+    },
+    {
+      "idx": 1,
+      "text": "Coffee this weekend? Just us, like old times",
+      "unit": "message",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-02T10:13:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 2,
+        "lineNo": 3
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.78,
+      "textEn": "Coffee this weekend? Just us, like old times"
+    },
+    {
+      "idx": 2,
+      "text": "Thanks Karthik! Busy with the release this weekend, sorry",
+      "unit": "message",
+      "sender": "Ananya",
+      "refTs": "2024-09-02T11:40:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 3,
+        "lineNo": 4
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "Thanks Karthik! Busy with the release this weekend, sorry"
+    },
+    {
+      "idx": 3,
+      "text": "You replied to everyone's stories except mine",
+      "unit": "message",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-04T23:05:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 4,
+        "lineNo": 5
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "You replied to everyone's stories except mine"
+    },
+    {
+      "idx": 4,
+      "text": "Why are you ignoring me?",
+      "unit": "message",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-04T23:06:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 5,
+        "lineNo": 6
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "Why are you ignoring me?"
+    },
+    {
+      "idx": 5,
+      "text": "I waited near your office today. You left early?",
+      "unit": "message",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-07T19:48:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 6,
+        "lineNo": 7
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.79,
+      "textEn": "I waited near your office today. You left early?"
+    },
+    {
+      "idx": 6,
+      "text": "Reply. Ananya. REPLY.",
+      "unit": "message",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-07T19:49:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 7,
+        "lineNo": 8
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.73,
+      "textEn": "Reply. Ananya. REPLY."
+    },
+    {
+      "idx": 7,
+      "text": "Karthik, I am not interested. Please stop messaging and calling me. This is making me very uncomfortable.",
+      "unit": "message",
+      "sender": "Ananya",
+      "refTs": "2024-09-09T09:02:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 8,
+        "lineNo": 9
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "Karthik, I am not interested. Please stop messaging and calling me. This is making me very uncomfortable."
+    },
+    {
+      "idx": 8,
+      "text": "Haan toh? Main kuch galat nahi kar raha, tu overreact kar rahi hai",
+      "unit": "message",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-09T09:05:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 9,
+        "lineNo": 10
+      },
+      "lang": "hi-Latn",
+      "langConfidence": 0.95,
+      "textEn": "Yes, so? I am not doing anything wrong, you are overreacting.",
+      "translation": {
+        "provider": "sarvam",
+        "model": "mayura:v1",
+        "redacted": false
+      }
+    },
+    {
+      "idx": 9,
+      "text": "You changed your number? Lol. Found you anyway.",
+      "unit": "message",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-18T21:30:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 10,
+        "lineNo": 11
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.78,
+      "textEn": "You changed your number? Lol. Found you anyway."
+    },
+    {
+      "idx": 10,
+      "text": "I still have the photos from the Goa team trip. The private ones.",
+      "unit": "message",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-18T21:31:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 11,
+        "lineNo": 12
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "I still have the photos from the Goa team trip. The private ones."
+    },
+    {
+      "idx": 11,
+      "text": "Imagine if HR at Nimbus and your parents in Mysuru got them",
+      "unit": "message",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-18T21:32:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 12,
+        "lineNo": 13
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.82,
+      "textEn": "Imagine if HR at Nimbus and your parents in Mysuru got them"
+    },
+    {
+      "idx": 12,
+      "text": "Delete them. That was a private moment and you know it.",
+      "unit": "message",
+      "sender": "Ananya",
+      "refTs": "2024-09-18T21:40:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 13,
+        "lineNo": 14
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.81,
+      "textEn": "Delete them. That was a private moment and you know it."
+    },
+    {
+      "idx": 13,
+      "text": "Delete? Haha. Pehle mujhse baat kar, phir sochunga",
+      "unit": "message",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-18T21:41:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 14,
+        "lineNo": 15
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "Delete? Haha. Pehle mujhse baat kar, phir sochunga"
+    },
+    {
+      "idx": 14,
+      "text": "ನಿನ್ನ ಅಪ್ಪ-ಅಮ್ಮನಿಗೆ ಎಲ್ಲಾ ಗೊತ್ತಾಗುತ್ತೆ, ನೋಡ್ತಿರು",
+      "unit": "message",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-18T21:43:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 15,
+        "lineNo": 16
+      },
+      "lang": "kn-IN",
+      "langConfidence": 0.99,
+      "textEn": "Your parents will know, you see",
+      "translation": {
+        "provider": "sarvam",
+        "model": "mayura:v1",
+        "redacted": false
+      }
+    },
+    {
+      "idx": 15,
+      "text": "I will tell everyone you slept your way into the promotion",
+      "unit": "message",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-18T21:44:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 16,
+        "lineNo": 17
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "I will tell everyone you slept your way into the promotion"
+    },
+    {
+      "idx": 16,
+      "text": "That is a lie. I will report you.",
+      "unit": "message",
+      "sender": "Ananya",
+      "refTs": "2024-09-18T21:50:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 17,
+        "lineNo": 18
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.78,
+      "textEn": "That is a lie. I will report you."
+    },
+    {
+      "idx": 17,
+      "text": "Report karke dekh. Teri career khatam kar dunga",
+      "unit": "message",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-18T21:51:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 18,
+        "lineNo": 19
+      },
+      "lang": "hi-Latn",
+      "langConfidence": 0.88,
+      "textEn": "Report it and see. I will end your career.",
+      "translation": {
+        "provider": "sarvam",
+        "model": "mayura:v1",
+        "redacted": false
+      }
+    },
+    {
+      "idx": 18,
+      "text": "Story is live. 400 views already 🙂",
+      "unit": "message",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-22T20:30:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 19,
+        "lineNo": 20
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.75,
+      "textEn": "Story is live. 400 views already 🙂"
+    },
+    {
+      "idx": 19,
+      "text": "Send 15000 to karthik.menon@okicici and I take it down. Tonight.",
+      "unit": "message",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-22T20:31:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 20,
+        "lineNo": 21
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "Send 15000 to karthik.menon@okicici and I take it down. Tonight."
+    },
+    {
+      "idx": 20,
+      "text": "Warna kal subah sab leak. Tera choice.",
+      "unit": "message",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-22T20:32:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 21,
+        "lineNo": 22
+      },
+      "lang": "hi-Latn",
+      "langConfidence": 0.95,
+      "textEn": "Otherwise, everything will leak tomorrow morning. Your choice.",
+      "translation": {
+        "provider": "sarvam",
+        "model": "mayura:v1",
+        "redacted": false
+      }
+    },
+    {
+      "idx": 21,
+      "text": "Please don't do this. I will pay, just delete everything.",
+      "unit": "message",
+      "sender": "Ananya",
+      "refTs": "2024-09-22T20:55:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 22,
+        "lineNo": 23
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "Please don't do this. I will pay, just delete everything."
+    },
+    {
+      "idx": 22,
+      "text": "Screenshot bhej payment ka. 10 baje tak",
+      "unit": "message",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-22T20:56:00",
+      "media": null,
+      "locator": {
+        "messageIdx": 23,
+        "lineNo": 24
+      },
+      "lang": "hi-Latn",
+      "langConfidence": 0.95,
+      "textEn": "Send the screenshot as proof of payment. By 10 AM",
+      "translation": {
+        "provider": "sarvam",
+        "model": "mayura:v1",
+        "redacted": false
+      }
+    }
+  ],
+  "metadata": {
+    "participants": [
+      "Ananya",
+      "Karthik Menon"
+    ],
+    "messages": 24,
+    "dateOrder": "DMY"
+  },
+  "flags": [],
+  "children": [],
+  "usage": [
+    {
+      "provider": "sarvam",
+      "endpoint": "/translate",
+      "status": 200,
+      "latencyMs": 868,
+      "model": "mayura:v1",
+      "chars": 48
+    },
+    {
+      "provider": "sarvam",
+      "endpoint": "/translate",
+      "status": 200,
+      "latencyMs": 1435,
+      "model": "mayura:v1",
+      "chars": 47
+    },
+    {
+      "provider": "sarvam",
+      "endpoint": "/translate",
+      "status": 200,
+      "latencyMs": 1439,
+      "model": "mayura:v1",
+      "chars": 66
+    },
+    {
+      "provider": "sarvam",
+      "endpoint": "/translate",
+      "status": 200,
+      "latencyMs": 1141,
+      "model": "mayura:v1",
+      "chars": 38
+    },
+    {
+      "provider": "sarvam",
+      "endpoint": "/translate",
+      "status": 200,
+      "latencyMs": 1125,
+      "model": "mayura:v1",
+      "chars": 39
+    }
+  ],
+  "generator": {
+    "name": "extract_chat_export",
+    "version": 1
+  }
+}

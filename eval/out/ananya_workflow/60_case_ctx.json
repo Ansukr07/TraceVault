@@ -1,0 +1,1588 @@
+{
+  "caseId": "ananya-demo",
+  "scopeFiltered": true,
+  "evidence": [
+    {
+      "id": "E1",
+      "idx": 0,
+      "sha256": "50289efeb58961522e6e1065befe056e7e53e7e1df670d9343051a3317c1c984",
+      "filename": "WhatsApp Chat with Karthik Menon.txt",
+      "kind": "chat_export",
+      "mimeType": "text/plain",
+      "width": null,
+      "height": null,
+      "capturedAt": null,
+      "flags": [],
+      "ocrProvider": null,
+      "ocrConfidence": null,
+      "chunkIds": [
+        "E1:0",
+        "E1:1",
+        "E1:2",
+        "E1:3",
+        "E1:4",
+        "E1:5",
+        "E1:6",
+        "E1:7",
+        "E1:8",
+        "E1:9",
+        "E1:10",
+        "E1:11",
+        "E1:12",
+        "E1:13",
+        "E1:14",
+        "E1:15",
+        "E1:16",
+        "E1:17",
+        "E1:18",
+        "E1:19",
+        "E1:20",
+        "E1:21",
+        "E1:22"
+      ],
+      "hashes": null
+    },
+    {
+      "id": "E2",
+      "idx": 1,
+      "sha256": "a31dd3dc3c4b0f21408ce4d37050e5fefa9d087d5d4f5a267e3e9242c519da0c",
+      "filename": "01_whatsapp_persistent_contact.png",
+      "kind": "image",
+      "mimeType": "image/png",
+      "width": 1080,
+      "height": 2340,
+      "capturedAt": "2024-09-09T09:10:03",
+      "flags": [],
+      "ocrProvider": "rapidocr",
+      "ocrConfidence": 0.816,
+      "chunkIds": [
+        "E2:0",
+        "E2:1",
+        "E2:2",
+        "E2:3",
+        "E2:4",
+        "E2:5",
+        "E2:6",
+        "E2:7",
+        "E2:8",
+        "E2:9",
+        "E2:10",
+        "E2:11",
+        "E2:12"
+      ],
+      "hashes": {
+        "phash": "f0356d656978413d",
+        "dhash": "0200402985c02591"
+      }
+    },
+    {
+      "id": "E3",
+      "idx": 2,
+      "sha256": "c7b9dfe03d7205fa370bc682ca97c30d7024bce2a0806d814744545725b34132",
+      "filename": "02_instagram_dm_after_block.png",
+      "kind": "image",
+      "mimeType": "image/png",
+      "width": 1080,
+      "height": 2340,
+      "capturedAt": "2024-09-10T08:34:12",
+      "flags": [],
+      "ocrProvider": "rapidocr",
+      "ocrConfidence": 0.849,
+      "chunkIds": [
+        "E3:0",
+        "E3:1",
+        "E3:2",
+        "E3:3",
+        "E3:4"
+      ],
+      "hashes": {
+        "phash": "d12dd16db5c825d2",
+        "dhash": "0200000008009098"
+      }
+    },
+    {
+      "id": "E4",
+      "idx": 3,
+      "sha256": "dbab9156cfe60e930f822d22efd584c0001c82dc2be994e04499d5c5fb1c676e",
+      "filename": "03_sms_surveillance.png",
+      "kind": "image",
+      "mimeType": "image/png",
+      "width": 1080,
+      "height": 2340,
+      "capturedAt": "2024-09-14T18:20:45",
+      "flags": [],
+      "ocrProvider": "rapidocr",
+      "ocrConfidence": 0.774,
+      "chunkIds": [
+        "E4:0",
+        "E4:1",
+        "E4:2",
+        "E4:3",
+        "E4:4"
+      ],
+      "hashes": {
+        "phash": "afd22fd20f16481e",
+        "dhash": "6500000040006e66"
+      }
+    },
+    {
+      "id": "E5",
+      "idx": 4,
+      "sha256": "8f34c8839f19f868cc48438bf416a2d0d868c32680d40ad9b77baaea75ba77e6",
+      "filename": "04_whatsapp_threats_second_sim.png",
+      "kind": "image",
+      "mimeType": "image/png",
+      "width": 1080,
+      "height": 2340,
+      "capturedAt": "2024-09-18T21:55:30",
+      "flags": [],
+      "ocrProvider": "rapidocr",
+      "ocrConfidence": 0.523,
+      "chunkIds": [
+        "E5:0",
+        "E5:1",
+        "E5:2",
+        "E5:3",
+        "E5:4",
+        "E5:5",
+        "E5:6",
+        "E5:7"
+      ],
+      "hashes": {
+        "phash": "d22db1c2f8a585f8",
+        "dhash": "02100872b1e8d898"
+      }
+    },
+    {
+      "id": "E6",
+      "idx": 5,
+      "sha256": "bc0d004ac0a02f277cc2fac2f98aaea71ef3524cae68962ece58d4c17d4ee184",
+      "filename": "05_instagram_fake_account.png",
+      "kind": "image",
+      "mimeType": "image/png",
+      "width": 1080,
+      "height": 2340,
+      "capturedAt": "2024-09-21T21:12:09",
+      "flags": [],
+      "ocrProvider": "rapidocr",
+      "ocrConfidence": 0.763,
+      "chunkIds": [
+        "E6:0",
+        "E6:1",
+        "E6:2",
+        "E6:3",
+        "E6:4",
+        "E6:5",
+        "E6:6"
+      ],
+      "hashes": {
+        "phash": "a080575d6d2d2f6d",
+        "dhash": "26a8ffbf80180000"
+      }
+    },
+    {
+      "id": "E7",
+      "idx": 6,
+      "sha256": "545a0433c67f5550e98eebdfe0e23efc9b30056c62545f2ad01594498df979d1",
+      "filename": "06_whatsapp_demand_EDITED.png",
+      "kind": "image",
+      "mimeType": "image/png",
+      "width": 1080,
+      "height": 2340,
+      "capturedAt": "2024-10-05T18:19:40",
+      "flags": [
+        {
+          "type": "EDITED_FILE",
+          "field": "Software",
+          "value": "Snapseed 2.0"
+        },
+        {
+          "type": "METADATA_MISMATCH",
+          "field": "inImageDate",
+          "value": "image shows 2024-09-22, EXIF capture 2024-10-05",
+          "contentDate": "2024-09-22",
+          "captureDate": "2024-10-05"
+        }
+      ],
+      "ocrProvider": "rapidocr",
+      "ocrConfidence": 0.829,
+      "chunkIds": [
+        "E7:0",
+        "E7:1",
+        "E7:2",
+        "E7:3",
+        "E7:4"
+      ],
+      "hashes": {
+        "phash": "db646965654d644d",
+        "dhash": "0210000000007039"
+      }
+    },
+    {
+      "id": "E8",
+      "idx": 7,
+      "sha256": "8b0551b1cb17912fcd2b0c62d236cc012402e5d5a5cf299e81475e74850a975f",
+      "filename": "07_telegram_second_demand.png",
+      "kind": "image",
+      "mimeType": "image/png",
+      "width": 1080,
+      "height": 2340,
+      "capturedAt": "2024-09-26T19:33:18",
+      "flags": [],
+      "ocrProvider": "rapidocr",
+      "ocrConfidence": 0.767,
+      "chunkIds": [
+        "E8:0",
+        "E8:1",
+        "E8:2",
+        "E8:3",
+        "E8:4",
+        "E8:5",
+        "E8:6"
+      ],
+      "hashes": {
+        "phash": "d2acd2b2ccd2279a",
+        "dhash": "95020000000888c8"
+      }
+    },
+    {
+      "id": "E9",
+      "idx": 8,
+      "sha256": "6574c0e4f01dbe7da39e691c940ca3caf0ff13a6f5fadb39002a49f6f63caa30",
+      "filename": "hdfc_statement_sep2024.pdf",
+      "kind": "pdf",
+      "mimeType": "application/pdf",
+      "width": null,
+      "height": null,
+      "capturedAt": "2024-10-01T09:30:00",
+      "flags": [],
+      "ocrProvider": null,
+      "ocrConfidence": null,
+      "chunkIds": [
+        "E9:0",
+        "E9:1",
+        "E9:2",
+        "E9:3",
+        "E9:4",
+        "E9:5",
+        "E9:6"
+      ],
+      "hashes": null
+    },
+    {
+      "id": "E10",
+      "idx": 9,
+      "sha256": "8baef763d3e2b417cb4cb15e22423d1c4589b5c711b57fe3e61ec6185a13d2ac",
+      "filename": "email_from_anon.eml",
+      "kind": "email",
+      "mimeType": "message/rfc822",
+      "width": null,
+      "height": null,
+      "capturedAt": "2024-09-28T22:41:00+05:30",
+      "flags": [],
+      "ocrProvider": null,
+      "ocrConfidence": null,
+      "chunkIds": [
+        "E10:0",
+        "E10:1",
+        "E10:2",
+        "E10:3",
+        "E10:4",
+        "E10:5"
+      ],
+      "hashes": null
+    },
+    {
+      "id": "E11",
+      "idx": 10,
+      "sha256": "ea7c92156570a82aeb401e921d2bf115d4769cf1ef7908d9c9157ed4b3be4da6",
+      "filename": "voice_statement_en.wav",
+      "kind": "statement",
+      "mimeType": "audio/wav",
+      "width": null,
+      "height": null,
+      "capturedAt": null,
+      "flags": [],
+      "ocrProvider": null,
+      "ocrConfidence": null,
+      "chunkIds": [
+        "E11:0",
+        "E11:1",
+        "E11:2",
+        "E11:3",
+        "E11:4"
+      ],
+      "hashes": null
+    },
+    {
+      "id": "E12",
+      "idx": 11,
+      "sha256": "76aab80a29305b682b9e053610b15bad613d20b1772868eedec526cc40b2a32a",
+      "filename": "voice_note_hi.wav",
+      "kind": "audio",
+      "mimeType": "audio/wav",
+      "width": null,
+      "height": null,
+      "capturedAt": null,
+      "flags": [],
+      "ocrProvider": null,
+      "ocrConfidence": null,
+      "chunkIds": [
+        "E12:0"
+      ],
+      "hashes": null
+    }
+  ],
+  "chunks": [
+    {
+      "id": "E1:0",
+      "evidenceId": "E1",
+      "text": "Hi Ananya! Saw the Nimbus launch post. Proud of you 🎉",
+      "textEn": "Hi Ananya! Saw the Nimbus launch post. Proud of you 🎉"
+    },
+    {
+      "id": "E1:1",
+      "evidenceId": "E1",
+      "text": "Coffee this weekend? Just us, like old times",
+      "textEn": "Coffee this weekend? Just us, like old times"
+    },
+    {
+      "id": "E1:2",
+      "evidenceId": "E1",
+      "text": "Thanks Karthik! Busy with the release this weekend, sorry",
+      "textEn": "Thanks Karthik! Busy with the release this weekend, sorry"
+    },
+    {
+      "id": "E1:3",
+      "evidenceId": "E1",
+      "text": "You replied to everyone's stories except mine",
+      "textEn": "You replied to everyone's stories except mine"
+    },
+    {
+      "id": "E1:4",
+      "evidenceId": "E1",
+      "text": "Why are you ignoring me?",
+      "textEn": "Why are you ignoring me?"
+    },
+    {
+      "id": "E1:5",
+      "evidenceId": "E1",
+      "text": "I waited near your office today. You left early?",
+      "textEn": "I waited near your office today. You left early?"
+    },
+    {
+      "id": "E1:6",
+      "evidenceId": "E1",
+      "text": "Reply. Ananya. REPLY.",
+      "textEn": "Reply. Ananya. REPLY."
+    },
+    {
+      "id": "E1:7",
+      "evidenceId": "E1",
+      "text": "Karthik, I am not interested. Please stop messaging and calling me. This is making me very uncomfortable.",
+      "textEn": "Karthik, I am not interested. Please stop messaging and calling me. This is making me very uncomfortable."
+    },
+    {
+      "id": "E1:8",
+      "evidenceId": "E1",
+      "text": "Haan toh? Main kuch galat nahi kar raha, tu overreact kar rahi hai",
+      "textEn": "Yes, so? I am not doing anything wrong, you are overreacting."
+    },
+    {
+      "id": "E1:9",
+      "evidenceId": "E1",
+      "text": "You changed your number? Lol. Found you anyway.",
+      "textEn": "You changed your number? Lol. Found you anyway."
+    },
+    {
+      "id": "E1:10",
+      "evidenceId": "E1",
+      "text": "I still have the photos from the Goa team trip. The private ones.",
+      "textEn": "I still have the photos from the Goa team trip. The private ones."
+    },
+    {
+      "id": "E1:11",
+      "evidenceId": "E1",
+      "text": "Imagine if HR at Nimbus and your parents in Mysuru got them",
+      "textEn": "Imagine if HR at Nimbus and your parents in Mysuru got them"
+    },
+    {
+      "id": "E1:12",
+      "evidenceId": "E1",
+      "text": "Delete them. That was a private moment and you know it.",
+      "textEn": "Delete them. That was a private moment and you know it."
+    },
+    {
+      "id": "E1:13",
+      "evidenceId": "E1",
+      "text": "Delete? Haha. Pehle mujhse baat kar, phir sochunga",
+      "textEn": "Delete? Haha. Pehle mujhse baat kar, phir sochunga"
+    },
+    {
+      "id": "E1:14",
+      "evidenceId": "E1",
+      "text": "ನಿನ್ನ ಅಪ್ಪ-ಅಮ್ಮನಿಗೆ ಎಲ್ಲಾ ಗೊತ್ತಾಗುತ್ತೆ, ನೋಡ್ತಿರು",
+      "textEn": "Your parents will know, you see"
+    },
+    {
+      "id": "E1:15",
+      "evidenceId": "E1",
+      "text": "I will tell everyone you slept your way into the promotion",
+      "textEn": "I will tell everyone you slept your way into the promotion"
+    },
+    {
+      "id": "E1:16",
+      "evidenceId": "E1",
+      "text": "That is a lie. I will report you.",
+      "textEn": "That is a lie. I will report you."
+    },
+    {
+      "id": "E1:17",
+      "evidenceId": "E1",
+      "text": "Report karke dekh. Teri career khatam kar dunga",
+      "textEn": "Report it and see. I will end your career."
+    },
+    {
+      "id": "E1:18",
+      "evidenceId": "E1",
+      "text": "Story is live. 400 views already 🙂",
+      "textEn": "Story is live. 400 views already 🙂"
+    },
+    {
+      "id": "E1:19",
+      "evidenceId": "E1",
+      "text": "Send 15000 to karthik.menon@okicici and I take it down. Tonight.",
+      "textEn": "Send 15000 to karthik.menon@okicici and I take it down. Tonight."
+    },
+    {
+      "id": "E1:20",
+      "evidenceId": "E1",
+      "text": "Warna kal subah sab leak. Tera choice.",
+      "textEn": "Otherwise, everything will leak tomorrow morning. Your choice."
+    },
+    {
+      "id": "E1:21",
+      "evidenceId": "E1",
+      "text": "Please don't do this. I will pay, just delete everything.",
+      "textEn": "Please don't do this. I will pay, just delete everything."
+    },
+    {
+      "id": "E1:22",
+      "evidenceId": "E1",
+      "text": "Screenshot bhej payment ka. 10 baje tak",
+      "textEn": "Send the screenshot as proof of payment. By 10 AM"
+    },
+    {
+      "id": "E2:0",
+      "evidenceId": "E2",
+      "text": "Hi Ananya! Saw the Nimbus launch post. Proud of you",
+      "textEn": "Hi Ananya! Saw the Nimbus launch post. Proud of you"
+    },
+    {
+      "id": "E2:1",
+      "evidenceId": "E2",
+      "text": "Coffee this weekend? Just us, like old times",
+      "textEn": "Coffee this weekend? Just us, like old times"
+    },
+    {
+      "id": "E2:2",
+      "evidenceId": "E2",
+      "text": "Thanks Karthik! Busy with the release this weekend,\nsorry",
+      "textEn": "Thanks Karthik! Busy with the release this weekend,\nsorry"
+    },
+    {
+      "id": "E2:3",
+      "evidenceId": "E2",
+      "text": "You replied to everyone's stories except mine",
+      "textEn": "You replied to everyone's stories except mine"
+    },
+    {
+      "id": "E2:4",
+      "evidenceId": "E2",
+      "text": "Why are you ignoring me?",
+      "textEn": "Why are you ignoring me?"
+    },
+    {
+      "id": "E2:5",
+      "evidenceId": "E2",
+      "text": "Missed call",
+      "textEn": "Missed call"
+    },
+    {
+      "id": "E2:6",
+      "evidenceId": "E2",
+      "text": "Missed call",
+      "textEn": "Missed call"
+    },
+    {
+      "id": "E2:7",
+      "evidenceId": "E2",
+      "text": "Missed call",
+      "textEn": "Missed call"
+    },
+    {
+      "id": "E2:8",
+      "evidenceId": "E2",
+      "text": "I waited near your office today. You left early?",
+      "textEn": "I waited near your office today. You left early?"
+    },
+    {
+      "id": "E2:9",
+      "evidenceId": "E2",
+      "text": "Reply. Ananya. REPLY.",
+      "textEn": "Reply. Ananya. REPLY."
+    },
+    {
+      "id": "E2:10",
+      "evidenceId": "E2",
+      "text": "Karthik, I am not interested. Please stop messaging\nand calling me. This is making me very\nuncomfortable.",
+      "textEn": "Karthik, I am not interested. Please stop messaging\nand calling me. This is making me very\nuncomfortable."
+    },
+    {
+      "id": "E2:11",
+      "evidenceId": "E2",
+      "text": "Haan toh? Main kuch galat nahi kar raha, tu overreact\nkar rahi hai",
+      "textEn": "Yes, so? I'm not doing anything wrong, you overreact is doing"
+    },
+    {
+      "id": "E2:12",
+      "evidenceId": "E2",
+      "text": "I am blocking this number.",
+      "textEn": "I am blocking this number."
+    },
+    {
+      "id": "E3:0",
+      "evidenceId": "E3",
+      "text": "blocking me on whatsapp won't help",
+      "textEn": "blocking me on whatsapp won't help"
+    },
+    {
+      "id": "E3:1",
+      "evidenceId": "E3",
+      "text": "this is my new insta btw. you can't block everything",
+      "textEn": "this is my new insta btw. you can't block everything"
+    },
+    {
+      "id": "E3:2",
+      "evidenceId": "E3",
+      "text": "I know you take the 8:20 bus from Indiranagar. Blue\nkurta today, nice",
+      "textEn": "I know you take the 8:20 bus from Indiranagar. Blue\nkurta today, nice"
+    },
+    {
+      "id": "E3:3",
+      "evidenceId": "E3",
+      "text": "I will report this account.",
+      "textEn": "I will report this account."
+    },
+    {
+      "id": "E3:4",
+      "evidenceId": "E3",
+      "text": "report karo. Mujhe fark nahi padta",
+      "textEn": "Report it. I don't care."
+    },
+    {
+      "id": "E4:0",
+      "evidenceId": "E4",
+      "text": "Not in your contacts",
+      "textEn": "Not in your contacts"
+    },
+    {
+      "id": "E4:1",
+      "evidenceId": "E4",
+      "text": "Sat, 14 Sep",
+      "textEn": "Sat, 14 Sep"
+    },
+    {
+      "id": "E4:2",
+      "evidenceId": "E4",
+      "text": "looks good on you.",
+      "textEn": "looks good on you."
+    },
+    {
+      "id": "E4:3",
+      "evidenceId": "E4",
+      "text": "Your PG is on 12th Main, the green gate. I know.",
+      "textEn": "Your PG is on 12th Main, the green gate. I know."
+    },
+    {
+      "id": "E4:4",
+      "evidenceId": "E4",
+      "text": "Don't get any ideas about police. Nobody will believe\nyou.",
+      "textEn": "Don't get any ideas about police. Nobody will believe\nyou."
+    },
+    {
+      "id": "E5:0",
+      "evidenceId": "E5",
+      "text": "Kemkue nok pno on raqnu no pauep non",
+      "textEn": "Kemkue nok pno on raqnu no pauep non"
+    },
+    {
+      "id": "E5:1",
+      "evidenceId": "E5",
+      "text": "I still have the photos from the Goa team trip. The\nprivate ones.",
+      "textEn": "I still have the photos from the Goa team trip. The\nprivate ones."
+    },
+    {
+      "id": "E5:2",
+      "evidenceId": "E5",
+      "text": "Imagine if HR at Nimbus and your parents in Mysuru\ngot them",
+      "textEn": "Imagine if HR at Nimbus and your parents in Mysuru\ngot them"
+    },
+    {
+      "id": "E5:3",
+      "evidenceId": "E5",
+      "text": "Delete them. That was a private moment and you\nknow it.",
+      "textEn": "Delete them. That was a private moment and you\nknow it."
+    },
+    {
+      "id": "E5:4",
+      "evidenceId": "E5",
+      "text": "Delete? Haha. Pehle mujhse baat kar, phir sochunga",
+      "textEn": "Delete? Haha. Pehle mujhse baat kar, phir sochunga"
+    },
+    {
+      "id": "E5:5",
+      "evidenceId": "E5",
+      "text": "I will tell everyone you slept your way into the\npromotion",
+      "textEn": "I will tell everyone you slept your way into the\npromotion"
+    },
+    {
+      "id": "E5:6",
+      "evidenceId": "E5",
+      "text": "That is a lie. I will report you.",
+      "textEn": "That is a lie. I will report you."
+    },
+    {
+      "id": "E5:7",
+      "evidenceId": "E5",
+      "text": "Report karke dekh. Teri career khatam kar dunga",
+      "textEn": "Go ahead and report it. I will end your career."
+    },
+    {
+      "id": "E6:0",
+      "evidenceId": "E6",
+      "text": "Ananya Rao (Nimbus Labs) is NOT\nwho you think she is. Full story",
+      "textEn": "Ananya Rao (Nimbus Labs) is NOT\nwho you think she is. Full story"
+    },
+    {
+      "id": "E6:1",
+      "evidenceId": "E6",
+      "text": "coming. Ask me for the pics 0o",
+      "textEn": "coming. Ask me for the pics 0o"
+    },
+    {
+      "id": "E6:2",
+      "evidenceId": "E6",
+      "text": "O 412 views",
+      "textEn": "O 412 views"
+    },
+    {
+      "id": "E6:3",
+      "evidenceId": "E6",
+      "text": "Replies & comments",
+      "textEn": "Replies & comments"
+    },
+    {
+      "id": "E6:4",
+      "evidenceId": "E6",
+      "text": "priyam.r_ wait is this the Nimbus designer??",
+      "textEn": "priyam.r_ wait is this the Nimbus designer??"
+    },
+    {
+      "id": "E6:5",
+      "evidenceId": "E6",
+      "text": "blr_techgossip dm me the pics pls",
+      "textEn": "blr_techgossip dm me the pics pls"
+    },
+    {
+      "id": "E6:6",
+      "evidenceId": "E6",
+      "text": "anu.exposed Rest goes live tomorrow, watch this space",
+      "textEn": "anu.exposed Rest goes live tomorrow, watch this space"
+    },
+    {
+      "id": "E7:0",
+      "evidenceId": "E7",
+      "text": "Story is live. 400 views already",
+      "textEn": "Story is live. 400 views already"
+    },
+    {
+      "id": "E7:1",
+      "evidenceId": "E7",
+      "text": "Send 15000 to karthik.menon@okicici and I take it\ndown. Tonight.",
+      "textEn": "Send 15000 to karthik.menon@okicici and I take it\ndown. Tonight."
+    },
+    {
+      "id": "E7:2",
+      "evidenceId": "E7",
+      "text": "Warna kal subah sab leak. Tera choice.",
+      "textEn": "Otherwise, everything will leak tomorrow morning. Your choice."
+    },
+    {
+      "id": "E7:3",
+      "evidenceId": "E7",
+      "text": "Please don't do this. I will pay, just delete everything.",
+      "textEn": "Please don't do this. I will pay, just delete everything."
+    },
+    {
+      "id": "E7:4",
+      "evidenceId": "E7",
+      "text": "Screenshot bhej payment ka. 10 baje tak",
+      "textEn": "Send the screenshot as proof of payment. By 10 AM"
+    },
+    {
+      "id": "E8:0",
+      "evidenceId": "E8",
+      "text": "Story is down. You think that's the end?",
+      "textEn": "Story is down. You think that's the end?"
+    },
+    {
+      "id": "E8:1",
+      "evidenceId": "E8",
+      "text": "Rent is due. Send 30000 to ktk.pay88@ybl",
+      "textEn": "Rent is due. Send 30000 to ktk.pay88@ybl"
+    },
+    {
+      "id": "E8:2",
+      "evidenceId": "E8",
+      "text": "Ya photos Instagram pe daal dunga, sab followers ke",
+      "textEn": "Or I will post these photos on Instagram, to all my followers."
+    },
+    {
+      "id": "E8:3",
+      "evidenceId": "E8",
+      "text": "saamne",
+      "textEn": "saamne"
+    },
+    {
+      "id": "E8:4",
+      "evidenceId": "E8",
+      "text": "You already took 25,000. Stop.",
+      "textEn": "You already took 25,000. Stop."
+    },
+    {
+      "id": "E8:5",
+      "evidenceId": "E8",
+      "text": "Rs 25,000? That was just the interest",
+      "textEn": "Rs 25,000? That was just the interest"
+    },
+    {
+      "id": "E8:6",
+      "evidenceId": "E8",
+      "text": "You have till Sunday.",
+      "textEn": "You have till Sunday."
+    },
+    {
+      "id": "E9:0",
+      "evidenceId": "E9",
+      "text": "HDFC BANK - Account Statement (Demo)",
+      "textEn": "HDFC BANK - Account Statement (Demo)"
+    },
+    {
+      "id": "E9:1",
+      "evidenceId": "E9",
+      "text": "Account holder: Ananya Rao A/c no: XXXXXXX9035 Branch: Indiranagar, Bengaluru",
+      "textEn": "Account holder: Ananya Rao A/c no: XXXXXXX9035 Branch: Indiranagar, Bengaluru"
+    },
+    {
+      "id": "E9:2",
+      "evidenceId": "E9",
+      "text": "Period: 01/09/2024 to 30/09/2024",
+      "textEn": "Period: 01/09/2024 to 30/09/2024"
+    },
+    {
+      "id": "E9:3",
+      "evidenceId": "E9",
+      "text": "02/09/2024 SALARY CREDIT NIMBUS LABS PVT LTD Debit: - Credit: 68,000.00 Balance: 91,420.00",
+      "textEn": "02/09/2024 SALARY CREDIT NIMBUS LABS PVT LTD Debit: - Credit: 68,000.00 Balance: 91,420.00"
+    },
+    {
+      "id": "E9:4",
+      "evidenceId": "E9",
+      "text": "12/09/2024 UPI/DR/425512340011/Swiggy/Food Debit: 640.00 Credit: - Balance: 90,780.00",
+      "textEn": "12/09/2024 UPI/DR/425512340011/Swiggy/Food Debit: 640.00 Credit: - Balance: 90,780.00"
+    },
+    {
+      "id": "E9:5",
+      "evidenceId": "E9",
+      "text": "23/09/2024 UPI/DR/426612349911/karthik.menon@okicici/Payment Debit: 25,000.00 Credit: - Balance: 65,780.00",
+      "textEn": "23/09/2024 UPI/DR/426612349911/karthik.menon@okicici/Payment Debit: 25,000.00 Credit: - Balance: 65,780.00"
+    },
+    {
+      "id": "E9:6",
+      "evidenceId": "E9",
+      "text": "27/09/2024 UPI/DR/426912340077/ktk.pay88@ybl/Payment Debit: 10,000.00 Credit: - Balance: 55,780.00",
+      "textEn": "27/09/2024 UPI/DR/426912340077/ktk.pay88@ybl/Payment Debit: 10,000.00 Credit: - Balance: 55,780.00"
+    },
+    {
+      "id": "E10:0",
+      "evidenceId": "E10",
+      "text": "From: Anonymous <anon.truth.blr@proton.me>\nTo: Ananya Rao <ananya.rao.blr@gmail.com>\nSubject: last chance\nDate: Sat, 28 Sep 2024 22:41:00 +0530",
+      "textEn": "From: Anonymous <anon.truth.blr@proton.me>\nTo: Ananya Rao <ananya.rao.blr@gmail.com>\nSubject: last chance\nDate: Sat, 28 Sep 2024 22:41:00 +0530"
+    },
+    {
+      "id": "E10:1",
+      "evidenceId": "E10",
+      "text": "Ananya,",
+      "textEn": "Ananya,"
+    },
+    {
+      "id": "E10:2",
+      "evidenceId": "E10",
+      "text": "You think moving PG will stop me? 14th Cross is not far from Indiranagar either.",
+      "textEn": "You think moving PG will stop me? 14th Cross is not far from Indiranagar either."
+    },
+    {
+      "id": "E10:3",
+      "evidenceId": "E10",
+      "text": "Pay the 30k by Sunday. Otherwise the pics go to hr@nimbuslabs.example and your father's WhatsApp.",
+      "textEn": "Pay the 30k by Sunday. Otherwise the pics go to hr@nimbuslabs.example and your father's WhatsApp."
+    },
+    {
+      "id": "E10:4",
+      "evidenceId": "E10",
+      "text": "Don't bother with the police, I use new SIMs every time. Tell Priya from design I said hi too.",
+      "textEn": "Don't bother with the police, I use new SIMs every time. Tell Priya from design I said hi too."
+    },
+    {
+      "id": "E10:5",
+      "evidenceId": "E10",
+      "text": "- K (anon.truth.blr@proton.me)",
+      "textEn": "- K (anon.truth.blr@proton.me)"
+    },
+    {
+      "id": "E11:0",
+      "evidenceId": "E11",
+      "text": "My name is Ananya Rao. I work at Nimbus Labs in Bengaluru. Karthik Menon is a former colleague. Since early September, he has been messaging and calling me repeatedly.",
+      "textEn": "My name is Ananya Rao. I work at Nimbus Labs in Bengaluru. Karthik Menon is a former colleague. Since early September, he has been messaging and calling me repeatedly."
+    },
+    {
+      "id": "E11:1",
+      "evidenceId": "E11",
+      "text": "Even after I told him to stop, he followed me, knew where I live.",
+      "textEn": "Even after I told him to stop, he followed me, knew where I live."
+    },
+    {
+      "id": "E11:2",
+      "evidenceId": "E11",
+      "text": "And my blog, and he used new numbers and an Instagram account. On 18th September, he threatened to send private photos to my office and my parents.",
+      "textEn": "And my blog, and he used new numbers and an Instagram account. On 18th September, he threatened to send private photos to my office and my parents."
+    },
+    {
+      "id": "E11:3",
+      "evidenceId": "E11",
+      "text": "On twenty-second September he demanded fifteen thousand rupees.",
+      "textEn": "On 22nd September, he demanded ₹15000."
+    },
+    {
+      "id": "E11:4",
+      "evidenceId": "E11",
+      "text": "To take down a fake story about me, I paid 25000 rupees on 25.",
+      "textEn": "To take down a fake story about me, I paid ₹25,000 on 25."
+    },
+    {
+      "id": "E12:0",
+      "evidenceId": "E12",
+      "text": "मैंने 25 सितंबर को 25,000 रुपये भेजे क्योंकि मैं बहुत डरी हुई थी। अब वह 30,000 और मांग रहा है।",
+      "textEn": "I sent ₹25000 on September 25 because I was very scared. Now he is asking for ₹30000 more."
+    }
+  ],
+  "entities": [
+    {
+      "id": "PERSON:91 70190 55555 karthik",
+      "type": "Person",
+      "name": "Karthik Menon",
+      "chunkIds": [
+        "E11:0",
+        "E1:0",
+        "E1:1",
+        "E1:10",
+        "E1:11",
+        "E1:13",
+        "E1:14",
+        "E1:15",
+        "E1:17",
+        "E1:18",
+        "E1:19",
+        "E1:2",
+        "E1:20",
+        "E1:22",
+        "E1:3",
+        "E1:4",
+        "E1:5",
+        "E1:6",
+        "E1:7",
+        "E1:8",
+        "E1:9",
+        "E2:0",
+        "E2:1",
+        "E2:10",
+        "E2:11",
+        "E2:2",
+        "E2:3",
+        "E2:4",
+        "E2:5",
+        "E2:6",
+        "E2:7",
+        "E2:8",
+        "E2:9",
+        "E5:0",
+        "E5:1",
+        "E5:2",
+        "E5:4",
+        "E5:5",
+        "E5:7",
+        "E7:0",
+        "E7:1",
+        "E7:2",
+        "E7:4"
+      ],
+      "citations": [
+        "E11:0",
+        "E1:0",
+        "E1:1",
+        "E1:10",
+        "E1:11"
+      ]
+    },
+    {
+      "id": "PERSON:ananya",
+      "type": "Person",
+      "name": "Ananya Rao",
+      "chunkIds": [
+        "E10:0",
+        "E10:1",
+        "E11:0",
+        "E1:0",
+        "E1:12",
+        "E1:16",
+        "E1:2",
+        "E1:21",
+        "E1:6",
+        "E1:7",
+        "E2:0",
+        "E2:10",
+        "E2:12",
+        "E2:2",
+        "E2:9",
+        "E3:3",
+        "E5:3",
+        "E5:6",
+        "E6:0",
+        "E7:3",
+        "E8:4",
+        "E9:1"
+      ],
+      "citations": [
+        "E10:0",
+        "E10:1",
+        "E11:0",
+        "E1:0",
+        "E1:12"
+      ]
+    },
+    {
+      "id": "PERSON:anu exposed 21 sep 9 05 pm",
+      "type": "Person",
+      "name": "anu.exposed : 21 Sep, 9:05 pm",
+      "chunkIds": [
+        "E6:0",
+        "E6:1",
+        "E6:2",
+        "E6:3",
+        "E6:4",
+        "E6:5",
+        "E6:6"
+      ],
+      "citations": [
+        "E6:0",
+        "E6:1",
+        "E6:2",
+        "E6:3",
+        "E6:4"
+      ]
+    },
+    {
+      "id": "PERSON:anonymous",
+      "type": "Person",
+      "name": "Anonymous",
+      "chunkIds": [
+        "E10:0",
+        "E10:1",
+        "E10:2",
+        "E10:3",
+        "E10:4",
+        "E10:5"
+      ],
+      "citations": [
+        "E10:0",
+        "E10:1",
+        "E10:2",
+        "E10:3",
+        "E10:4"
+      ]
+    },
+    {
+      "id": "PERSON:instagram active 2m ago",
+      "type": "Person",
+      "name": "Instagram : Active 2m ago",
+      "chunkIds": [
+        "E11:2",
+        "E3:0",
+        "E3:1",
+        "E3:2",
+        "E3:4",
+        "E8:2"
+      ],
+      "citations": [
+        "E11:2",
+        "E3:0",
+        "E3:1",
+        "E3:2",
+        "E3:4"
+      ]
+    },
+    {
+      "id": "PERSON:ktk",
+      "type": "Person",
+      "name": "ktk",
+      "chunkIds": [
+        "E8:0",
+        "E8:1",
+        "E8:2",
+        "E8:3",
+        "E8:5",
+        "E8:6"
+      ],
+      "citations": [
+        "E8:0",
+        "E8:1",
+        "E8:2",
+        "E8:3",
+        "E8:5"
+      ]
+    },
+    {
+      "id": "LOCATION:Indiranagar",
+      "type": "Account",
+      "name": "Indiranagar",
+      "chunkIds": [
+        "E10:2",
+        "E3:2",
+        "E9:1"
+      ],
+      "citations": [
+        "E10:2",
+        "E3:2",
+        "E9:1"
+      ]
+    },
+    {
+      "id": "PERSON:9170190 55555",
+      "type": "Person",
+      "name": "+9170190 55555",
+      "chunkIds": [
+        "E4:2",
+        "E4:3",
+        "E4:4"
+      ],
+      "citations": [
+        "E4:2",
+        "E4:3",
+        "E4:4"
+      ]
+    },
+    {
+      "id": "UPI_ID:karthik.menon@okicici",
+      "type": "Account",
+      "name": "karthik.menon@okicici",
+      "chunkIds": [
+        "E1:19",
+        "E7:1",
+        "E9:5"
+      ],
+      "citations": [
+        "E1:19",
+        "E7:1",
+        "E9:5"
+      ]
+    },
+    {
+      "id": "EMAIL:anon.truth.blr@proton.me",
+      "type": "Account",
+      "name": "anon.truth.blr@proton.me",
+      "chunkIds": [
+        "E10:0",
+        "E10:5"
+      ],
+      "citations": [
+        "E10:0",
+        "E10:5"
+      ]
+    },
+    {
+      "id": "LOCATION:Bengaluru",
+      "type": "Account",
+      "name": "Bengaluru",
+      "chunkIds": [
+        "E11:0",
+        "E9:1"
+      ],
+      "citations": [
+        "E11:0",
+        "E9:1"
+      ]
+    },
+    {
+      "id": "LOCATION:Mysuru",
+      "type": "Account",
+      "name": "Mysuru",
+      "chunkIds": [
+        "E1:11",
+        "E5:2"
+      ],
+      "citations": [
+        "E1:11",
+        "E5:2"
+      ]
+    },
+    {
+      "id": "LOCATION:Nimbus",
+      "type": "Account",
+      "name": "Nimbus",
+      "chunkIds": [
+        "E1:11",
+        "E5:2"
+      ],
+      "citations": [
+        "E1:11",
+        "E5:2"
+      ]
+    },
+    {
+      "id": "ORG:Police",
+      "type": "Account",
+      "name": "police",
+      "chunkIds": [
+        "E10:4",
+        "E4:4"
+      ],
+      "citations": [
+        "E10:4",
+        "E4:4"
+      ]
+    },
+    {
+      "id": "ORG:WhatsApp",
+      "type": "Account",
+      "name": "whatsapp",
+      "chunkIds": [
+        "E10:3",
+        "E3:0"
+      ],
+      "citations": [
+        "E10:3",
+        "E3:0"
+      ]
+    },
+    {
+      "id": "UPI_ID:ktk.pay88@ybl",
+      "type": "Account",
+      "name": "ktk.pay88@ybl",
+      "chunkIds": [
+        "E8:1",
+        "E9:6"
+      ],
+      "citations": [
+        "E8:1",
+        "E9:6"
+      ]
+    },
+    {
+      "id": "BANK_ACCT:XXXXXXX9035",
+      "type": "Account",
+      "name": "XXXXXXX9035",
+      "chunkIds": [
+        "E9:1"
+      ],
+      "citations": [
+        "E9:1"
+      ]
+    },
+    {
+      "id": "EMAIL:ananya.rao.blr@gmail.com",
+      "type": "Account",
+      "name": "ananya.rao.blr@gmail.com",
+      "chunkIds": [
+        "E10:0"
+      ],
+      "citations": [
+        "E10:0"
+      ]
+    },
+    {
+      "id": "EMAIL:hr@nimbuslabs.example",
+      "type": "Account",
+      "name": "hr@nimbuslabs.example",
+      "chunkIds": [
+        "E10:3"
+      ],
+      "citations": [
+        "E10:3"
+      ]
+    },
+    {
+      "id": "LOCATION:Nimbus Labs",
+      "type": "Account",
+      "name": "Nimbus Labs",
+      "chunkIds": [
+        "E11:0"
+      ],
+      "citations": [
+        "E11:0"
+      ]
+    },
+    {
+      "id": "ORG:HDFC",
+      "type": "Account",
+      "name": "HDFC",
+      "chunkIds": [
+        "E9:0"
+      ],
+      "citations": [
+        "E9:0"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "245a48d6957c755e",
+      "title": "Instagram : Active 2m ago named a place: Indiranagar",
+      "description": "I know you take the 8:20 bus from Indiranagar. Blue kurta today, nice",
+      "timestamp": "2024-09-10T08:21:00",
+      "category": "meeting",
+      "amount": null,
+      "entityIds": [
+        "PERSON:instagram active 2m ago",
+        "PERSON:ananya"
+      ],
+      "evidenceChunkIds": [
+        "E3:2"
+      ],
+      "severity": 0,
+      "confidence": 0.9
+    },
+    {
+      "id": "c411d05e3e20ae2c",
+      "title": "Payment of ₹640",
+      "description": "12/09/2024 UPI/DR/425512340011/Swiggy/Food Debit: 640.00 Credit: - Balance: 90,780.00",
+      "timestamp": "2024-09-12T00:00:00",
+      "category": "payment",
+      "amount": 640,
+      "entityIds": [
+        "PERSON:ananya"
+      ],
+      "evidenceChunkIds": [
+        "E9:4"
+      ],
+      "severity": 1,
+      "confidence": 0.7
+    },
+    {
+      "id": "d0f27beabae25741",
+      "title": "Karthik Menon named a place: Nimbus",
+      "description": "Imagine if HR at Nimbus and your parents in Mysuru got them",
+      "timestamp": "2024-09-18T21:32:00",
+      "category": "meeting",
+      "amount": null,
+      "entityIds": [
+        "PERSON:91 70190 55555 karthik",
+        "PERSON:ananya"
+      ],
+      "evidenceChunkIds": [
+        "E1:11",
+        "E5:2"
+      ],
+      "severity": 0,
+      "confidence": 0.9
+    },
+    {
+      "id": "ac503c5067ff8801",
+      "title": "Karthik Menon asked for ₹15,000 via karthik.menon@okicici",
+      "description": "Send 15000 to karthik.menon@okicici and I take it down. Tonight.",
+      "timestamp": "2024-09-22T20:31:00",
+      "category": "payment",
+      "amount": 15000,
+      "entityIds": [
+        "PERSON:91 70190 55555 karthik",
+        "PERSON:ananya"
+      ],
+      "evidenceChunkIds": [
+        "E1:19",
+        "E7:1"
+      ],
+      "severity": 1,
+      "confidence": 0.9
+    },
+    {
+      "id": "1c6594b10cff76cc",
+      "title": "Karthik Menon: extortion demand",
+      "description": "Otherwise, everything will leak tomorrow morning. Your choice.",
+      "timestamp": "2024-09-22T20:32:00",
+      "category": "extortion",
+      "amount": null,
+      "entityIds": [
+        "PERSON:91 70190 55555 karthik",
+        "PERSON:ananya"
+      ],
+      "evidenceChunkIds": [
+        "E1:20",
+        "E7:2"
+      ],
+      "severity": 2,
+      "confidence": 0.9
+    },
+    {
+      "id": "a116ed13b68c7f7d",
+      "title": "Ananya Rao replied about payment",
+      "description": "Please don't do this. I will pay, just delete everything.",
+      "timestamp": "2024-09-22T20:55:00",
+      "category": "contact",
+      "amount": null,
+      "entityIds": [
+        "PERSON:ananya",
+        "PERSON:91 70190 55555 karthik"
+      ],
+      "evidenceChunkIds": [
+        "E1:21",
+        "E7:3"
+      ],
+      "severity": 1,
+      "confidence": 0.9
+    },
+    {
+      "id": "1abb34bbaea6b950",
+      "title": "Karthik Menon asked for money",
+      "description": "Send the screenshot as proof of payment. By 10 AM",
+      "timestamp": "2024-09-22T20:56:00",
+      "category": "financial_request",
+      "amount": null,
+      "entityIds": [
+        "PERSON:91 70190 55555 karthik",
+        "PERSON:ananya"
+      ],
+      "evidenceChunkIds": [
+        "E1:22",
+        "E7:4"
+      ],
+      "severity": 1,
+      "confidence": 0.9
+    },
+    {
+      "id": "9cbeba881b5f78b6",
+      "title": "Payment of ₹25,000 to karthik.menon@okicici",
+      "description": "23/09/2024 UPI/DR/426612349911/karthik.menon@okicici/Payment Debit: 25,000.00 Credit: - Balance: 65,780.00",
+      "timestamp": "2024-09-23T00:00:00",
+      "category": "payment",
+      "amount": 25000,
+      "entityIds": [
+        "PERSON:ananya"
+      ],
+      "evidenceChunkIds": [
+        "E9:5"
+      ],
+      "severity": 1,
+      "confidence": 0.7
+    },
+    {
+      "id": "d745b3bacdc5c775",
+      "title": "ktk asked for ₹30,000 via ktk.pay88@ybl",
+      "description": "Rent is due. Send 30000 to ktk.pay88@ybl",
+      "timestamp": "2024-09-26T19:03:00",
+      "category": "payment",
+      "amount": 30000,
+      "entityIds": [
+        "PERSON:ktk",
+        "PERSON:ananya"
+      ],
+      "evidenceChunkIds": [
+        "E8:1"
+      ],
+      "severity": 1,
+      "confidence": 0.9
+    },
+    {
+      "id": "0f02b5abeba18c6d",
+      "title": "ktk asked for ₹25,000",
+      "description": "Rs 25,000? That was just the interest",
+      "timestamp": "2024-09-26T19:31:00",
+      "category": "payment",
+      "amount": 25000,
+      "entityIds": [
+        "PERSON:ktk",
+        "PERSON:ananya"
+      ],
+      "evidenceChunkIds": [
+        "E8:5"
+      ],
+      "severity": 1,
+      "confidence": 0.9
+    },
+    {
+      "id": "21f046e01178ec2f",
+      "title": "Payment of ₹10,000 to ktk.pay88@ybl",
+      "description": "27/09/2024 UPI/DR/426912340077/ktk.pay88@ybl/Payment Debit: 10,000.00 Credit: - Balance: 55,780.00",
+      "timestamp": "2024-09-27T00:00:00",
+      "category": "payment",
+      "amount": 10000,
+      "entityIds": [
+        "PERSON:ananya"
+      ],
+      "evidenceChunkIds": [
+        "E9:6"
+      ],
+      "severity": 1,
+      "confidence": 0.7
+    },
+    {
+      "id": "8497389f414ef90c",
+      "title": "Anonymous: extortion demand",
+      "description": "Pay the 30k by Sunday. Otherwise the pics go to hr@nimbuslabs.example and your father's WhatsApp.",
+      "timestamp": "2024-09-28T22:41:00+05:30",
+      "category": "extortion",
+      "amount": null,
+      "entityIds": [
+        "PERSON:anonymous",
+        "PERSON:ananya"
+      ],
+      "evidenceChunkIds": [
+        "E10:3"
+      ],
+      "severity": 3,
+      "confidence": 0.9
+    },
+    {
+      "id": "133957453d11737a",
+      "title": "Anonymous named a place: Indiranagar",
+      "description": "You think moving PG will stop me? 14th Cross is not far from Indiranagar either.",
+      "timestamp": "2024-09-28T22:41:00+05:30",
+      "category": "meeting",
+      "amount": null,
+      "entityIds": [
+        "PERSON:anonymous",
+        "PERSON:ananya"
+      ],
+      "evidenceChunkIds": [
+        "E10:2"
+      ],
+      "severity": 0,
+      "confidence": 0.9
+    },
+    {
+      "id": "0e4b90e951392d67",
+      "title": "Complainant's account: Unknown: sexual harassment",
+      "description": "And my blog, and he used new numbers and an Instagram account. On 18th September, he threatened to send private photos to my office and my parents.",
+      "timestamp": "2026-09-18T00:00:00",
+      "category": "sexual",
+      "amount": null,
+      "entityIds": [
+        "PERSON:ananya"
+      ],
+      "evidenceChunkIds": [
+        "E11:2"
+      ],
+      "severity": 2,
+      "confidence": 0.7
+    },
+    {
+      "id": "73b3c4009824236f",
+      "title": "Complainant's account: Unknown asked for money",
+      "description": "On 22nd September, he demanded ₹15000.",
+      "timestamp": null,
+      "category": "financial_request",
+      "amount": null,
+      "entityIds": [
+        "PERSON:ananya"
+      ],
+      "evidenceChunkIds": [
+        "E11:3"
+      ],
+      "severity": 1,
+      "confidence": 0.5
+    },
+    {
+      "id": "8a8f7b07e4ca9010",
+      "title": "Unknown asked for money",
+      "description": "I sent ₹25000 on September 25 because I was very scared. Now he is asking for ₹30000 more.",
+      "timestamp": null,
+      "category": "financial_request",
+      "amount": null,
+      "entityIds": [
+        "PERSON:ananya"
+      ],
+      "evidenceChunkIds": [
+        "E12:0"
+      ],
+      "severity": 1,
+      "confidence": 0.5
+    },
+    {
+      "id": "edb4c6ede62bf680",
+      "title": "Complainant's account: Unknown asked for ₹25,000",
+      "description": "To take down a fake story about me, I paid ₹25,000 on 25.",
+      "timestamp": null,
+      "category": "payment",
+      "amount": 25000,
+      "entityIds": [
+        "PERSON:ananya"
+      ],
+      "evidenceChunkIds": [
+        "E11:4"
+      ],
+      "severity": 1,
+      "confidence": 0.5
+    },
+    {
+      "id": "f00d6134edbec3cb",
+      "title": "Complainant's account: Unknown named a place: Nimbus Labs",
+      "description": "My name is Ananya Rao. I work at Nimbus Labs in Bengaluru. Karthik Menon is a former colleague. Since early September, he has been messaging and calling me repeatedly.",
+      "timestamp": null,
+      "category": "meeting",
+      "amount": null,
+      "entityIds": [
+        "PERSON:ananya"
+      ],
+      "evidenceChunkIds": [
+        "E11:0"
+      ],
+      "severity": 0,
+      "confidence": 0.5
+    }
+  ],
+  "statements": [
+    {
+      "evidenceId": "E9",
+      "transactions": [
+        {
+          "amount": "25000.00",
+          "upiId": "karthik.menon@okicici",
+          "direction": "debit",
+          "text": "23/09/2024 UPI/DR/426612349911/karthik.menon@okicici/Payment Debit: 25,000.00 Credit: - Balance: 65,780.00",
+          "citations": [
+            "E9:5"
+          ]
+        },
+        {
+          "amount": "10000.00",
+          "upiId": "ktk.pay88@ybl",
+          "direction": "debit",
+          "text": "27/09/2024 UPI/DR/426912340077/ktk.pay88@ybl/Payment Debit: 10,000.00 Credit: - Balance: 55,780.00",
+          "citations": [
+            "E9:6"
+          ]
+        }
+      ]
+    }
+  ],
+  "question": "How much did Ananya pay and to which UPI ID?"
+}

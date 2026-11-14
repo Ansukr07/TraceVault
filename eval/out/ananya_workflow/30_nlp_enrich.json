@@ -1,0 +1,2470 @@
+{
+  "items": [
+    {
+      "id": "E1:0",
+      "entities": [
+        {
+          "type": "PERSON",
+          "text": "Ananya",
+          "start": 3,
+          "end": 9,
+          "norm": "Ananya Rao"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E1:1",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E1:2",
+      "entities": [
+        {
+          "type": "PERSON",
+          "text": "Karthik",
+          "start": 7,
+          "end": 14,
+          "norm": "Karthik Menon"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E1:3",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E1:4",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E1:5",
+      "entities": [
+        {
+          "type": "DATE",
+          "text": "today",
+          "start": 26,
+          "end": 31,
+          "norm": "2024-09-07T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "times": [
+        {
+          "text": "today",
+          "start": 26,
+          "end": 31,
+          "ts": "2024-09-07T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E1:6",
+      "entities": [
+        {
+          "type": "PERSON",
+          "text": "Ananya",
+          "start": 7,
+          "end": 13,
+          "norm": "Ananya Rao"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E1:7",
+      "entities": [
+        {
+          "type": "PERSON",
+          "text": "Karthik",
+          "start": 0,
+          "end": 7,
+          "norm": "Karthik Menon"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E1:8",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E1:9",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E1:10",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E1:11",
+      "entities": [
+        {
+          "type": "LOCATION",
+          "text": "Nimbus",
+          "start": 17,
+          "end": 23,
+          "norm": "Nimbus"
+        },
+        {
+          "type": "LOCATION",
+          "text": "Mysuru",
+          "start": 44,
+          "end": 50,
+          "norm": "Mysuru"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E1:12",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E1:13",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E1:14",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E1:15",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E1:16",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E1:17",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E1:18",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E1:19",
+      "entities": [
+        {
+          "type": "MONEY",
+          "text": "15000",
+          "start": 5,
+          "end": 10,
+          "norm": 15000
+        },
+        {
+          "type": "UPI_ID",
+          "text": "karthik.menon@okicici",
+          "start": 14,
+          "end": 35,
+          "norm": "karthik.menon@okicici"
+        },
+        {
+          "type": "TIME",
+          "text": "Tonight",
+          "start": 56,
+          "end": 63,
+          "norm": "2024-09-22T21:00:00",
+          "precision": "approx"
+        }
+      ],
+      "times": [
+        {
+          "text": "Tonight",
+          "start": 56,
+          "end": 63,
+          "ts": "2024-09-22T21:00:00",
+          "precision": "approx"
+        }
+      ],
+      "severity": {
+        "score": 1,
+        "labels": [
+          "financial_request"
+        ]
+      }
+    },
+    {
+      "id": "E1:20",
+      "entities": [
+        {
+          "type": "TIME",
+          "text": "kal subah",
+          "start": 6,
+          "end": 15,
+          "norm": "2024-09-23T09:00:00",
+          "precision": "approx"
+        }
+      ],
+      "times": [
+        {
+          "text": "kal subah",
+          "start": 6,
+          "end": 15,
+          "ts": "2024-09-23T09:00:00",
+          "precision": "approx"
+        }
+      ],
+      "severity": {
+        "score": 2,
+        "labels": [
+          "extortion"
+        ]
+      }
+    },
+    {
+      "id": "E1:21",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 1,
+        "labels": [
+          "financial_request"
+        ]
+      }
+    },
+    {
+      "id": "E1:22",
+      "entities": [
+        {
+          "type": "TIME",
+          "text": "10 baje",
+          "start": 28,
+          "end": 35,
+          "norm": "2024-09-22T10:00:00",
+          "precision": "exact"
+        }
+      ],
+      "times": [
+        {
+          "text": "10 baje",
+          "start": 28,
+          "end": 35,
+          "ts": "2024-09-22T10:00:00",
+          "precision": "exact"
+        }
+      ],
+      "severity": {
+        "score": 1,
+        "labels": [
+          "financial_request"
+        ]
+      }
+    },
+    {
+      "id": "E2:0",
+      "entities": [
+        {
+          "type": "PERSON",
+          "text": "Ananya",
+          "start": 3,
+          "end": 9,
+          "norm": "Ananya Rao"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E2:1",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E2:2",
+      "entities": [
+        {
+          "type": "PERSON",
+          "text": "Karthik",
+          "start": 7,
+          "end": 14,
+          "norm": "Karthik Menon"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E2:3",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E2:4",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E2:5",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E2:6",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E2:7",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E2:8",
+      "entities": [
+        {
+          "type": "DATE",
+          "text": "today",
+          "start": 26,
+          "end": 31,
+          "norm": "2024-09-07T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "times": [
+        {
+          "text": "today",
+          "start": 26,
+          "end": 31,
+          "ts": "2024-09-07T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E2:9",
+      "entities": [
+        {
+          "type": "PERSON",
+          "text": "Ananya",
+          "start": 7,
+          "end": 13,
+          "norm": "Ananya Rao"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E2:10",
+      "entities": [
+        {
+          "type": "PERSON",
+          "text": "Karthik",
+          "start": 0,
+          "end": 7,
+          "norm": "Karthik Menon"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E2:11",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E2:12",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E3:0",
+      "entities": [
+        {
+          "type": "ORG",
+          "text": "whatsapp",
+          "start": 15,
+          "end": 23,
+          "norm": "WhatsApp"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E3:1",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E3:2",
+      "entities": [
+        {
+          "type": "LOCATION",
+          "text": "Indiranagar",
+          "start": 34,
+          "end": 45,
+          "norm": "Indiranagar"
+        },
+        {
+          "type": "DATE",
+          "text": "today",
+          "start": 58,
+          "end": 63,
+          "norm": "2024-09-10T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "times": [
+        {
+          "text": "today",
+          "start": 58,
+          "end": 63,
+          "ts": "2024-09-10T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E3:3",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E3:4",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E4:0",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E4:1",
+      "entities": [
+        {
+          "type": "DATE",
+          "text": "14 Sep",
+          "start": 5,
+          "end": 11,
+          "norm": "2024-09-14T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "times": [
+        {
+          "text": "14 Sep",
+          "start": 5,
+          "end": 11,
+          "ts": "2024-09-14T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E4:2",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E4:3",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E4:4",
+      "entities": [
+        {
+          "type": "ORG",
+          "text": "police",
+          "start": 26,
+          "end": 32,
+          "norm": "Police"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E5:0",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E5:1",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E5:2",
+      "entities": [
+        {
+          "type": "LOCATION",
+          "text": "Nimbus",
+          "start": 17,
+          "end": 23,
+          "norm": "Nimbus"
+        },
+        {
+          "type": "LOCATION",
+          "text": "Mysuru",
+          "start": 44,
+          "end": 50,
+          "norm": "Mysuru"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E5:3",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E5:4",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E5:5",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E5:6",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E5:7",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E6:0",
+      "entities": [
+        {
+          "type": "PERSON",
+          "text": "Ananya",
+          "start": 0,
+          "end": 6,
+          "norm": "Ananya Rao"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E6:1",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E6:2",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E6:3",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E6:4",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E6:5",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E6:6",
+      "entities": [
+        {
+          "type": "PERSON",
+          "text": "anu.exposed",
+          "start": 0,
+          "end": 11,
+          "norm": "anu.exposed : 21 Sep, 9:05 pm"
+        },
+        {
+          "type": "DATE",
+          "text": "tomorrow",
+          "start": 27,
+          "end": 35,
+          "norm": "2024-09-22T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "times": [
+        {
+          "text": "tomorrow",
+          "start": 27,
+          "end": 35,
+          "ts": "2024-09-22T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E7:0",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E7:1",
+      "entities": [
+        {
+          "type": "MONEY",
+          "text": "15000",
+          "start": 5,
+          "end": 10,
+          "norm": 15000
+        },
+        {
+          "type": "UPI_ID",
+          "text": "karthik.menon@okicici",
+          "start": 14,
+          "end": 35,
+          "norm": "karthik.menon@okicici"
+        },
+        {
+          "type": "TIME",
+          "text": "Tonight",
+          "start": 56,
+          "end": 63,
+          "norm": "2024-09-22T21:00:00",
+          "precision": "approx"
+        }
+      ],
+      "times": [
+        {
+          "text": "Tonight",
+          "start": 56,
+          "end": 63,
+          "ts": "2024-09-22T21:00:00",
+          "precision": "approx"
+        }
+      ],
+      "severity": {
+        "score": 1,
+        "labels": [
+          "financial_request"
+        ]
+      }
+    },
+    {
+      "id": "E7:2",
+      "entities": [
+        {
+          "type": "TIME",
+          "text": "kal subah",
+          "start": 6,
+          "end": 15,
+          "norm": "2024-09-23T09:00:00",
+          "precision": "approx"
+        }
+      ],
+      "times": [
+        {
+          "text": "kal subah",
+          "start": 6,
+          "end": 15,
+          "ts": "2024-09-23T09:00:00",
+          "precision": "approx"
+        }
+      ],
+      "severity": {
+        "score": 2,
+        "labels": [
+          "extortion"
+        ]
+      }
+    },
+    {
+      "id": "E7:3",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 1,
+        "labels": [
+          "financial_request"
+        ]
+      }
+    },
+    {
+      "id": "E7:4",
+      "entities": [
+        {
+          "type": "TIME",
+          "text": "10 baje",
+          "start": 28,
+          "end": 35,
+          "norm": "2024-09-22T10:00:00",
+          "precision": "exact"
+        }
+      ],
+      "times": [
+        {
+          "text": "10 baje",
+          "start": 28,
+          "end": 35,
+          "ts": "2024-09-22T10:00:00",
+          "precision": "exact"
+        }
+      ],
+      "severity": {
+        "score": 1,
+        "labels": [
+          "financial_request"
+        ]
+      }
+    },
+    {
+      "id": "E8:0",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E8:1",
+      "entities": [
+        {
+          "type": "MONEY",
+          "text": "30000",
+          "start": 18,
+          "end": 23,
+          "norm": 30000
+        },
+        {
+          "type": "UPI_ID",
+          "text": "ktk.pay88@ybl",
+          "start": 27,
+          "end": 40,
+          "norm": "ktk.pay88@ybl"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 1,
+        "labels": [
+          "financial_request"
+        ]
+      }
+    },
+    {
+      "id": "E8:2",
+      "entities": [
+        {
+          "type": "PERSON",
+          "text": "Instagram",
+          "start": 10,
+          "end": 19,
+          "norm": "Instagram : Active 2m ago"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E8:3",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E8:4",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E8:5",
+      "entities": [
+        {
+          "type": "MONEY",
+          "text": "Rs 25,000",
+          "start": 0,
+          "end": 9,
+          "norm": 25000
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 1,
+        "labels": [
+          "financial_request"
+        ]
+      }
+    },
+    {
+      "id": "E8:6",
+      "entities": [
+        {
+          "type": "DATE",
+          "text": "Sunday",
+          "start": 14,
+          "end": 20,
+          "norm": "2024-09-29T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "times": [
+        {
+          "text": "Sunday",
+          "start": 14,
+          "end": 20,
+          "ts": "2024-09-29T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E9:0",
+      "entities": [
+        {
+          "type": "ORG",
+          "text": "HDFC",
+          "start": 0,
+          "end": 4,
+          "norm": "HDFC"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E9:1",
+      "entities": [
+        {
+          "type": "PERSON",
+          "text": "Ananya",
+          "start": 16,
+          "end": 22,
+          "norm": "Ananya Rao"
+        },
+        {
+          "type": "BANK_ACCT",
+          "text": "XXXXXXX9035",
+          "start": 35,
+          "end": 46,
+          "norm": "XXXXXXX9035"
+        },
+        {
+          "type": "LOCATION",
+          "text": "Indiranagar",
+          "start": 55,
+          "end": 66,
+          "norm": "Indiranagar"
+        },
+        {
+          "type": "LOCATION",
+          "text": "Bengaluru",
+          "start": 68,
+          "end": 77,
+          "norm": "Bengaluru"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E9:2",
+      "entities": [
+        {
+          "type": "DATE",
+          "text": "01/09/2024",
+          "start": 8,
+          "end": 18,
+          "norm": "2024-09-01T00:00:00",
+          "precision": "day"
+        },
+        {
+          "type": "DATE",
+          "text": "30/09/2024",
+          "start": 22,
+          "end": 32,
+          "norm": "2024-09-30T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "times": [
+        {
+          "text": "01/09/2024",
+          "start": 8,
+          "end": 18,
+          "ts": "2024-09-01T00:00:00",
+          "precision": "day"
+        },
+        {
+          "text": "30/09/2024",
+          "start": 22,
+          "end": 32,
+          "ts": "2024-09-30T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E9:3",
+      "entities": [
+        {
+          "type": "DATE",
+          "text": "02/09/2024",
+          "start": 0,
+          "end": 10,
+          "norm": "2024-09-02T00:00:00",
+          "precision": "day"
+        },
+        {
+          "type": "MONEY",
+          "text": "68,000.00",
+          "start": 62,
+          "end": 71,
+          "norm": 68000,
+          "direction": "credit"
+        }
+      ],
+      "times": [
+        {
+          "text": "02/09/2024",
+          "start": 0,
+          "end": 10,
+          "ts": "2024-09-02T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E9:4",
+      "entities": [
+        {
+          "type": "DATE",
+          "text": "12/09/2024",
+          "start": 0,
+          "end": 10,
+          "norm": "2024-09-12T00:00:00",
+          "precision": "day"
+        },
+        {
+          "type": "MONEY",
+          "text": "640.00",
+          "start": 50,
+          "end": 56,
+          "norm": 640,
+          "direction": "debit"
+        }
+      ],
+      "times": [
+        {
+          "text": "12/09/2024",
+          "start": 0,
+          "end": 10,
+          "ts": "2024-09-12T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "severity": {
+        "score": 1,
+        "labels": [
+          "financial_request"
+        ]
+      }
+    },
+    {
+      "id": "E9:5",
+      "entities": [
+        {
+          "type": "DATE",
+          "text": "23/09/2024",
+          "start": 0,
+          "end": 10,
+          "norm": "2024-09-23T00:00:00",
+          "precision": "day"
+        },
+        {
+          "type": "UPI_ID",
+          "text": "karthik.menon@okicici",
+          "start": 31,
+          "end": 52,
+          "norm": "karthik.menon@okicici"
+        },
+        {
+          "type": "MONEY",
+          "text": "25,000.00",
+          "start": 68,
+          "end": 77,
+          "norm": 25000,
+          "direction": "debit"
+        }
+      ],
+      "times": [
+        {
+          "text": "23/09/2024",
+          "start": 0,
+          "end": 10,
+          "ts": "2024-09-23T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "severity": {
+        "score": 1,
+        "labels": [
+          "financial_request"
+        ]
+      }
+    },
+    {
+      "id": "E9:6",
+      "entities": [
+        {
+          "type": "DATE",
+          "text": "27/09/2024",
+          "start": 0,
+          "end": 10,
+          "norm": "2024-09-27T00:00:00",
+          "precision": "day"
+        },
+        {
+          "type": "UPI_ID",
+          "text": "ktk.pay88@ybl",
+          "start": 31,
+          "end": 44,
+          "norm": "ktk.pay88@ybl"
+        },
+        {
+          "type": "MONEY",
+          "text": "10,000.00",
+          "start": 60,
+          "end": 69,
+          "norm": 10000,
+          "direction": "debit"
+        }
+      ],
+      "times": [
+        {
+          "text": "27/09/2024",
+          "start": 0,
+          "end": 10,
+          "ts": "2024-09-27T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "severity": {
+        "score": 1,
+        "labels": [
+          "financial_request"
+        ]
+      }
+    },
+    {
+      "id": "E10:0",
+      "entities": [
+        {
+          "type": "PERSON",
+          "text": "Anonymous",
+          "start": 6,
+          "end": 15,
+          "norm": "Anonymous"
+        },
+        {
+          "type": "EMAIL",
+          "text": "anon.truth.blr@proton.me",
+          "start": 17,
+          "end": 41,
+          "norm": "anon.truth.blr@proton.me"
+        },
+        {
+          "type": "PERSON",
+          "text": "Ananya",
+          "start": 47,
+          "end": 53,
+          "norm": "Ananya Rao"
+        },
+        {
+          "type": "EMAIL",
+          "text": "ananya.rao.blr@gmail.com",
+          "start": 59,
+          "end": 83,
+          "norm": "ananya.rao.blr@gmail.com"
+        },
+        {
+          "type": "DATE",
+          "text": "28 Sep 2024",
+          "start": 117,
+          "end": 128,
+          "norm": "2024-09-28T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "times": [
+        {
+          "text": "28 Sep 2024",
+          "start": 117,
+          "end": 128,
+          "ts": "2024-09-28T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E10:1",
+      "entities": [
+        {
+          "type": "PERSON",
+          "text": "Ananya",
+          "start": 0,
+          "end": 6,
+          "norm": "Ananya Rao"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E10:2",
+      "entities": [
+        {
+          "type": "LOCATION",
+          "text": "Indiranagar",
+          "start": 61,
+          "end": 72,
+          "norm": "Indiranagar"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E10:3",
+      "entities": [
+        {
+          "type": "DATE",
+          "text": "Sunday",
+          "start": 15,
+          "end": 21,
+          "norm": "2024-09-22T00:00:00",
+          "precision": "day"
+        },
+        {
+          "type": "EMAIL",
+          "text": "hr@nimbuslabs.example",
+          "start": 48,
+          "end": 69,
+          "norm": "hr@nimbuslabs.example"
+        },
+        {
+          "type": "ORG",
+          "text": "WhatsApp",
+          "start": 88,
+          "end": 96,
+          "norm": "WhatsApp"
+        }
+      ],
+      "times": [
+        {
+          "text": "Sunday",
+          "start": 15,
+          "end": 21,
+          "ts": "2024-09-22T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "severity": {
+        "score": 3,
+        "labels": [
+          "extortion",
+          "financial_request"
+        ]
+      }
+    },
+    {
+      "id": "E10:4",
+      "entities": [
+        {
+          "type": "ORG",
+          "text": "police",
+          "start": 22,
+          "end": 28,
+          "norm": "Police"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E10:5",
+      "entities": [
+        {
+          "type": "EMAIL",
+          "text": "anon.truth.blr@proton.me",
+          "start": 5,
+          "end": 29,
+          "norm": "anon.truth.blr@proton.me"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E11:0",
+      "entities": [
+        {
+          "type": "PERSON",
+          "text": "Ananya",
+          "start": 11,
+          "end": 17,
+          "norm": "Ananya Rao"
+        },
+        {
+          "type": "LOCATION",
+          "text": "Nimbus Labs",
+          "start": 33,
+          "end": 44,
+          "norm": "Nimbus Labs"
+        },
+        {
+          "type": "LOCATION",
+          "text": "Bengaluru",
+          "start": 48,
+          "end": 57,
+          "norm": "Bengaluru"
+        },
+        {
+          "type": "PERSON",
+          "text": "Karthik Menon",
+          "start": 59,
+          "end": 72,
+          "norm": "Karthik Menon"
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E11:1",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 0,
+        "labels": []
+      }
+    },
+    {
+      "id": "E11:2",
+      "entities": [
+        {
+          "type": "PERSON",
+          "text": "Instagram",
+          "start": 44,
+          "end": 53,
+          "norm": "Instagram : Active 2m ago"
+        },
+        {
+          "type": "DATE",
+          "text": "18th September",
+          "start": 66,
+          "end": 80,
+          "norm": "2026-09-18T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "times": [
+        {
+          "text": "18th September",
+          "start": 66,
+          "end": 80,
+          "ts": "2026-09-18T00:00:00",
+          "precision": "day"
+        }
+      ],
+      "severity": {
+        "score": 2,
+        "labels": [
+          "sexual"
+        ]
+      }
+    },
+    {
+      "id": "E11:3",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 1,
+        "labels": [
+          "financial_request"
+        ]
+      }
+    },
+    {
+      "id": "E11:4",
+      "entities": [
+        {
+          "type": "MONEY",
+          "text": "25000 rupees",
+          "start": 43,
+          "end": 55,
+          "norm": 25000
+        }
+      ],
+      "times": [],
+      "severity": {
+        "score": 1,
+        "labels": [
+          "financial_request"
+        ]
+      }
+    },
+    {
+      "id": "E12:0",
+      "entities": [],
+      "times": [],
+      "severity": {
+        "score": 1,
+        "labels": [
+          "financial_request"
+        ]
+      }
+    }
+  ],
+  "mentions": [
+    {
+      "chunkId": "E1:0",
+      "text": "Ananya",
+      "label": "PERSON",
+      "start": 3,
+      "end": 9,
+      "confidence": 0.95,
+      "normalized": "Ananya Rao",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E1:2",
+      "text": "Karthik",
+      "label": "PERSON",
+      "start": 7,
+      "end": 14,
+      "confidence": 0.95,
+      "normalized": "Karthik Menon",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E1:6",
+      "text": "Ananya",
+      "label": "PERSON",
+      "start": 7,
+      "end": 13,
+      "confidence": 0.95,
+      "normalized": "Ananya Rao",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E1:7",
+      "text": "Karthik",
+      "label": "PERSON",
+      "start": 0,
+      "end": 7,
+      "confidence": 0.95,
+      "normalized": "Karthik Menon",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E1:11",
+      "text": "Nimbus",
+      "label": "LOCATION",
+      "start": 17,
+      "end": 23,
+      "confidence": 0.95,
+      "normalized": "Nimbus",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E1:11",
+      "text": "Mysuru",
+      "label": "LOCATION",
+      "start": 44,
+      "end": 50,
+      "confidence": 0.95,
+      "normalized": "Mysuru",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E1:19",
+      "text": "15000",
+      "label": "MONEY",
+      "start": 5,
+      "end": 10,
+      "confidence": 0.95,
+      "normalized": "15000",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E1:19",
+      "text": "karthik.menon@okicici",
+      "label": "UPI_ID",
+      "start": 14,
+      "end": 35,
+      "confidence": 0.95,
+      "normalized": "karthik.menon@okicici",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E2:0",
+      "text": "Ananya",
+      "label": "PERSON",
+      "start": 3,
+      "end": 9,
+      "confidence": 0.95,
+      "normalized": "Ananya Rao",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E2:2",
+      "text": "Karthik",
+      "label": "PERSON",
+      "start": 7,
+      "end": 14,
+      "confidence": 0.95,
+      "normalized": "Karthik Menon",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E2:9",
+      "text": "Ananya",
+      "label": "PERSON",
+      "start": 7,
+      "end": 13,
+      "confidence": 0.95,
+      "normalized": "Ananya Rao",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E2:10",
+      "text": "Karthik",
+      "label": "PERSON",
+      "start": 0,
+      "end": 7,
+      "confidence": 0.95,
+      "normalized": "Karthik Menon",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E3:0",
+      "text": "whatsapp",
+      "label": "ORG",
+      "start": 15,
+      "end": 23,
+      "confidence": 0.95,
+      "normalized": "WhatsApp",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E3:2",
+      "text": "Indiranagar",
+      "label": "LOCATION",
+      "start": 34,
+      "end": 45,
+      "confidence": 0.95,
+      "normalized": "Indiranagar",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E4:4",
+      "text": "police",
+      "label": "ORG",
+      "start": 26,
+      "end": 32,
+      "confidence": 0.95,
+      "normalized": "Police",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E5:2",
+      "text": "Nimbus",
+      "label": "LOCATION",
+      "start": 17,
+      "end": 23,
+      "confidence": 0.95,
+      "normalized": "Nimbus",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E5:2",
+      "text": "Mysuru",
+      "label": "LOCATION",
+      "start": 44,
+      "end": 50,
+      "confidence": 0.95,
+      "normalized": "Mysuru",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E6:0",
+      "text": "Ananya",
+      "label": "PERSON",
+      "start": 0,
+      "end": 6,
+      "confidence": 0.95,
+      "normalized": "Ananya Rao",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E6:6",
+      "text": "anu.exposed",
+      "label": "PERSON",
+      "start": 0,
+      "end": 11,
+      "confidence": 0.95,
+      "normalized": "anu.exposed : 21 Sep, 9:05 pm",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E7:1",
+      "text": "15000",
+      "label": "MONEY",
+      "start": 5,
+      "end": 10,
+      "confidence": 0.95,
+      "normalized": "15000",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E7:1",
+      "text": "karthik.menon@okicici",
+      "label": "UPI_ID",
+      "start": 14,
+      "end": 35,
+      "confidence": 0.95,
+      "normalized": "karthik.menon@okicici",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E8:1",
+      "text": "30000",
+      "label": "MONEY",
+      "start": 18,
+      "end": 23,
+      "confidence": 0.95,
+      "normalized": "30000",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E8:1",
+      "text": "ktk.pay88@ybl",
+      "label": "UPI_ID",
+      "start": 27,
+      "end": 40,
+      "confidence": 0.95,
+      "normalized": "ktk.pay88@ybl",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E8:2",
+      "text": "Instagram",
+      "label": "PERSON",
+      "start": 10,
+      "end": 19,
+      "confidence": 0.95,
+      "normalized": "Instagram : Active 2m ago",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E8:5",
+      "text": "Rs 25,000",
+      "label": "MONEY",
+      "start": 0,
+      "end": 9,
+      "confidence": 0.95,
+      "normalized": "25000",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E9:0",
+      "text": "HDFC",
+      "label": "ORG",
+      "start": 0,
+      "end": 4,
+      "confidence": 0.95,
+      "normalized": "HDFC",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E9:1",
+      "text": "Ananya",
+      "label": "PERSON",
+      "start": 16,
+      "end": 22,
+      "confidence": 0.95,
+      "normalized": "Ananya Rao",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E9:1",
+      "text": "XXXXXXX9035",
+      "label": "BANK_ACCT",
+      "start": 35,
+      "end": 46,
+      "confidence": 0.95,
+      "normalized": "XXXXXXX9035",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E9:1",
+      "text": "Indiranagar",
+      "label": "LOCATION",
+      "start": 55,
+      "end": 66,
+      "confidence": 0.95,
+      "normalized": "Indiranagar",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E9:1",
+      "text": "Bengaluru",
+      "label": "LOCATION",
+      "start": 68,
+      "end": 77,
+      "confidence": 0.95,
+      "normalized": "Bengaluru",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E9:3",
+      "text": "68,000.00",
+      "label": "MONEY",
+      "start": 62,
+      "end": 71,
+      "confidence": 0.95,
+      "normalized": "68000",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E9:4",
+      "text": "640.00",
+      "label": "MONEY",
+      "start": 50,
+      "end": 56,
+      "confidence": 0.95,
+      "normalized": "640",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E9:5",
+      "text": "karthik.menon@okicici",
+      "label": "UPI_ID",
+      "start": 31,
+      "end": 52,
+      "confidence": 0.95,
+      "normalized": "karthik.menon@okicici",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E9:5",
+      "text": "25,000.00",
+      "label": "MONEY",
+      "start": 68,
+      "end": 77,
+      "confidence": 0.95,
+      "normalized": "25000",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E9:6",
+      "text": "ktk.pay88@ybl",
+      "label": "UPI_ID",
+      "start": 31,
+      "end": 44,
+      "confidence": 0.95,
+      "normalized": "ktk.pay88@ybl",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E9:6",
+      "text": "10,000.00",
+      "label": "MONEY",
+      "start": 60,
+      "end": 69,
+      "confidence": 0.95,
+      "normalized": "10000",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E10:0",
+      "text": "Anonymous",
+      "label": "PERSON",
+      "start": 6,
+      "end": 15,
+      "confidence": 0.95,
+      "normalized": "Anonymous",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E10:0",
+      "text": "anon.truth.blr@proton.me",
+      "label": "EMAIL",
+      "start": 17,
+      "end": 41,
+      "confidence": 0.95,
+      "normalized": "anon.truth.blr@proton.me",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E10:0",
+      "text": "Ananya",
+      "label": "PERSON",
+      "start": 47,
+      "end": 53,
+      "confidence": 0.95,
+      "normalized": "Ananya Rao",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E10:0",
+      "text": "ananya.rao.blr@gmail.com",
+      "label": "EMAIL",
+      "start": 59,
+      "end": 83,
+      "confidence": 0.95,
+      "normalized": "ananya.rao.blr@gmail.com",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E10:1",
+      "text": "Ananya",
+      "label": "PERSON",
+      "start": 0,
+      "end": 6,
+      "confidence": 0.95,
+      "normalized": "Ananya Rao",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E10:2",
+      "text": "Indiranagar",
+      "label": "LOCATION",
+      "start": 61,
+      "end": 72,
+      "confidence": 0.95,
+      "normalized": "Indiranagar",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E10:3",
+      "text": "hr@nimbuslabs.example",
+      "label": "EMAIL",
+      "start": 48,
+      "end": 69,
+      "confidence": 0.95,
+      "normalized": "hr@nimbuslabs.example",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E10:3",
+      "text": "WhatsApp",
+      "label": "ORG",
+      "start": 88,
+      "end": 96,
+      "confidence": 0.95,
+      "normalized": "WhatsApp",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E10:4",
+      "text": "police",
+      "label": "ORG",
+      "start": 22,
+      "end": 28,
+      "confidence": 0.95,
+      "normalized": "Police",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E10:5",
+      "text": "anon.truth.blr@proton.me",
+      "label": "EMAIL",
+      "start": 5,
+      "end": 29,
+      "confidence": 0.95,
+      "normalized": "anon.truth.blr@proton.me",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E11:0",
+      "text": "Ananya",
+      "label": "PERSON",
+      "start": 11,
+      "end": 17,
+      "confidence": 0.95,
+      "normalized": "Ananya Rao",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E11:0",
+      "text": "Nimbus Labs",
+      "label": "LOCATION",
+      "start": 33,
+      "end": 44,
+      "confidence": 0.95,
+      "normalized": "Nimbus Labs",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E11:0",
+      "text": "Bengaluru",
+      "label": "LOCATION",
+      "start": 48,
+      "end": 57,
+      "confidence": 0.95,
+      "normalized": "Bengaluru",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E11:0",
+      "text": "Karthik Menon",
+      "label": "PERSON",
+      "start": 59,
+      "end": 72,
+      "confidence": 0.95,
+      "normalized": "Karthik Menon",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E11:2",
+      "text": "Instagram",
+      "label": "PERSON",
+      "start": 44,
+      "end": 53,
+      "confidence": 0.95,
+      "normalized": "Instagram : Active 2m ago",
+      "source": "rules"
+    },
+    {
+      "chunkId": "E11:4",
+      "text": "25000 rupees",
+      "label": "MONEY",
+      "start": 43,
+      "end": 55,
+      "confidence": 0.95,
+      "normalized": "25000",
+      "source": "rules"
+    }
+  ],
+  "times": [
+    {
+      "chunkId": "E1:5",
+      "expression": "today",
+      "start": 26,
+      "end": 31,
+      "iso": "2024-09-07T00:00:00",
+      "rangeEnd": null,
+      "tsPrecision": "approx",
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "chunkId": "E1:19",
+      "expression": "Tonight",
+      "start": 56,
+      "end": 63,
+      "iso": "2024-09-22T21:00:00",
+      "rangeEnd": null,
+      "tsPrecision": "approx",
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "chunkId": "E1:20",
+      "expression": "kal subah",
+      "start": 6,
+      "end": 15,
+      "iso": "2024-09-23T09:00:00",
+      "rangeEnd": null,
+      "tsPrecision": "approx",
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "chunkId": "E1:22",
+      "expression": "10 baje",
+      "start": 28,
+      "end": 35,
+      "iso": "2024-09-22T10:00:00",
+      "rangeEnd": null,
+      "tsPrecision": "exact",
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "chunkId": "E2:8",
+      "expression": "today",
+      "start": 26,
+      "end": 31,
+      "iso": "2024-09-07T00:00:00",
+      "rangeEnd": null,
+      "tsPrecision": "approx",
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "chunkId": "E3:2",
+      "expression": "today",
+      "start": 58,
+      "end": 63,
+      "iso": "2024-09-10T00:00:00",
+      "rangeEnd": null,
+      "tsPrecision": "approx",
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "chunkId": "E4:1",
+      "expression": "14 Sep",
+      "start": 5,
+      "end": 11,
+      "iso": "2024-09-14T00:00:00",
+      "rangeEnd": null,
+      "tsPrecision": "approx",
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "chunkId": "E6:6",
+      "expression": "tomorrow",
+      "start": 27,
+      "end": 35,
+      "iso": "2024-09-22T00:00:00",
+      "rangeEnd": null,
+      "tsPrecision": "approx",
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "chunkId": "E7:1",
+      "expression": "Tonight",
+      "start": 56,
+      "end": 63,
+      "iso": "2024-09-22T21:00:00",
+      "rangeEnd": null,
+      "tsPrecision": "approx",
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "chunkId": "E7:2",
+      "expression": "kal subah",
+      "start": 6,
+      "end": 15,
+      "iso": "2024-09-23T09:00:00",
+      "rangeEnd": null,
+      "tsPrecision": "approx",
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "chunkId": "E7:4",
+      "expression": "10 baje",
+      "start": 28,
+      "end": 35,
+      "iso": "2024-09-22T10:00:00",
+      "rangeEnd": null,
+      "tsPrecision": "exact",
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "chunkId": "E8:6",
+      "expression": "Sunday",
+      "start": 14,
+      "end": 20,
+      "iso": "2024-09-29T00:00:00",
+      "rangeEnd": null,
+      "tsPrecision": "approx",
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "chunkId": "E9:2",
+      "expression": "01/09/2024",
+      "start": 8,
+      "end": 18,
+      "iso": "2024-09-01T00:00:00",
+      "rangeEnd": null,
+      "tsPrecision": "approx",
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "chunkId": "E9:2",
+      "expression": "30/09/2024",
+      "start": 22,
+      "end": 32,
+      "iso": "2024-09-30T00:00:00",
+      "rangeEnd": null,
+      "tsPrecision": "approx",
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "chunkId": "E9:3",
+      "expression": "02/09/2024",
+      "start": 0,
+      "end": 10,
+      "iso": "2024-09-02T00:00:00",
+      "rangeEnd": null,
+      "tsPrecision": "approx",
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "chunkId": "E9:4",
+      "expression": "12/09/2024",
+      "start": 0,
+      "end": 10,
+      "iso": "2024-09-12T00:00:00",
+      "rangeEnd": null,
+      "tsPrecision": "approx",
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "chunkId": "E9:5",
+      "expression": "23/09/2024",
+      "start": 0,
+      "end": 10,
+      "iso": "2024-09-23T00:00:00",
+      "rangeEnd": null,
+      "tsPrecision": "approx",
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "chunkId": "E9:6",
+      "expression": "27/09/2024",
+      "start": 0,
+      "end": 10,
+      "iso": "2024-09-27T00:00:00",
+      "rangeEnd": null,
+      "tsPrecision": "approx",
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "chunkId": "E10:0",
+      "expression": "28 Sep 2024",
+      "start": 117,
+      "end": 128,
+      "iso": "2024-09-28T00:00:00",
+      "rangeEnd": null,
+      "tsPrecision": "approx",
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "chunkId": "E10:3",
+      "expression": "Sunday",
+      "start": 15,
+      "end": 21,
+      "iso": "2024-09-22T00:00:00",
+      "rangeEnd": null,
+      "tsPrecision": "approx",
+      "timezone": "Asia/Kolkata"
+    },
+    {
+      "chunkId": "E11:2",
+      "expression": "18th September",
+      "start": 66,
+      "end": 80,
+      "iso": "2026-09-18T00:00:00",
+      "rangeEnd": null,
+      "tsPrecision": "approx",
+      "timezone": "Asia/Kolkata"
+    }
+  ],
+  "workingTexts": {
+    "E1:0": "Hi Ananya! Saw the Nimbus launch post. Proud of you 🎉",
+    "E1:1": "Coffee this weekend? Just us, like old times",
+    "E1:2": "Thanks Karthik! Busy with the release this weekend, sorry",
+    "E1:3": "You replied to everyone's stories except mine",
+    "E1:4": "Why are you ignoring me?",
+    "E1:5": "I waited near your office today. You left early?",
+    "E1:6": "Reply. Ananya. REPLY.",
+    "E1:7": "Karthik, I am not interested. Please stop messaging and calling me. This is making me very uncomfortable.",
+    "E1:8": "Yes, so? I am not doing anything wrong, you are overreacting.",
+    "E1:9": "You changed your number? Lol. Found you anyway.",
+    "E1:10": "I still have the photos from the Goa team trip. The private ones.",
+    "E1:11": "Imagine if HR at Nimbus and your parents in Mysuru got them",
+    "E1:12": "Delete them. That was a private moment and you know it.",
+    "E1:13": "Delete? Haha. Pehle mujhse baat kar, phir sochunga",
+    "E1:14": "Your parents will know, you see",
+    "E1:15": "I will tell everyone you slept your way into the promotion",
+    "E1:16": "That is a lie. I will report you.",
+    "E1:17": "Report it and see. I will end your career.",
+    "E1:18": "Story is live. 400 views already 🙂",
+    "E1:19": "Send 15000 to karthik.menon@okicici and I take it down. Tonight.",
+    "E1:20": "Otherwise, everything will leak tomorrow morning. Your choice.",
+    "E1:21": "Please don't do this. I will pay, just delete everything.",
+    "E1:22": "Send the screenshot as proof of payment. By 10 AM",
+    "E2:0": "Hi Ananya! Saw the Nimbus launch post. Proud of you",
+    "E2:1": "Coffee this weekend? Just us, like old times",
+    "E2:2": "Thanks Karthik! Busy with the release this weekend,\nsorry",
+    "E2:3": "You replied to everyone's stories except mine",
+    "E2:4": "Why are you ignoring me?",
+    "E2:5": "Missed call",
+    "E2:6": "Missed call",
+    "E2:7": "Missed call",
+    "E2:8": "I waited near your office today. You left early?",
+    "E2:9": "Reply. Ananya. REPLY.",
+    "E2:10": "Karthik, I am not interested. Please stop messaging\nand calling me. This is making me very\nuncomfortable.",
+    "E2:11": "Yes, so? I'm not doing anything wrong, you overreact is doing",
+    "E2:12": "I am blocking this number.",
+    "E3:0": "blocking me on whatsapp won't help",
+    "E3:1": "this is my new insta btw. you can't block everything",
+    "E3:2": "I know you take the 8:20 bus from Indiranagar. Blue\nkurta today, nice",
+    "E3:3": "I will report this account.",
+    "E3:4": "Report it. I don't care.",
+    "E4:0": "Not in your contacts",
+    "E4:1": "Sat, 14 Sep",
+    "E4:2": "looks good on you.",
+    "E4:3": "Your PG is on 12th Main, the green gate. I know.",
+    "E4:4": "Don't get any ideas about police. Nobody will believe\nyou.",
+    "E5:0": "Kemkue nok pno on raqnu no pauep non",
+    "E5:1": "I still have the photos from the Goa team trip. The\nprivate ones.",
+    "E5:2": "Imagine if HR at Nimbus and your parents in Mysuru\ngot them",
+    "E5:3": "Delete them. That was a private moment and you\nknow it.",
+    "E5:4": "Delete? Haha. Pehle mujhse baat kar, phir sochunga",
+    "E5:5": "I will tell everyone you slept your way into the\npromotion",
+    "E5:6": "That is a lie. I will report you.",
+    "E5:7": "Go ahead and report it. I will end your career.",
+    "E6:0": "Ananya Rao (Nimbus Labs) is NOT\nwho you think she is. Full story",
+    "E6:1": "coming. Ask me for the pics 0o",
+    "E6:2": "O 412 views",
+    "E6:3": "Replies & comments",
+    "E6:4": "priyam.r_ wait is this the Nimbus designer??",
+    "E6:5": "blr_techgossip dm me the pics pls",
+    "E6:6": "anu.exposed Rest goes live tomorrow, watch this space",
+    "E7:0": "Story is live. 400 views already",
+    "E7:1": "Send 15000 to karthik.menon@okicici and I take it\ndown. Tonight.",
+    "E7:2": "Otherwise, everything will leak tomorrow morning. Your choice.",
+    "E7:3": "Please don't do this. I will pay, just delete everything.",
+    "E7:4": "Send the screenshot as proof of payment. By 10 AM",
+    "E8:0": "Story is down. You think that's the end?",
+    "E8:1": "Rent is due. Send 30000 to ktk.pay88@ybl",
+    "E8:2": "Or I will post these photos on Instagram, to all my followers.",
+    "E8:3": "saamne",
+    "E8:4": "You already took 25,000. Stop.",
+    "E8:5": "Rs 25,000? That was just the interest",
+    "E8:6": "You have till Sunday.",
+    "E9:0": "HDFC BANK - Account Statement (Demo)",
+    "E9:1": "Account holder: Ananya Rao A/c no: XXXXXXX9035 Branch: Indiranagar, Bengaluru",
+    "E9:2": "Period: 01/09/2024 to 30/09/2024",
+    "E9:3": "02/09/2024 SALARY CREDIT NIMBUS LABS PVT LTD Debit: - Credit: 68,000.00 Balance: 91,420.00",
+    "E9:4": "12/09/2024 UPI/DR/425512340011/Swiggy/Food Debit: 640.00 Credit: - Balance: 90,780.00",
+    "E9:5": "23/09/2024 UPI/DR/426612349911/karthik.menon@okicici/Payment Debit: 25,000.00 Credit: - Balance: 65,780.00",
+    "E9:6": "27/09/2024 UPI/DR/426912340077/ktk.pay88@ybl/Payment Debit: 10,000.00 Credit: - Balance: 55,780.00",
+    "E10:0": "From: Anonymous <anon.truth.blr@proton.me>\nTo: Ananya Rao <ananya.rao.blr@gmail.com>\nSubject: last chance\nDate: Sat, 28 Sep 2024 22:41:00 +0530",
+    "E10:1": "Ananya,",
+    "E10:2": "You think moving PG will stop me? 14th Cross is not far from Indiranagar either.",
+    "E10:3": "Pay the 30k by Sunday. Otherwise the pics go to hr@nimbuslabs.example and your father's WhatsApp.",
+    "E10:4": "Don't bother with the police, I use new SIMs every time. Tell Priya from design I said hi too.",
+    "E10:5": "- K (anon.truth.blr@proton.me)",
+    "E11:0": "My name is Ananya Rao. I work at Nimbus Labs in Bengaluru. Karthik Menon is a former colleague. Since early September, he has been messaging and calling me repeatedly.",
+    "E11:1": "Even after I told him to stop, he followed me, knew where I live.",
+    "E11:2": "And my blog, and he used new numbers and an Instagram account. On 18th September, he threatened to send private photos to my office and my parents.",
+    "E11:3": "On 22nd September, he demanded ₹15000.",
+    "E11:4": "To take down a fake story about me, I paid ₹25,000 on 25.",
+    "E12:0": "I sent ₹25000 on September 25 because I was very scared. Now he is asking for ₹30000 more."
+  },
+  "embeddings": {},
+  "indexedChunks": 92,
+  "incident": {
+    "labels": [],
+    "scores": {
+      "harassment": 0.5144,
+      "financial_fraud": 0.4342,
+      "scams": 0.3733,
+      "upi_bank_fraud": 0.4288
+    },
+    "primary": "other",
+    "confidence": 0.5144,
+    "provider": "laya",
+    "warnings": [
+      "Hugging Face Laya inference failed (HTTP 402: no Inference Provider credits); used local Laya.",
+      "Laya confidence is uncalibrated; fallback to other and Owner review is enabled."
+    ],
+    "needsOwnerReview": true
+  },
+  "warnings": [],
+  "generator": {
+    "name": "nlp_rules",
+    "version": 1,
+    "spacy": false,
+    "system1": "convaiinnovations/laya"
+  }
+}

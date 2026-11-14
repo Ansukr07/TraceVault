@@ -1,0 +1,55 @@
+{
+  "caseId": "ananya-demo",
+  "result": {
+    "answer": null,
+    "retrievalSnippets": [
+      {
+        "citation": "E11:2",
+        "text": "And my blog, and he used new numbers and an Instagram account. On 18th September, he threatened to send private photos to my office and my parents."
+      },
+      {
+        "citation": "E5:7",
+        "text": "Go ahead and report it. I will end your career."
+      },
+      {
+        "citation": "E1:17",
+        "text": "Report it and see. I will end your career."
+      },
+      {
+        "citation": "E1:11",
+        "text": "Imagine if HR at Nimbus and your parents in Mysuru got them"
+      },
+      {
+        "citation": "E5:2",
+        "text": "Imagine if HR at Nimbus and your parents in Mysuru\ngot them"
+      },
+      {
+        "citation": "E10:3",
+        "text": "Pay the 30k by Sunday. Otherwise the pics go to hr@nimbuslabs.example and your father's WhatsApp."
+      },
+      {
+        "citation": "E1:10",
+        "text": "I still have the photos from the Goa team trip. The private ones."
+      },
+      {
+        "citation": "E5:1",
+        "text": "I still have the photos from the Goa team trip. The\nprivate ones."
+      }
+    ],
+    "abstained": true,
+    "citations": [
+      "E11:2",
+      "E5:7",
+      "E1:17",
+      "E1:11",
+      "E5:2",
+      "E10:3",
+      "E1:10",
+      "E5:1"
+    ],
+    "validated": true,
+    "reason": "Retrieved cited context; no answer synthesis model is configured.",
+    "warning": null
+  },
+  "persistence": "caller_persists_json"
+}

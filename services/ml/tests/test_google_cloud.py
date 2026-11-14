@@ -9,7 +9,7 @@ from PIL import Image
 from app.lang import google_cloud as gc
 from app.lang.google_cloud import GoogleCloud, GoogleError, parse_vision, to_google_lang
 from app.lang.translate import annotate_chunks, pick_provider
-from app.parsers import ocr
+from app.ocr import english, pipeline as ocr
 from app.voice.sarvam_client import SarvamClient, SarvamConfig, UsageLog
 
 KEY = "AIza-test-secret-key"
@@ -154,8 +154,21 @@ def test_translation_failure_is_recorded_not_raised(monkeypatch):
 
 # ------------------------------------------------------------------ OCR
 @pytest.fixture
-def blank():
+def blank(monkeypatch):
+    # These tests cover the Google leg of the local-language pipeline; keep Sarvam Vision out of them.
+    from app.ocr import indic
+
+    monkeypatch.setattr(indic, "sarvam_available", lambda: False)
     return Image.new("RGB", (400, 200), "white")
+
+
+def test_sarvam_vision_lines_keep_geometry_only_when_given():
+    from app.ocr.indic import _sarvam_lines
+
+    page_text = _sarvam_lines({"text": "ಹಣ ಕಳುಹಿಸಿ\nsecond"}, 400, 200)
+    assert [ln["bbox"] for ln in page_text] == [None, None]
+    boxed = _sarvam_lines({"width": 800, "height": 400, "lines": [{"text": "ಹಣ", "bbox": [80, 40, 400, 120], "confidence": 0.9}]}, 400, 200)
+    assert boxed[0]["bbox"] == [40, 20, 200, 60] and boxed[0]["conf"] == 0.9
 
 
 def patch_google(monkeypatch, seen, resp):
@@ -190,8 +203,8 @@ def test_auto_uses_google_only_when_local_result_is_poor(monkeypatch, blank):
     assert r["provider"] == "google_vision" and len(seen) == 1
     # Good local text must not be sent anywhere.
     seen.clear()
-    monkeypatch.setattr(ocr, "_run", lambda img: [{"text": "Please do not do this", "bbox": [0, 0, 100, 20], "conf": 0.97}])
-    monkeypatch.setattr(ocr, "available", lambda: True)
+    monkeypatch.setattr(english, "_run", lambda img: [{"text": "Please do not do this", "bbox": [0, 0, 100, 20], "conf": 0.97}])
+    monkeypatch.setattr(english, "available", lambda: True)
     r = ocr.ocr_image(blank, provider="auto")
     assert r["provider"] == "rapidocr" and seen == []
 

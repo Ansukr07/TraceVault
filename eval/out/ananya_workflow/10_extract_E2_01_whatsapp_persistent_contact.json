@@ -1,0 +1,843 @@
+{
+  "artifactType": "ocr",
+  "artifact": {
+    "width": 1080,
+    "height": 2340,
+    "inverted": false,
+    "lines": [
+      {
+        "text": "87%",
+        "bbox": [
+          981,
+          16,
+          1039,
+          44
+        ],
+        "conf": 0.67
+      },
+      {
+        "text": "9:41",
+        "bbox": [
+          40,
+          17,
+          94,
+          47
+        ],
+        "conf": 0.799
+      },
+      {
+        "text": "5G",
+        "bbox": [
+          868,
+          17,
+          908,
+          43
+        ],
+        "conf": 0.655
+      },
+      {
+        "text": "Karthik Menon",
+        "bbox": [
+          124,
+          83,
+          355,
+          113
+        ],
+        "conf": 0.877
+      },
+      {
+        "text": "last seen today at 9:04 am",
+        "bbox": [
+          121,
+          123,
+          400,
+          149
+        ],
+        "conf": 0.895
+      },
+      {
+        "text": "2 September 2024",
+        "bbox": [
+          443,
+          775,
+          639,
+          801
+        ],
+        "conf": 0.798
+      },
+      {
+        "text": "Hi Ananya! Saw the Nimbus launch post. Proud of you",
+        "bbox": [
+          45,
+          847,
+          808,
+          881
+        ],
+        "conf": 0.935
+      },
+      {
+        "text": "10:12 am",
+        "bbox": [
+          718,
+          895,
+          812,
+          923
+        ],
+        "conf": 0.821
+      },
+      {
+        "text": "Coffee this weekend? Just us, like old times 10:13 am",
+        "bbox": [
+          42,
+          965,
+          765,
+          1006
+        ],
+        "conf": 0.912
+      },
+      {
+        "text": "Thanks Karthik! Busy with the release this weekend,",
+        "bbox": [
+          269,
+          1048,
+          992,
+          1082
+        ],
+        "conf": 0.888
+      },
+      {
+        "text": "sorry",
+        "bbox": [
+          265,
+          1094,
+          347,
+          1131
+        ],
+        "conf": 0.816
+      },
+      {
+        "text": "11:40 am",
+        "bbox": [
+          944,
+          1098,
+          1041,
+          1127
+        ],
+        "conf": 0.81
+      },
+      {
+        "text": "4 September 2024",
+        "bbox": [
+          443,
+          1180,
+          639,
+          1207
+        ],
+        "conf": 0.891
+      },
+      {
+        "text": "You replied to everyone's stories except mine 11:05 pm",
+        "bbox": [
+          43,
+          1251,
+          795,
+          1289
+        ],
+        "conf": 0.918
+      },
+      {
+        "text": "Why are you ignoring me? 11:06 pm",
+        "bbox": [
+          42,
+          1330,
+          531,
+          1369
+        ],
+        "conf": 0.917
+      },
+      {
+        "text": "Missed call 11:20 pm",
+        "bbox": [
+          41,
+          1409,
+          313,
+          1449
+        ],
+        "conf": 0.884
+      },
+      {
+        "text": "Missed call 11:21 pm",
+        "bbox": [
+          40,
+          1488,
+          314,
+          1531
+        ],
+        "conf": 0.902
+      },
+      {
+        "text": "Missed call",
+        "bbox": [
+          43,
+          1573,
+          209,
+          1605
+        ],
+        "conf": 0.864
+      },
+      {
+        "text": "11:24 pm",
+        "bbox": [
+          200,
+          1575,
+          311,
+          1609
+        ],
+        "conf": 0.839
+      },
+      {
+        "text": "7 September 2024",
+        "bbox": [
+          444,
+          1661,
+          638,
+          1688
+        ],
+        "conf": 0.936
+      },
+      {
+        "text": "I waited near your office today. You left early? 7:48 pm",
+        "bbox": [
+          39,
+          1730,
+          788,
+          1771
+        ],
+        "conf": 0.928
+      },
+      {
+        "text": "Reply. Ananya. REPLY. 7:49 pm",
+        "bbox": [
+          43,
+          1812,
+          450,
+          1849
+        ],
+        "conf": 0.936
+      },
+      {
+        "text": "9 September 2024",
+        "bbox": [
+          443,
+          1901,
+          639,
+          1928
+        ],
+        "conf": 0.89
+      },
+      {
+        "text": "Karthik, I am not interested. Please stop messaging",
+        "bbox": [
+          270,
+          1972,
+          988,
+          2011
+        ],
+        "conf": 0.919
+      },
+      {
+        "text": "and calling me. This is making me very",
+        "bbox": [
+          269,
+          2013,
+          815,
+          2053
+        ],
+        "conf": 0.928
+      },
+      {
+        "text": "uncomfortable.",
+        "bbox": [
+          270,
+          2060,
+          487,
+          2090
+        ],
+        "conf": 0.902
+      },
+      {
+        "text": "9:02 am",
+        "bbox": [
+          956,
+          2064,
+          1040,
+          2092
+        ],
+        "conf": 0.785
+      },
+      {
+        "text": "Haan toh? Main kuch galat nahi kar raha, tu overreact",
+        "bbox": [
+          43,
+          2139,
+          803,
+          2171
+        ],
+        "conf": 0.924
+      },
+      {
+        "text": "kar rahi hai",
+        "bbox": [
+          44,
+          2182,
+          202,
+          2212
+        ],
+        "conf": 0.899
+      },
+      {
+        "text": "9:05 am",
+        "bbox": [
+          728,
+          2186,
+          814,
+          2216
+        ],
+        "conf": 0.767
+      },
+      {
+        "text": "I am blocking this number. 9:07 am",
+        "bbox": [
+          562,
+          2261,
+          1040,
+          2297
+        ],
+        "conf": 0.918
+      }
+    ],
+    "screenshotChat": {
+      "contact": "Karthik Menon",
+      "bubbles": [
+        {
+          "text": "Hi Ananya! Saw the Nimbus launch post. Proud of you",
+          "bbox": [
+            45,
+            847,
+            812,
+            923
+          ],
+          "conf": 0.821,
+          "side": "left",
+          "sender": "Karthik Menon",
+          "timeOfDay": "10:12",
+          "date": "2024-09-02",
+          "ts": "2024-09-02T10:12:00"
+        },
+        {
+          "text": "Coffee this weekend? Just us, like old times",
+          "bbox": [
+            42,
+            965,
+            765,
+            1006
+          ],
+          "conf": 0.912,
+          "side": "left",
+          "sender": "Karthik Menon",
+          "timeOfDay": "10:13",
+          "date": "2024-09-02",
+          "ts": "2024-09-02T10:13:00"
+        },
+        {
+          "text": "Thanks Karthik! Busy with the release this weekend,\nsorry",
+          "bbox": [
+            265,
+            1048,
+            1041,
+            1127
+          ],
+          "conf": 0.816,
+          "side": "right",
+          "sender": "Me",
+          "timeOfDay": "11:40",
+          "date": "2024-09-02",
+          "ts": "2024-09-02T11:40:00"
+        },
+        {
+          "text": "You replied to everyone's stories except mine",
+          "bbox": [
+            43,
+            1251,
+            795,
+            1289
+          ],
+          "conf": 0.918,
+          "side": "left",
+          "sender": "Karthik Menon",
+          "timeOfDay": "23:05",
+          "date": "2024-09-04",
+          "ts": "2024-09-04T23:05:00"
+        },
+        {
+          "text": "Why are you ignoring me?",
+          "bbox": [
+            42,
+            1330,
+            531,
+            1369
+          ],
+          "conf": 0.917,
+          "side": "left",
+          "sender": "Karthik Menon",
+          "timeOfDay": "23:06",
+          "date": "2024-09-04",
+          "ts": "2024-09-04T23:06:00"
+        },
+        {
+          "text": "Missed call",
+          "bbox": [
+            41,
+            1409,
+            313,
+            1449
+          ],
+          "conf": 0.884,
+          "side": "left",
+          "sender": "Karthik Menon",
+          "timeOfDay": "23:20",
+          "date": "2024-09-04",
+          "ts": "2024-09-04T23:20:00"
+        },
+        {
+          "text": "Missed call",
+          "bbox": [
+            40,
+            1488,
+            314,
+            1531
+          ],
+          "conf": 0.902,
+          "side": "left",
+          "sender": "Karthik Menon",
+          "timeOfDay": "23:21",
+          "date": "2024-09-04",
+          "ts": "2024-09-04T23:21:00"
+        },
+        {
+          "text": "Missed call",
+          "bbox": [
+            43,
+            1573,
+            311,
+            1609
+          ],
+          "conf": 0.864,
+          "side": "left",
+          "sender": "Karthik Menon",
+          "timeOfDay": "23:24",
+          "date": "2024-09-04",
+          "ts": "2024-09-04T23:24:00"
+        },
+        {
+          "text": "I waited near your office today. You left early?",
+          "bbox": [
+            39,
+            1730,
+            788,
+            1771
+          ],
+          "conf": 0.928,
+          "side": "left",
+          "sender": "Karthik Menon",
+          "timeOfDay": "19:48",
+          "date": "2024-09-07",
+          "ts": "2024-09-07T19:48:00"
+        },
+        {
+          "text": "Reply. Ananya. REPLY.",
+          "bbox": [
+            43,
+            1812,
+            450,
+            1849
+          ],
+          "conf": 0.936,
+          "side": "left",
+          "sender": "Karthik Menon",
+          "timeOfDay": "19:49",
+          "date": "2024-09-07",
+          "ts": "2024-09-07T19:49:00"
+        },
+        {
+          "text": "Karthik, I am not interested. Please stop messaging\nand calling me. This is making me very\nuncomfortable.",
+          "bbox": [
+            269,
+            1972,
+            1040,
+            2092
+          ],
+          "conf": 0.902,
+          "side": "right",
+          "sender": "Me",
+          "timeOfDay": "09:02",
+          "date": "2024-09-09",
+          "ts": "2024-09-09T09:02:00"
+        },
+        {
+          "text": "Haan toh? Main kuch galat nahi kar raha, tu overreact\nkar rahi hai",
+          "bbox": [
+            43,
+            2139,
+            814,
+            2216
+          ],
+          "conf": 0.899,
+          "side": "left",
+          "sender": "Karthik Menon",
+          "timeOfDay": "09:05",
+          "date": "2024-09-09",
+          "ts": "2024-09-09T09:05:00"
+        },
+        {
+          "text": "I am blocking this number.",
+          "bbox": [
+            562,
+            2261,
+            1040,
+            2297
+          ],
+          "conf": 0.918,
+          "side": "right",
+          "sender": "Me",
+          "timeOfDay": "09:07",
+          "date": "2024-09-09",
+          "ts": "2024-09-09T09:07:00"
+        }
+      ],
+      "isChat": true
+    },
+    "ocrProvider": "rapidocr"
+  },
+  "chunks": [
+    {
+      "idx": 0,
+      "text": "Hi Ananya! Saw the Nimbus launch post. Proud of you",
+      "unit": "bubble",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-02T10:12:00",
+      "conf": 0.821,
+      "lowConfidence": false,
+      "timeOfDay": "10:12",
+      "locator": {
+        "bbox": [
+          45,
+          847,
+          812,
+          923
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "Hi Ananya! Saw the Nimbus launch post. Proud of you"
+    },
+    {
+      "idx": 1,
+      "text": "Coffee this weekend? Just us, like old times",
+      "unit": "bubble",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-02T10:13:00",
+      "conf": 0.912,
+      "lowConfidence": false,
+      "timeOfDay": "10:13",
+      "locator": {
+        "bbox": [
+          42,
+          965,
+          765,
+          1006
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.78,
+      "textEn": "Coffee this weekend? Just us, like old times"
+    },
+    {
+      "idx": 2,
+      "text": "Thanks Karthik! Busy with the release this weekend,\nsorry",
+      "unit": "bubble",
+      "sender": "Me",
+      "refTs": "2024-09-02T11:40:00",
+      "conf": 0.816,
+      "lowConfidence": false,
+      "timeOfDay": "11:40",
+      "locator": {
+        "bbox": [
+          265,
+          1048,
+          1041,
+          1127
+        ],
+        "side": "right"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "Thanks Karthik! Busy with the release this weekend,\nsorry"
+    },
+    {
+      "idx": 3,
+      "text": "You replied to everyone's stories except mine",
+      "unit": "bubble",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-04T23:05:00",
+      "conf": 0.918,
+      "lowConfidence": false,
+      "timeOfDay": "23:05",
+      "locator": {
+        "bbox": [
+          43,
+          1251,
+          795,
+          1289
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "You replied to everyone's stories except mine"
+    },
+    {
+      "idx": 4,
+      "text": "Why are you ignoring me?",
+      "unit": "bubble",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-04T23:06:00",
+      "conf": 0.917,
+      "lowConfidence": false,
+      "timeOfDay": "23:06",
+      "locator": {
+        "bbox": [
+          42,
+          1330,
+          531,
+          1369
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "Why are you ignoring me?"
+    },
+    {
+      "idx": 5,
+      "text": "Missed call",
+      "unit": "bubble",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-04T23:20:00",
+      "conf": 0.884,
+      "lowConfidence": false,
+      "timeOfDay": "23:20",
+      "locator": {
+        "bbox": [
+          41,
+          1409,
+          313,
+          1449
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.72,
+      "textEn": "Missed call"
+    },
+    {
+      "idx": 6,
+      "text": "Missed call",
+      "unit": "bubble",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-04T23:21:00",
+      "conf": 0.902,
+      "lowConfidence": false,
+      "timeOfDay": "23:21",
+      "locator": {
+        "bbox": [
+          40,
+          1488,
+          314,
+          1531
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.72,
+      "textEn": "Missed call"
+    },
+    {
+      "idx": 7,
+      "text": "Missed call",
+      "unit": "bubble",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-04T23:24:00",
+      "conf": 0.864,
+      "lowConfidence": false,
+      "timeOfDay": "23:24",
+      "locator": {
+        "bbox": [
+          43,
+          1573,
+          311,
+          1609
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.72,
+      "textEn": "Missed call"
+    },
+    {
+      "idx": 8,
+      "text": "I waited near your office today. You left early?",
+      "unit": "bubble",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-07T19:48:00",
+      "conf": 0.928,
+      "lowConfidence": false,
+      "timeOfDay": "19:48",
+      "locator": {
+        "bbox": [
+          39,
+          1730,
+          788,
+          1771
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.79,
+      "textEn": "I waited near your office today. You left early?"
+    },
+    {
+      "idx": 9,
+      "text": "Reply. Ananya. REPLY.",
+      "unit": "bubble",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-07T19:49:00",
+      "conf": 0.936,
+      "lowConfidence": false,
+      "timeOfDay": "19:49",
+      "locator": {
+        "bbox": [
+          43,
+          1812,
+          450,
+          1849
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.73,
+      "textEn": "Reply. Ananya. REPLY."
+    },
+    {
+      "idx": 10,
+      "text": "Karthik, I am not interested. Please stop messaging\nand calling me. This is making me very\nuncomfortable.",
+      "unit": "bubble",
+      "sender": "Me",
+      "refTs": "2024-09-09T09:02:00",
+      "conf": 0.902,
+      "lowConfidence": false,
+      "timeOfDay": "09:02",
+      "locator": {
+        "bbox": [
+          269,
+          1972,
+          1040,
+          2092
+        ],
+        "side": "right"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "Karthik, I am not interested. Please stop messaging\nand calling me. This is making me very\nuncomfortable."
+    },
+    {
+      "idx": 11,
+      "text": "Haan toh? Main kuch galat nahi kar raha, tu overreact\nkar rahi hai",
+      "unit": "bubble",
+      "sender": "Karthik Menon",
+      "refTs": "2024-09-09T09:05:00",
+      "conf": 0.899,
+      "lowConfidence": false,
+      "timeOfDay": "09:05",
+      "locator": {
+        "bbox": [
+          43,
+          2139,
+          814,
+          2216
+        ],
+        "side": "left"
+      },
+      "lang": "hi-Latn",
+      "langConfidence": 0.95,
+      "textEn": "Yes, so? I'm not doing anything wrong, you overreact is doing",
+      "translation": {
+        "provider": "sarvam",
+        "model": "mayura:v1",
+        "redacted": false
+      }
+    },
+    {
+      "idx": 12,
+      "text": "I am blocking this number.",
+      "unit": "bubble",
+      "sender": "Me",
+      "refTs": "2024-09-09T09:07:00",
+      "conf": 0.918,
+      "lowConfidence": false,
+      "timeOfDay": "09:07",
+      "locator": {
+        "bbox": [
+          562,
+          2261,
+          1040,
+          2297
+        ],
+        "side": "right"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.75,
+      "textEn": "I am blocking this number."
+    }
+  ],
+  "metadata": {
+    "width": 1080,
+    "height": 2340,
+    "format": "PNG",
+    "captureTime": "2024-09-09T09:10:03",
+    "modifyTime": "2024-09-09T09:10:03",
+    "ocrProvider": "rapidocr"
+  },
+  "flags": [],
+  "hashes": {
+    "phash": "f0356d656978413d",
+    "dhash": "0200402985c02591"
+  },
+  "children": [],
+  "usage": [
+    {
+      "provider": "sarvam",
+      "endpoint": "/translate",
+      "status": 200,
+      "latencyMs": 1185,
+      "model": "mayura:v1",
+      "chars": 66
+    }
+  ],
+  "generator": {
+    "name": "extract_image",
+    "version": 1
+  }
+}

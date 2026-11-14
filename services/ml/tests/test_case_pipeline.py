@@ -27,7 +27,8 @@ def api():
 
     os.environ["INTERNAL_SECRET"] = "s3cret"
     os.environ["SARVAM_MOCK"] = "true"
-    os.environ.pop("ANTHROPIC_API_KEY", None)
+    for k in ("LLM_API_KEY", "GROQ_API_KEY"):
+        os.environ.pop(k, None)
     from app.main import app
     from app.voice import sarvam_client
 

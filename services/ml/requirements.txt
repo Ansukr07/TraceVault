@@ -1,8 +1,40 @@
-fastapi>=0.115
-uvicorn[standard]>=0.32
-pydantic>=2.9
-httpx>=0.27
+# Core service
+fastapi>=0.115,<1
+uvicorn[standard]>=0.32,<1
+pydantic>=2.9,<3
+httpx>=0.27,<1
 python-multipart>=0.0.12
-# Sarvam is called over httpx (no SDK). Added per milestone:
-# faster-whisper (optional, local STT fallback), paddleocr, spacy, gliner, dateparser, phonenumbers, rapidfuzz,
-# sentence-transformers, imagehash, datasketch, networkx, PyMuPDF, anthropic
+
+# Ingestion: PDF, images, metadata, language
+PyMuPDF>=1.24,<2
+Pillow>=10,<12
+imagehash>=4.3
+numpy>=1.26
+langid>=1.1.6,<2
+
+# English OCR pipeline (on-device; PaddleOCR models on ONNX Runtime).
+# The local-language OCR pipeline (Google Vision / Sarvam Vision) needs only httpx + API keys.
+rapidocr-onnxruntime>=1.3
+
+# NLP: NER, time normalisation, dedup
+phonenumbers>=8.13,<10
+dateparser>=1.2,<2
+rapidfuzz>=3.6
+datasketch>=1.6
+networkx>=3.2
+
+# Vector store (case-scoped Chroma)
+chromadb>=0.5,<2
+
+# Investigation agents
+langgraph>=0.2,<2
+
+# System1 open-source model layer (Laya). Hosted inference via huggingface_hub when HF_TOKEN is set.
+huggingface_hub>=0.27,<2
+laya>=0.3.20,<1
+
+
+# Heavy optional runtimes — install for the target CPU/GPU when needed; the service reports what is missing.
+# faster-whisper>=1.0        # local STT fallback
+# spacy>=3.7                 # + python -m spacy download en_core_web_sm
+# FlagEmbedding>=1.3         # BAAI/bge-m3 dense embeddings for the vector store

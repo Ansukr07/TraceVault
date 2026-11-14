@@ -1,0 +1,414 @@
+{
+  "artifactType": "ocr",
+  "artifact": {
+    "width": 1080,
+    "height": 2340,
+    "inverted": false,
+    "lines": [
+      {
+        "text": "9:41",
+        "bbox": [
+          41,
+          18,
+          94,
+          48
+        ],
+        "conf": 0.645
+      },
+      {
+        "text": "5G",
+        "bbox": [
+          868,
+          18,
+          908,
+          44
+        ],
+        "conf": 0.658
+      },
+      {
+        "text": "87%",
+        "bbox": [
+          983,
+          18,
+          1038,
+          44
+        ],
+        "conf": 0.748
+      },
+      {
+        "text": "+91 70190 55555 ~Karthik",
+        "bbox": [
+          127,
+          83,
+          526,
+          112
+        ],
+        "conf": 0.828
+      },
+      {
+        "text": "online",
+        "bbox": [
+          122,
+          125,
+          193,
+          150
+        ],
+        "conf": 0.855
+      },
+      {
+        "text": "22 September 2024",
+        "bbox": [
+          436,
+          1786,
+          645,
+          1813
+        ],
+        "conf": 0.909
+      },
+      {
+        "text": "Story is live. 400 views already",
+        "bbox": [
+          46,
+          1860,
+          466,
+          1890
+        ],
+        "conf": 0.943
+      },
+      {
+        "text": "8:30 pm",
+        "bbox": [
+          536,
+          1863,
+          622,
+          1896
+        ],
+        "conf": 0.843
+      },
+      {
+        "text": "Send 15000 to karthik.menon@okicici and I take it",
+        "bbox": [
+          45,
+          1939,
+          754,
+          1968
+        ],
+        "conf": 0.897
+      },
+      {
+        "text": "down. Tonight.",
+        "bbox": [
+          44,
+          1980,
+          251,
+          2014
+        ],
+        "conf": 0.896
+      },
+      {
+        "text": "8:31 pm",
+        "bbox": [
+          727,
+          1986,
+          812,
+          2016
+        ],
+        "conf": 0.818
+      },
+      {
+        "text": "Warna kal subah sab leak. Tera choice. 8:32 pm",
+        "bbox": [
+          43,
+          2056,
+          680,
+          2096
+        ],
+        "conf": 0.91
+      },
+      {
+        "text": "Please don't do this. I will pay, just delete everything.",
+        "bbox": [
+          268,
+          2137,
+          1014,
+          2178
+        ],
+        "conf": 0.922
+      },
+      {
+        "text": "8:55 pm",
+        "bbox": [
+          954,
+          2187,
+          1040,
+          2219
+        ],
+        "conf": 0.829
+      },
+      {
+        "text": "Screenshot bhej payment ka. 10 baje tak 8:56 pm",
+        "bbox": [
+          42,
+          2259,
+          717,
+          2299
+        ],
+        "conf": 0.892
+      }
+    ],
+    "screenshotChat": {
+      "contact": "+91 70190 55555 ~Karthik",
+      "bubbles": [
+        {
+          "text": "Story is live. 400 views already",
+          "bbox": [
+            46,
+            1860,
+            622,
+            1896
+          ],
+          "conf": 0.943,
+          "side": "left",
+          "sender": "+91 70190 55555 ~Karthik",
+          "timeOfDay": "20:30",
+          "date": "2024-09-22",
+          "ts": "2024-09-22T20:30:00"
+        },
+        {
+          "text": "Send 15000 to karthik.menon@okicici and I take it\ndown. Tonight.",
+          "bbox": [
+            44,
+            1939,
+            812,
+            2016
+          ],
+          "conf": 0.896,
+          "side": "left",
+          "sender": "+91 70190 55555 ~Karthik",
+          "timeOfDay": "20:31",
+          "date": "2024-09-22",
+          "ts": "2024-09-22T20:31:00"
+        },
+        {
+          "text": "Warna kal subah sab leak. Tera choice.",
+          "bbox": [
+            43,
+            2056,
+            680,
+            2096
+          ],
+          "conf": 0.91,
+          "side": "left",
+          "sender": "+91 70190 55555 ~Karthik",
+          "timeOfDay": "20:32",
+          "date": "2024-09-22",
+          "ts": "2024-09-22T20:32:00"
+        },
+        {
+          "text": "Please don't do this. I will pay, just delete everything.",
+          "bbox": [
+            268,
+            2137,
+            1040,
+            2219
+          ],
+          "conf": 0.829,
+          "side": "right",
+          "sender": "Me",
+          "timeOfDay": "20:55",
+          "date": "2024-09-22",
+          "ts": "2024-09-22T20:55:00"
+        },
+        {
+          "text": "Screenshot bhej payment ka. 10 baje tak",
+          "bbox": [
+            42,
+            2259,
+            717,
+            2299
+          ],
+          "conf": 0.892,
+          "side": "left",
+          "sender": "+91 70190 55555 ~Karthik",
+          "timeOfDay": "20:56",
+          "date": "2024-09-22",
+          "ts": "2024-09-22T20:56:00"
+        }
+      ],
+      "isChat": true
+    },
+    "ocrProvider": "rapidocr"
+  },
+  "chunks": [
+    {
+      "idx": 0,
+      "text": "Story is live. 400 views already",
+      "unit": "bubble",
+      "sender": "+91 70190 55555 ~Karthik",
+      "refTs": "2024-09-22T20:30:00",
+      "conf": 0.943,
+      "lowConfidence": false,
+      "timeOfDay": "20:30",
+      "locator": {
+        "bbox": [
+          46,
+          1860,
+          622,
+          1896
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.75,
+      "textEn": "Story is live. 400 views already"
+    },
+    {
+      "idx": 1,
+      "text": "Send 15000 to karthik.menon@okicici and I take it\ndown. Tonight.",
+      "unit": "bubble",
+      "sender": "+91 70190 55555 ~Karthik",
+      "refTs": "2024-09-22T20:31:00",
+      "conf": 0.896,
+      "lowConfidence": false,
+      "timeOfDay": "20:31",
+      "locator": {
+        "bbox": [
+          44,
+          1939,
+          812,
+          2016
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "Send 15000 to karthik.menon@okicici and I take it\ndown. Tonight."
+    },
+    {
+      "idx": 2,
+      "text": "Warna kal subah sab leak. Tera choice.",
+      "unit": "bubble",
+      "sender": "+91 70190 55555 ~Karthik",
+      "refTs": "2024-09-22T20:32:00",
+      "conf": 0.91,
+      "lowConfidence": false,
+      "timeOfDay": "20:32",
+      "locator": {
+        "bbox": [
+          43,
+          2056,
+          680,
+          2096
+        ],
+        "side": "left"
+      },
+      "lang": "hi-Latn",
+      "langConfidence": 0.95,
+      "textEn": "Otherwise, everything will leak tomorrow morning. Your choice.",
+      "translation": {
+        "provider": "sarvam",
+        "model": "mayura:v1",
+        "redacted": false
+      }
+    },
+    {
+      "idx": 3,
+      "text": "Please don't do this. I will pay, just delete everything.",
+      "unit": "bubble",
+      "sender": "Me",
+      "refTs": "2024-09-22T20:55:00",
+      "conf": 0.829,
+      "lowConfidence": false,
+      "timeOfDay": "20:55",
+      "locator": {
+        "bbox": [
+          268,
+          2137,
+          1040,
+          2219
+        ],
+        "side": "right"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "Please don't do this. I will pay, just delete everything."
+    },
+    {
+      "idx": 4,
+      "text": "Screenshot bhej payment ka. 10 baje tak",
+      "unit": "bubble",
+      "sender": "+91 70190 55555 ~Karthik",
+      "refTs": "2024-09-22T20:56:00",
+      "conf": 0.892,
+      "lowConfidence": false,
+      "timeOfDay": "20:56",
+      "locator": {
+        "bbox": [
+          42,
+          2259,
+          717,
+          2299
+        ],
+        "side": "left"
+      },
+      "lang": "hi-Latn",
+      "langConfidence": 0.95,
+      "textEn": "Send the screenshot as proof of payment. By 10 AM",
+      "translation": {
+        "provider": "sarvam",
+        "model": "mayura:v1",
+        "redacted": false
+      }
+    }
+  ],
+  "metadata": {
+    "width": 1080,
+    "height": 2340,
+    "format": "PNG",
+    "captureTime": "2024-10-05T18:19:40",
+    "modifyTime": "2024-10-05T18:20:11",
+    "software": "Snapseed 2.0",
+    "ocrProvider": "rapidocr"
+  },
+  "flags": [
+    {
+      "type": "EDITED_FILE",
+      "field": "Software",
+      "value": "Snapseed 2.0"
+    },
+    {
+      "type": "METADATA_MISMATCH",
+      "field": "inImageDate",
+      "value": "image shows 2024-09-22, EXIF capture 2024-10-05",
+      "contentDate": "2024-09-22",
+      "captureDate": "2024-10-05"
+    }
+  ],
+  "hashes": {
+    "phash": "db646965654d644d",
+    "dhash": "0210000000007039"
+  },
+  "children": [],
+  "usage": [
+    {
+      "provider": "sarvam",
+      "endpoint": "/translate",
+      "status": 200,
+      "latencyMs": 1341,
+      "model": "mayura:v1",
+      "chars": 39
+    },
+    {
+      "provider": "sarvam",
+      "endpoint": "/translate",
+      "status": 200,
+      "latencyMs": 1342,
+      "model": "mayura:v1",
+      "chars": 38
+    }
+  ],
+  "generator": {
+    "name": "extract_image",
+    "version": 1
+  }
+}

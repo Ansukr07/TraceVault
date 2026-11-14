@@ -12,7 +12,7 @@ if (!fs.existsSync(py)) {
   console.error('ML venv missing. Run: cd services/ml && python -m venv .venv && .venv/Scripts/pip install -r requirements.txt');
   process.exit(1);
 }
-const p = spawn(py, ['-m', 'uvicorn', 'app.main:app', '--host', '127.0.0.1', '--port', '8000', '--reload'], {
+const p = spawn(py, ['-m', 'uvicorn', 'app.main:app', '--host', '127.0.0.1', '--port', '8000', '--reload', '--reload-dir', 'app'], {
   cwd: mlDir,
   stdio: 'inherit',
 });

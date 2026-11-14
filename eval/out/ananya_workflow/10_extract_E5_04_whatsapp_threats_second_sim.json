@@ -1,0 +1,618 @@
+{
+  "artifactType": "ocr",
+  "artifact": {
+    "width": 1080,
+    "height": 2340,
+    "inverted": false,
+    "lines": [
+      {
+        "text": "5G",
+        "bbox": [
+          867,
+          17,
+          907,
+          44
+        ],
+        "conf": 0.583
+      },
+      {
+        "text": "87%",
+        "bbox": [
+          983,
+          18,
+          1038,
+          44
+        ],
+        "conf": 0.749
+      },
+      {
+        "text": "9:41",
+        "bbox": [
+          42,
+          20,
+          92,
+          46
+        ],
+        "conf": 0.719
+      },
+      {
+        "text": "+91 70190 55555 ~Karthik",
+        "bbox": [
+          127,
+          83,
+          526,
+          113
+        ],
+        "conf": 0.864
+      },
+      {
+        "text": "online",
+        "bbox": [
+          122,
+          123,
+          193,
+          151
+        ],
+        "conf": 0.817
+      },
+      {
+        "text": "18 September 2024",
+        "bbox": [
+          438,
+          1215,
+          645,
+          1241
+        ],
+        "conf": 0.922
+      },
+      {
+        "text": "Kemkue nok pno on raqnu no pauep non",
+        "bbox": [
+          44,
+          1284,
+          769,
+          1324
+        ],
+        "conf": 0.523
+      },
+      {
+        "text": "9:30 pm",
+        "bbox": [
+          727,
+          1335,
+          812,
+          1364
+        ],
+        "conf": 0.78
+      },
+      {
+        "text": "I still have the photos from the Goa team trip. The",
+        "bbox": [
+          43,
+          1409,
+          746,
+          1439
+        ],
+        "conf": 0.901
+      },
+      {
+        "text": "private ones.",
+        "bbox": [
+          43,
+          1450,
+          226,
+          1485
+        ],
+        "conf": 0.769
+      },
+      {
+        "text": "9:31 pm",
+        "bbox": [
+          726,
+          1455,
+          813,
+          1486
+        ],
+        "conf": 0.82
+      },
+      {
+        "text": "Imagine if HR at Nimbus and your parents in Mysuru",
+        "bbox": [
+          43,
+          1531,
+          786,
+          1565
+        ],
+        "conf": 0.898
+      },
+      {
+        "text": "got them",
+        "bbox": [
+          41,
+          1570,
+          178,
+          1610
+        ],
+        "conf": 0.833
+      },
+      {
+        "text": "9:32 pm",
+        "bbox": [
+          726,
+          1577,
+          813,
+          1610
+        ],
+        "conf": 0.711
+      },
+      {
+        "text": "Delete them. That was a private moment and you",
+        "bbox": [
+          270,
+          1653,
+          965,
+          1686
+        ],
+        "conf": 0.9
+      },
+      {
+        "text": "know it.",
+        "bbox": [
+          269,
+          1694,
+          382,
+          1728
+        ],
+        "conf": 0.837
+      },
+      {
+        "text": "9:40 pm",
+        "bbox": [
+          952,
+          1699,
+          1040,
+          1731
+        ],
+        "conf": 0.827
+      },
+      {
+        "text": "Delete? Haha. Pehle mujhse baat kar, phir sochunga",
+        "bbox": [
+          45,
+          1775,
+          773,
+          1809
+        ],
+        "conf": 0.934
+      },
+      {
+        "text": "9:41 pm",
+        "bbox": [
+          728,
+          1825,
+          813,
+          1852
+        ],
+        "conf": 0.833
+      },
+      {
+        "text": "9:43 pm",
+        "bbox": [
+          726,
+          1945,
+          813,
+          1976
+        ],
+        "conf": 0.806
+      },
+      {
+        "text": "I will tell everyone you slept your way into the",
+        "bbox": [
+          41,
+          2016,
+          692,
+          2054
+        ],
+        "conf": 0.935
+      },
+      {
+        "text": "promotion",
+        "bbox": [
+          43,
+          2059,
+          197,
+          2095
+        ],
+        "conf": 0.847
+      },
+      {
+        "text": "9:44 pm",
+        "bbox": [
+          726,
+          2065,
+          813,
+          2096
+        ],
+        "conf": 0.804
+      },
+      {
+        "text": "That is a lie. I will report you.",
+        "bbox": [
+          536,
+          2140,
+          944,
+          2175
+        ],
+        "conf": 0.878
+      },
+      {
+        "text": "9:50 pm",
+        "bbox": [
+          937,
+          2148,
+          1038,
+          2175
+        ],
+        "conf": 0.753
+      },
+      {
+        "text": "Report karke dekh. Teri career khatam kar dunga",
+        "bbox": [
+          44,
+          2221,
+          727,
+          2256
+        ],
+        "conf": 0.887
+      },
+      {
+        "text": "9:51 pm",
+        "bbox": [
+          726,
+          2269,
+          813,
+          2299
+        ],
+        "conf": 0.82
+      }
+    ],
+    "screenshotChat": {
+      "contact": "+91 70190 55555 ~Karthik",
+      "bubbles": [
+        {
+          "text": "Kemkue nok pno on raqnu no pauep non",
+          "bbox": [
+            44,
+            1284,
+            812,
+            1364
+          ],
+          "conf": 0.523,
+          "side": "left",
+          "sender": "+91 70190 55555 ~Karthik",
+          "timeOfDay": "21:30",
+          "date": "2024-09-18",
+          "ts": "2024-09-18T21:30:00"
+        },
+        {
+          "text": "I still have the photos from the Goa team trip. The\nprivate ones.",
+          "bbox": [
+            43,
+            1409,
+            813,
+            1486
+          ],
+          "conf": 0.769,
+          "side": "left",
+          "sender": "+91 70190 55555 ~Karthik",
+          "timeOfDay": "21:31",
+          "date": "2024-09-18",
+          "ts": "2024-09-18T21:31:00"
+        },
+        {
+          "text": "Imagine if HR at Nimbus and your parents in Mysuru\ngot them",
+          "bbox": [
+            41,
+            1531,
+            813,
+            1610
+          ],
+          "conf": 0.833,
+          "side": "left",
+          "sender": "+91 70190 55555 ~Karthik",
+          "timeOfDay": "21:32",
+          "date": "2024-09-18",
+          "ts": "2024-09-18T21:32:00"
+        },
+        {
+          "text": "Delete them. That was a private moment and you\nknow it.",
+          "bbox": [
+            269,
+            1653,
+            1040,
+            1731
+          ],
+          "conf": 0.837,
+          "side": "right",
+          "sender": "Me",
+          "timeOfDay": "21:40",
+          "date": "2024-09-18",
+          "ts": "2024-09-18T21:40:00"
+        },
+        {
+          "text": "Delete? Haha. Pehle mujhse baat kar, phir sochunga",
+          "bbox": [
+            45,
+            1775,
+            813,
+            1852
+          ],
+          "conf": 0.833,
+          "side": "left",
+          "sender": "+91 70190 55555 ~Karthik",
+          "timeOfDay": "21:41",
+          "date": "2024-09-18",
+          "ts": "2024-09-18T21:41:00"
+        },
+        {
+          "text": "I will tell everyone you slept your way into the\npromotion",
+          "bbox": [
+            41,
+            2016,
+            813,
+            2096
+          ],
+          "conf": 0.847,
+          "side": "left",
+          "sender": "+91 70190 55555 ~Karthik",
+          "timeOfDay": "21:44",
+          "date": "2024-09-18",
+          "ts": "2024-09-18T21:44:00"
+        },
+        {
+          "text": "That is a lie. I will report you.",
+          "bbox": [
+            536,
+            2140,
+            1038,
+            2175
+          ],
+          "conf": 0.878,
+          "side": "right",
+          "sender": "Me",
+          "timeOfDay": "21:50",
+          "date": "2024-09-18",
+          "ts": "2024-09-18T21:50:00"
+        },
+        {
+          "text": "Report karke dekh. Teri career khatam kar dunga",
+          "bbox": [
+            44,
+            2221,
+            813,
+            2299
+          ],
+          "conf": 0.887,
+          "side": "left",
+          "sender": "+91 70190 55555 ~Karthik",
+          "timeOfDay": "21:51",
+          "date": "2024-09-18",
+          "ts": "2024-09-18T21:51:00"
+        }
+      ],
+      "isChat": true
+    },
+    "ocrProvider": "rapidocr"
+  },
+  "chunks": [
+    {
+      "idx": 0,
+      "text": "Kemkue nok pno on raqnu no pauep non",
+      "unit": "bubble",
+      "sender": "+91 70190 55555 ~Karthik",
+      "refTs": "2024-09-18T21:30:00",
+      "conf": 0.523,
+      "lowConfidence": true,
+      "timeOfDay": "21:30",
+      "locator": {
+        "bbox": [
+          44,
+          1284,
+          812,
+          1364
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.78,
+      "textEn": "Kemkue nok pno on raqnu no pauep non"
+    },
+    {
+      "idx": 1,
+      "text": "I still have the photos from the Goa team trip. The\nprivate ones.",
+      "unit": "bubble",
+      "sender": "+91 70190 55555 ~Karthik",
+      "refTs": "2024-09-18T21:31:00",
+      "conf": 0.769,
+      "lowConfidence": false,
+      "timeOfDay": "21:31",
+      "locator": {
+        "bbox": [
+          43,
+          1409,
+          813,
+          1486
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "I still have the photos from the Goa team trip. The\nprivate ones."
+    },
+    {
+      "idx": 2,
+      "text": "Imagine if HR at Nimbus and your parents in Mysuru\ngot them",
+      "unit": "bubble",
+      "sender": "+91 70190 55555 ~Karthik",
+      "refTs": "2024-09-18T21:32:00",
+      "conf": 0.833,
+      "lowConfidence": false,
+      "timeOfDay": "21:32",
+      "locator": {
+        "bbox": [
+          41,
+          1531,
+          813,
+          1610
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.82,
+      "textEn": "Imagine if HR at Nimbus and your parents in Mysuru\ngot them"
+    },
+    {
+      "idx": 3,
+      "text": "Delete them. That was a private moment and you\nknow it.",
+      "unit": "bubble",
+      "sender": "Me",
+      "refTs": "2024-09-18T21:40:00",
+      "conf": 0.837,
+      "lowConfidence": false,
+      "timeOfDay": "21:40",
+      "locator": {
+        "bbox": [
+          269,
+          1653,
+          1040,
+          1731
+        ],
+        "side": "right"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.81,
+      "textEn": "Delete them. That was a private moment and you\nknow it."
+    },
+    {
+      "idx": 4,
+      "text": "Delete? Haha. Pehle mujhse baat kar, phir sochunga",
+      "unit": "bubble",
+      "sender": "+91 70190 55555 ~Karthik",
+      "refTs": "2024-09-18T21:41:00",
+      "conf": 0.833,
+      "lowConfidence": false,
+      "timeOfDay": "21:41",
+      "locator": {
+        "bbox": [
+          45,
+          1775,
+          813,
+          1852
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "Delete? Haha. Pehle mujhse baat kar, phir sochunga"
+    },
+    {
+      "idx": 5,
+      "text": "I will tell everyone you slept your way into the\npromotion",
+      "unit": "bubble",
+      "sender": "+91 70190 55555 ~Karthik",
+      "refTs": "2024-09-18T21:44:00",
+      "conf": 0.847,
+      "lowConfidence": false,
+      "timeOfDay": "21:44",
+      "locator": {
+        "bbox": [
+          41,
+          2016,
+          813,
+          2096
+        ],
+        "side": "left"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.55,
+      "textEn": "I will tell everyone you slept your way into the\npromotion"
+    },
+    {
+      "idx": 6,
+      "text": "That is a lie. I will report you.",
+      "unit": "bubble",
+      "sender": "Me",
+      "refTs": "2024-09-18T21:50:00",
+      "conf": 0.878,
+      "lowConfidence": false,
+      "timeOfDay": "21:50",
+      "locator": {
+        "bbox": [
+          536,
+          2140,
+          1038,
+          2175
+        ],
+        "side": "right"
+      },
+      "lang": "en-IN",
+      "langConfidence": 0.78,
+      "textEn": "That is a lie. I will report you."
+    },
+    {
+      "idx": 7,
+      "text": "Report karke dekh. Teri career khatam kar dunga",
+      "unit": "bubble",
+      "sender": "+91 70190 55555 ~Karthik",
+      "refTs": "2024-09-18T21:51:00",
+      "conf": 0.887,
+      "lowConfidence": false,
+      "timeOfDay": "21:51",
+      "locator": {
+        "bbox": [
+          44,
+          2221,
+          813,
+          2299
+        ],
+        "side": "left"
+      },
+      "lang": "hi-Latn",
+      "langConfidence": 0.88,
+      "textEn": "Go ahead and report it. I will end your career.",
+      "translation": {
+        "provider": "sarvam",
+        "model": "mayura:v1",
+        "redacted": false
+      }
+    }
+  ],
+  "metadata": {
+    "width": 1080,
+    "height": 2340,
+    "format": "PNG",
+    "captureTime": "2024-09-18T21:55:30",
+    "modifyTime": "2024-09-18T21:55:30",
+    "ocrProvider": "rapidocr"
+  },
+  "flags": [],
+  "hashes": {
+    "phash": "d22db1c2f8a585f8",
+    "dhash": "02100872b1e8d898"
+  },
+  "children": [],
+  "usage": [
+    {
+      "provider": "sarvam",
+      "endpoint": "/translate",
+      "status": 200,
+      "latencyMs": 1175,
+      "model": "mayura:v1",
+      "chars": 47
+    }
+  ],
+  "generator": {
+    "name": "extract_image",
+    "version": 1
+  }
+}

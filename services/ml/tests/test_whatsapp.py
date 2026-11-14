@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from app.parsers.whatsapp import parse_whatsapp
+from app.ingestion.whatsapp import parse_whatsapp
 
 ANDROID = """12/05/24, 9:41 pm - Messages and calls are end-to-end encrypted.
 12/05/24, 9:42 pm - Rahul: kal raat 9 baje milna
