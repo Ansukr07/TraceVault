@@ -6,13 +6,18 @@ import { useCase } from '../../lib/case';
 import { CaseShell, PageLoading } from '../../components';
 
 const LLM = [
-  ['cloud_redacted', 'Claude, with names and numbers replaced by placeholders before sending (recommended)'],
-  ['cloud', 'Claude, full text'],
+  ['cloud_redacted', 'Qwen 3.8 (27B) on Groq, with names and numbers replaced by placeholders before sending (recommended)'],
+  ['cloud', 'Qwen 3.8 (27B) on Groq, full text'],
   ['local', 'Local model only: nothing leaves this server'],
 ];
 const OCR = [
   ['local', 'Read text from images on this server only (English; Kannada and Hindi screenshots may be missed)'],
-  ['cloud', 'Also use Google Cloud Vision when this server cannot read an image, e.g. Kannada. The image is sent to Google.'],
+  ['cloud', 'When this server cannot read an image (e.g. Kannada, Hindi), use Google Cloud Vision, then Sarvam Vision. Only those images are sent.'],
+  ['sarvam', 'Read every image with Sarvam Vision (Indian-language OCR) first. All images are sent to Sarvam AI.'],
+];
+const SYSTEM1 = [
+  ['local', 'Run the incident-type model (Laya) on this server only (recommended)'],
+  ['hosted', 'Allow Hugging Face hosted inference for it when configured. Case text is sent to Hugging Face.'],
 ];
 const TRANSLATE = [
   ['sarvam_redacted', 'Sarvam Translate, with personal details replaced first (recommended)'],
@@ -42,6 +47,7 @@ export function SettingsPage() {
         llmMode: f.get('llmMode'),
         translateMode: f.get('translateMode'),
         ocrMode: f.get('ocrMode'),
+        system1Mode: f.get('system1Mode'),
         voiceMode: voiceConsent ? 'sarvam' : 'local',
         voiceConsent,
         timezone: f.get('timezone'),
@@ -90,6 +96,11 @@ export function SettingsPage() {
         <fieldset className="field" disabled={!owner} style={{ border: 0, padding: 0, margin: 0 }}>
           <legend style={{ marginBottom: 8 }}>Reading text from images (OCR)</legend>
           {OCR.map(([v, label]) => <label key={v} className="consent"><input type="radio" name="ocrMode" value={v} defaultChecked={(s.ocrMode ?? 'local') === v} /><span>{label}</span></label>)}
+        </fieldset>
+        <fieldset className="field" disabled={!owner} style={{ border: 0, padding: 0, margin: 0 }}>
+          <legend style={{ marginBottom: 8 }}>Investigation model (System1)</legend>
+          {SYSTEM1.map(([v, label]) => <label key={v} className="consent"><input type="radio" name="system1Mode" value={v} defaultChecked={(s.system1Mode ?? 'local') === v} /><span>{label}</span></label>)}
+          <p className="muted" style={{ fontSize: 13, marginTop: 6 }}>Search embeddings and the investigation agents always run on this server.</p>
         </fieldset>
         <label className="field">Case timezone<input name="timezone" defaultValue={c.data.timezone} disabled={!owner} /></label>
         {msg && <p className="badge ok">{msg}</p>}

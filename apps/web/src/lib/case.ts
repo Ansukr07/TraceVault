@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, getToken } from './api';
 
-export type CaseSettings = { llmMode: 'cloud' | 'cloud_redacted' | 'local'; voiceMode: 'sarvam' | 'local'; voiceConsentAt?: string; translateMode: 'sarvam' | 'sarvam_redacted' | 'off'; ocrMode?: 'local' | 'cloud' };
+export type CaseSettings = { llmMode: 'cloud' | 'cloud_redacted' | 'local'; voiceMode: 'sarvam' | 'local'; voiceConsentAt?: string; translateMode: 'sarvam' | 'sarvam_redacted' | 'off'; ocrMode?: 'local' | 'cloud' | 'sarvam'; system1Mode?: 'local' | 'hosted' };
 export type CaseT = { id: string; title: string; incidentType: string; description: string; status: string; timezone: string; settings: CaseSettings; role: string; createdAt: string; sealedAt?: string | null; sealedRoot?: string | null; addendumOf?: string | null };
 export type Entity = { type: string; text: string; start: number; end: number; norm: unknown; precision?: string; direction?: string };
 export type Chunk = {
